@@ -1,0 +1,32 @@
+{
+	"title": "Game类",
+	"type": "class",
+	"methods": [
+		{
+			"name": "run",
+			"disc": ""
+		},
+		{
+			"name": "render",
+			"disc": ""
+		},
+		{
+			"name": "getCanvas",
+			"disc": "返回_canvas对象"
+		},
+		{
+			"name": "getContainer",
+			"disc": "返回_div对象"
+		}
+	],
+	"properties": [
+		{
+			"name": "_canvas",
+			"disc": "用于显示游戏内容。"
+		},
+		{
+			"name": "_div",
+			"disc": "用于存放dom对象，这些对象在全屏时候可以被看见。"
+		}
+	]
+}

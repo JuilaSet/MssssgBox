@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <script src="libs/jquery-3.3.1.min.js"></script>
+  <title>Doc 帮助文档</title>
+  <style>
+    * {
+        box-sizing: border-box;
+    }
+   
+    a {
+        color: #2194CE;
+        text-decoration: none;
+    }
+    body {
+        color: #555;
+        font-family: 'inconsolata';
+    }
+
+    #panel {
+        position: fixed;
+        left: 0px;
+        width: 260px;
+        height: 100%;
+        overflow: auto;
+        padding: 0px 10px 0px 20px;
+        background: #fafafa;
+        font-size: larger;
+        overflow:scroll;
+    }
+
+    #panel li {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    #panel li a:hover {
+        background-color: #CCC;
+    }
+    
+    #panel li a.active {
+        color: white;
+        background-color: #4CAF50;
+    }
+
+    #content {
+        position: fixed;
+        left: 265px;
+        background: #555;
+        width: 900px;
+        height: 100%;
+
+        padding:30px;
+        overflow:scroll;
+    }
+
+    #content div {
+        padding:10px 10px 10px 10px;
+        background: #CCC;
+    }
+
+    #content div ul {
+        margin:10px 10px 10px 10px;
+        background: #EEE;
+    }
+    #content div ul li {
+        padding:10px 0px 10px 0px;
+    }
+  </style>
+ </head>
+ <body>
+    <div id="panel">
+      <h1>说明文档</h1>
+      <ul></ul>
+    </div>
+    <div id="content">
+        <div id="methods-div">
+            <h2>Methods:</h2>
+        </div>
+        <div id="properties-div">
+            <h2>Properties:</h2>
+        </div>
+    </div>
+ </body>
+ <script>
+    window.onload=()=>{
+        let texts;
+        $.getJSON("./config.json", function(data){
+            texts = data.files;
+        
+            const path = "json/";
+            //
+
+            const panel = document.getElementById("panel");
+            const list = panel.getElementsByTagName("ul")[0];
+
+            const mcontent = document.getElementById("methods-div");
+            const pcontent = document.getElementById("properties-div");
+            
+            function createMethodContent($methods){
+                var ul = document.createElement('ul');
+                for(let x in $methods){
+                    var arr = [$methods[x].name, "<br/>", "功能：", $methods[x].disc];
+                    var li = document.createElement('li');
+                    li.innerHTML = arr.join("");
+                    ul.appendChild(li);
+                    console.log(arr.join(""));
+                }
+                return ul;
+            }
+
+            function createPropContent($properties){
+                var ul = document.createElement('ul');
+                for(let x in $properties){
+                    var arr = [$properties[x].name, "<br/>", "功能：", $properties[x].disc];
+                    var li = document.createElement('li');
+                    li.innerHTML = arr.join("");
+                    ul.appendChild(li);
+                    console.log(arr.join(""));
+                }
+                return ul;
+            }
+
+            function createTitle($title){
+                var li = document.createElement('li');
+                var a = document.createElement('a');
+                a.innerHTML = $title;
+                li.appendChild(a);
+                list.appendChild(li);
+
+                return a;
+            }
+
+            let lastul, lastul2;
+            for(var x in texts){
+                $.getJSON(path + texts[x],function(data){
+                    createTitle(data.title).onclick = ()=>{
+                        if(lastul){
+                            mcontent.removeChild(lastul);
+                            pcontent.removeChild(lastul2);
+                        }
+                        mcontent.appendChild(lastul = createMethodContent(data.methods));
+                        pcontent.appendChild(lastul2 = createPropContent(data.properties));
+                    }
+                });
+            }
+        });
+    }
+ </script>
+</html>
