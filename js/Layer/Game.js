@@ -1,5 +1,5 @@
 class Game{
-    constructor($canvas, $container, $options){
+    constructor($options, $canvas, $container){
         this._canvas = $canvas || document.createElement('canvas');
         this._div = $container || document.createElement('div');
 

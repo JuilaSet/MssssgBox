@@ -1,30 +1,39 @@
 ||> 这是一个用于编写帮助文档的小工具。
 ||
 ||> 使用步骤：
-||1. 在json目录下新建一个json文件
+||1. 在json目录下新建一个json文件，编码格式为UTF-8
 ||
 ||2. json文件格式如下：
-||例子:
 ||{
-||	"title": "Click类",
+||	"title": "name",
 ||	"type": "class",
-||	"methods": [
-||		{
-||			"name": "方法名称",
-||			"disc": ""
-||		}
-||	],
-||	"properties": [
-||		{
-||			"name": "属性名称",
-||			"disc": ""
-||		}
-||	]
+||	"members":{
+||		"methods": [
+||			{
+||				"name": "",
+||				"disc": ""
+||			}
+||		],
+||		"properties": [
+||			{
+||				"name": "",
+||				"disc": ""
+||			}
+||		],
+||		"<other>":[
+||			{
+||				"name": "",
+||				"disc": ""
+||			}
+||		]
+||	}
 ||}
 ||* "title"：后面写上要说明的对象的名称。
 ||* "type"：表示说明对象的类型,有["class","function","var"]，现在只支持class。
+||* "members"：下是类成员
 ||* "methods"：方法描述，name是方法名称，disc是对它的使用说明。
-||* "properties"：属性描述，name是方法名称，disc是对它的使用说明。
+||* "properties"：属性描述，name是属性名称，disc是对它的使用说明。
+||* "<other>"：自定义描述,，name是它的名称，disc是对它的使用说明。
 ||
 ||3. 保存json后，打开config.json
 ||在files后的数组中添加你的json文件名称。

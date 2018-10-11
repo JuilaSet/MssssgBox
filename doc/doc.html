@@ -26,7 +26,7 @@
         position: fixed;
         left: 0px;
         width: 260px;
-        height: 100%;
+        height: 95%;
         overflow: auto;
         padding: 0px 10px 0px 20px;
         background: #fafafa;
@@ -54,7 +54,7 @@
         left: 265px;
         background: #555;
         width: 900px;
-        height: 100%;
+        height: 95%;
 
         padding:30px;
         overflow:scroll;
@@ -72,6 +72,13 @@
     #content div ul li {
         padding:10px 0px 10px 0px;
     }
+
+    #content h1 {
+        color: #EEE;
+        font-size: 25px;
+        font-weight: normal;
+        margin-top: 10px;
+    }
   </style>
  </head>
  <body>
@@ -80,12 +87,9 @@
       <ul></ul>
     </div>
     <div id="content">
-        <div id="methods-div">
-            <h2>Methods:</h2>
-        </div>
-        <div id="properties-div">
-            <h2>Properties:</h2>
-        </div>
+        <h1>Content</h1>
+        <div id="methods-div"></div>
+        <div id="properties-div"></div>
     </div>
  </body>
  <script>
@@ -99,32 +103,23 @@
 
             const panel = document.getElementById("panel");
             const list = panel.getElementsByTagName("ul")[0];
-
+            
+            const content = document.getElementById("content");
             const mcontent = document.getElementById("methods-div");
             const pcontent = document.getElementById("properties-div");
             
-            function createMethodContent($methods){
+            function createContent($data, $sign){
+                var div = document.createElement('div');
+                div.innerHTML=`<h2>${$sign}</h2>`;
                 var ul = document.createElement('ul');
-                for(let x in $methods){
-                    var arr = [$methods[x].name, "<br/>", "功能：", $methods[x].disc];
+                for(let x in $data){
+                    var arr = [$data[x].name, "<br/>", $data[x].disc];
                     var li = document.createElement('li');
                     li.innerHTML = arr.join("");
                     ul.appendChild(li);
-                    console.log(arr.join(""));
                 }
-                return ul;
-            }
-
-            function createPropContent($properties){
-                var ul = document.createElement('ul');
-                for(let x in $properties){
-                    var arr = [$properties[x].name, "<br/>", "功能：", $properties[x].disc];
-                    var li = document.createElement('li');
-                    li.innerHTML = arr.join("");
-                    ul.appendChild(li);
-                    console.log(arr.join(""));
-                }
-                return ul;
+                div.appendChild(ul);
+                return div;
             }
 
             function createTitle($title){
@@ -137,16 +132,14 @@
                 return a;
             }
 
-            let lastul, lastul2;
             for(var x in texts){
                 $.getJSON(path + texts[x],function(data){
                     createTitle(data.title).onclick = ()=>{
-                        if(lastul){
-                            mcontent.removeChild(lastul);
-                            pcontent.removeChild(lastul2);
-                        }
-                        mcontent.appendChild(lastul = createMethodContent(data.methods));
-                        pcontent.appendChild(lastul2 = createPropContent(data.properties));
+                        content.innerHTML="<h1></h1>";
+                        content.getElementsByTagName("h1")[0].innerHTML = data.title;
+                        for(let u in data.members){
+                            content.appendChild(createContent(data.members[u], u));
+                        }                        
                     }
                 });
             }
