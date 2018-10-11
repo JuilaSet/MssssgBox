@@ -5,23 +5,27 @@
 		"methods": [
 			{
 				"name":"constructor($options [, $canvas, $container])",
-				"disc":"$options:选项。"
+				"disc":"$options:设置选项。"
 			},
 			{
-				"name": "run",
+				"name": "run()",
 				"disc": "调用后，游戏开始"
 			},
 			{
-				"name": "render",
+				"name": "render()",
 				"disc": "进行画面的绘制渲染"
 			},
 			{
-				"name": "getCanvas",
+				"name": "getCanvas()",
 				"disc": "返回_canvas对象"
 			},
 			{
-				"name": "getContainer",
+				"name": "getContainer()",
 				"disc": "返回_div对象"
+			},
+			{
+				"name": "setFullScreen($boolean)",
+				"disc": "设置是否允许全屏。默认不允许。"
 			}
 		],
 		"properties": [

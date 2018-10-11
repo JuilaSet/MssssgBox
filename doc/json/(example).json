@@ -1,23 +1,23 @@
 {
-	"title": "name",
+	"title": "(example-name)",
 	"type": "class",
 	"members":{
 		"methods": [
 			{
-				"name": "",
-				"disc": ""
+				"name": "(example-methods)",
+				"disc": "(describe1)<br>(describe2)"
 			}
 		],
 		"properties": [
 			{
-				"name": "",
-				"disc": ""
+				"name": "(example-properties)",
+				"disc": "(describe)"
 			}
 		],
 		"<other>":[
 			{
-				"name": "",
-				"disc": ""
+				"name": "(example-other)",
+				"disc": "(describe)"
 			}
 		]
 	}

@@ -96,9 +96,9 @@
     window.onload=()=>{
         let texts;
         $.getJSON("./config.json", function(data){
-            texts = data.files;
-        
-            const path = "json/";
+            texts = data.files.sort();
+            
+            const path = "json/", tail = ".json";
             //
 
             const panel = document.getElementById("panel");
@@ -133,7 +133,7 @@
             }
 
             for(var x in texts){
-                $.getJSON(path + texts[x],function(data){
+                $.getJSON(path + texts[x] + tail,function(data){
                     createTitle(data.title).onclick = ()=>{
                         content.innerHTML="<h1></h1>";
                         content.getElementsByTagName("h1")[0].innerHTML = data.title;
