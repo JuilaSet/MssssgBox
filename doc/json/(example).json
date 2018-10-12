@@ -2,6 +2,12 @@
 	"title": "(example-name)",
 	"type": "class",
 	"members":{
+		"description":[
+			{
+				"name":"()",
+				"disc":"()"
+			}
+		],
 		"methods": [
 			{
 				"name": "(example-methods)",

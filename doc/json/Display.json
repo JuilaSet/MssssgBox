@@ -1,0 +1,61 @@
+{
+	"title": "Display",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"负责将游戏内容显示给玩家。"
+			}
+		],
+		"methods": [
+			{
+				"name":"constructor($options [, $canvas, $container])",
+				"disc":"$options:设置选项。"
+			},
+			{
+				"name": "render($beforeFunc, $afterFunc)",
+				"disc": ["开始渲染",
+						"<br>$beforeFunc(tick):在渲染前调用的回调函数，在一帧内不可见。", 
+						"$afterFunc(tick):在渲染后调用的回调函数。在一帧内可见。",
+						"参数tick是数字类型的计时器，每帧加1。"]
+			},
+			{
+				"name": "drawTree($rn=0)",
+				"disc": "绘制一颗树"
+			},
+			{
+				"name": "getCanvas()",
+				"disc": "返回_canvas对象"
+			},
+			{
+				"name": "getContainer()",
+				"disc": "返回_div对象"
+			},
+			{
+				"name": "setFullScreen($boolean)",
+				"disc": "设置是否允许全屏。默认不允许。"
+			}
+		],
+		"properties": [
+			{
+				"name": "canvas",
+				"disc": "用于显示游戏内容。"
+			},
+			{
+				"name": "container",
+				"disc": "一个div，用于存放dom对象，这些对象在全屏时候可以被看见。"
+			},
+			{
+				"name": "context",
+				"disc": "绘图上下文。"
+			}
+		],
+		"option":[
+			{
+				"name": "none",
+				"disc": ""
+			}
+		]
+	}
+}
