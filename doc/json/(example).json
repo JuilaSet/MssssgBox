@@ -5,7 +5,8 @@
 		"methods": [
 			{
 				"name": "(example-methods)",
-				"disc": "(describe1)<br>(describe2)"
+				"disc": ["(describe1)",
+						"(describe2)"]
 			}
 		],
 		"properties": [

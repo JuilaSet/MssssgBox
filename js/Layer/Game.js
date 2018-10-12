@@ -1,100 +1,85 @@
 class Game{
     constructor($options, $canvas, $container){
-        this._canvas = $canvas || document.createElement('canvas');
-        this._div = $container || document.createElement('div');
+        this.canvas = $canvas || document.createElement('canvas');
+        this.container = $container || document.createElement('div');
+        
+        this.context = this.canvas.getContext('2d');
 
-        this._div.appendChild(this._canvas);
+        this.container.appendChild(this.canvas);
+        document.body.appendChild(this.container);
     }
 
     // 开始游戏
     run($beforeFunc, $afterFunc){
+        let _this = this;
+        let _tick = 0;
         (function animation() {
-            $beforeFunc();
-            this.render();
-            $afterFunc();
+            _tick++;
+            $beforeFunc(_tick);
+            // 清空
+            _this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
+            $afterFunc(_tick);
             window.requestAnimationFrame(animation);
         })();
     }
 
-    // 渲染
-    render($tick){
-
-    }
-
     // getters
     getCanvas(){
-        return this._canvas;
+        return this.canvas;
     }
     getContainer(){
-        return this._div;
+        return this.container;
     }
 
     // setters
     setFullScreen($boolean){
         if($boolean){
-            this._div.onclick = ()=>{
-                if (this._div.requestFullscreen) {
-                    this._div.requestFullscreen();
-                } else if (this._div.mozRequestFullScreen) {
-                    this._div.mozRequestFullScreen();
-                } else if (this._div.webkitRequestFullScreen) {
-                    this._div.webkitRequestFullScreen();
+            this.container.onclick = ()=>{
+                if (this.container.requestFullscreen) {
+                    this.container.requestFullscreen();
+                } else if (this.container.mozRequestFullScreen) {
+                    this.container.mozRequestFullScreen();
+                } else if (this.container.webkitRequestFullScreen) {
+                    this.container.webkitRequestFullScreen();
                 }
             }
         
         }else{
-            this._div.onclick = ()=>{};
+            this.container.onclick = ()=>{};
         }
     }
 
     // 绘制数
-    drawTree(){
-        //js
-        var canvas = this._canvas, context=canvas.getContext('2d');
+    drawTree($rn=0){
         //主干与枝干的夹角
         var arg = Math.PI / 15;
+        var _this = this;
+        
+        (function drawTree(px, py, ang, scale, len) {
 
-        function drawTree(px, py, ang, scale, len) {
             //引入偏移随机角度，改变一下形状
-            var rn = Math.random() * 10 * (Math.PI / 180);
-
             var x = Math.floor(scale*len*Math.cos(ang));
             var y = Math.floor(scale*len*Math.sin(ang));
 
             //设置线条颜色
-            context.strokeStyle = 'white';
+            _this.context.strokeStyle = 'white';
             // 设置线条的宽度
-            context.lineWidth = 1;
+            _this.context.lineWidth = 0.2;
             // 绘制直线
-            context.beginPath();
+            _this.context.beginPath();
             // 起点
-            context.moveTo(px, py);
+            _this.context.moveTo(px, py);
             // 终点
-            context.lineTo(px+x, py-y);
-            context.closePath();
-            context.stroke();
+            _this.context.lineTo(px + x, py - y);
+            _this.context.closePath();
+            _this.context.stroke();
 
-            //终止递归
-            if (scale*len<20)
-                    return;
+            // 终止递归
+            if (scale*len < 10)return;
 
             //递归画出左右分枝
-            drawTree(px + x, py - y, ang - arg + rn, scale, scale*len);	//left
-            drawTree(px + x, py - y, ang + arg + rn, scale, scale*len);	//right
-
-        }
-
-        function init() {
-
-            // 拿到上下文
-            context = canvas.getContext('2d');
-
-            // 画分形树
-            setInterval(function(){
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                drawTree(300, 300, Math.PI/2, 0.85, 50);
-            }, 200);
-
-        }
+            drawTree(px + x, py - y, ang - arg + $rn, scale, scale*len);	//left
+            drawTree(px + x, py - y, ang + arg + $rn, scale, scale*len);	//right
+        })(this.canvas.width / 2 + 120, this.canvas.height / 2 + 70, Math.PI/2, 0.78, 40);
     }
 }

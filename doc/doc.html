@@ -113,7 +113,16 @@
                 div.innerHTML=`<h2>${$sign}</h2>`;
                 var ul = document.createElement('ul');
                 for(let x in $data){
-                    var arr = [$data[x].name, "<br/>", $data[x].disc];
+                    var arr = [];
+                    if($data[x].disc instanceof Array){
+                        arr = ["<strong>", $data[x].name, "</strong>"];
+                        for(var i in $data[x].disc){
+                            arr.push("<br/>");
+                            arr.push($data[x].disc[i]);
+                        }
+                    }else{
+                        arr = ["<strong>", $data[x].name, "</strong>", "<br/>", $data[x].disc ];
+                    }
                     var li = document.createElement('li');
                     li.innerHTML = arr.join("");
                     ul.appendChild(li);

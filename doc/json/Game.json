@@ -8,12 +8,14 @@
 				"disc":"$options:设置选项。"
 			},
 			{
-				"name": "run()",
-				"disc": "调用后，游戏开始"
+				"name": "run($beforeFunc, $afterFunc)",
+				"disc": ["调用后，游戏开始<br>$beforeFunc(tick):在渲染前调用的回调函数，在一帧内不可见。", 
+						"$afterFunc(tick):在渲染后调用的回调函数。在一帧内可见。",
+						"参数tick是数字类型的计时器，每帧加1。"]
 			},
 			{
-				"name": "render()",
-				"disc": "进行画面的绘制渲染"
+				"name": "drawTree($rn=0)",
+				"disc": "绘制一颗树"
 			},
 			{
 				"name": "getCanvas()",
@@ -30,12 +32,16 @@
 		],
 		"properties": [
 			{
-				"name": "_canvas",
+				"name": "canvas",
 				"disc": "用于显示游戏内容。"
 			},
 			{
-				"name": "_div",
-				"disc": "用于存放dom对象，这些对象在全屏时候可以被看见。"
+				"name": "container",
+				"disc": "一个div，用于存放dom对象，这些对象在全屏时候可以被看见。"
+			},
+			{
+				"name": "context",
+				"disc": "绘图上下文。"
 			}
 		],
 		"option":[
