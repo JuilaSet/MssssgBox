@@ -21,12 +21,12 @@
 						"context是绘图上下文。"]
 			},
 			{
-				"name": "drawTree($rn=0)",
-				"disc": "绘制一颗树"
-			},
-			{
 				"name": "setFullScreen($boolean)",
 				"disc": "设置是否允许全屏。默认不允许。"
+			},
+			{
+				"name": "addAnimation($animation)",
+				"disc": "添加动画，$animation是动画对象。"
 			}
 		],
 		"properties": [

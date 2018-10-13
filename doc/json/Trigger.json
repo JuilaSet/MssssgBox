@@ -5,10 +5,16 @@
 		"description":[
 			{
 				"name":"职责",
-				"disc":"根据用户的io，不断记录相应的状态，并反馈给其他对象。"
+				"disc":"根据用户的io和其他事件，不断记录相应的状态，并反馈给其他对象。"
 			}
 		],
 		"methods": [
+			{
+				"name": "init($String)",
+				"disc": ["用于初始化记录状态的属性",
+						 "$String用于表示初始化谁。",
+						 "$String=[\"dn\", \"mv\", \"up\", \"kd\", \"ku\"]"]
+			},
 			{
 				"name": "init($dn, $mv, $up, $kd, $ku)",
 				"disc": ["用于初始化记录状态的属性",
@@ -20,8 +26,12 @@
 						]
 			},
 			{
-				"name": "monitDom()",
+				"name": "startMonitDom()",
 				"disc": "开始监听dom事件"
+			},
+			{
+				"name": "endMonitDom()",
+				"disc": "取消监听dom事件"
 			}
 		],
 		"properties": [

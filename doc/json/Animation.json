@@ -1,0 +1,82 @@
+{
+	"title": "Animation",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"负责绘制动画。绘制的动画在自己的画布上。"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor()",
+				"disc": ["(describe1)",
+						"(describe2)"]
+			},{
+				"name": "clearBuffer",
+				"disc": "清除canvas缓冲。"
+			},
+			{
+				"name": "setAction($actionFunc)",
+				"disc": "设置动画效果。$actionFunc是动画回调函数，将被赋值给action函数。"
+			},
+			{
+				"name": "drawFrame()",
+				"disc": "绘制边框。"
+			},
+			{
+				"name": "drawTree()",
+				"disc": "(测试用)绘制一颗树。"
+			}
+		],
+		"properties": [
+			{
+				"name": "action",
+				"disc": "绘制动作，会不断在帧循环中被调用"
+			},
+			{
+				"name": "timer",
+				"disc": "计时器对象"
+			},
+			{
+				"name": "canvas",
+				"disc": "显示动画的画布，需要被贴在display的画布上。"
+			},
+			{
+				"name": "context",
+				"disc": "画笔"
+			},
+			{
+				"name": "position",
+				"disc": "左上角位置"
+			},
+			{
+				"name": "width",
+				"disc": "宽"
+			},
+			{
+				"name": "height",
+				"disc": "高"
+			},
+			{
+				"name": "(example-properties)",
+				"disc": "(describe)"
+			}
+		],
+		"options":[
+			{
+				"name": "position",
+				"disc": "{x, y}坐标对象，设置左动画上角位置。"
+			},
+			{
+				"name": "timer",
+				"disc": "计时器对象"
+			},
+			{
+				"name": "(example-other)",
+				"disc": "(describe)"
+			}
+		]
+	}
+}

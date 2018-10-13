@@ -3,8 +3,10 @@
         "(example)", 
         "Game", 
         "Display",
+        "IOTrigger",
         "Trigger",
         "Scene",
-        "Timer"
+        "Timer",
+        "Animation"
     ]
 }

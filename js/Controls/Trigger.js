@@ -4,30 +4,49 @@ class Trigger{
     }
 
     init($dn, $mv, $up, $kd, $ku){
-        if($dn)this.downPosition = [-1, -1];
-        if($mv)this.movePosition = [-1, -1];
-        if($up)this.upPosition = [-1, -1];
-        if($kd)this.keyDown = undefined;
-        if($ku)this.keyUp = undefined;
+        // 函数重载
+        if( typeof arguments[0] == "string" ){
+            switch(arguments[0]){
+                case "dn":this.downPosition = [-1, -1];break;
+                case "mv":this.movePosition = [-1, -1];break;
+                case "up":this.upPosition = [-1, -1];break;
+                case "kd":this.keyDown = undefined;break;
+                case "ku":this.keyUp = undefined;break;
+            }
+        }else{
+            if($dn)this.downPosition = [-1, -1];
+            if($mv)this.movePosition = [-1, -1];
+            if($up)this.upPosition = [-1, -1];
+            if($kd)this.keyDown = undefined;
+            if($ku)this.keyUp = undefined;
+        }
     }
 
-    monitDom(){
+    startMonitDom(){
         let _this = this;
-        document.body.onmousedown = (event)=>{
+        document.onmousedown = (event)=>{
             _this.onmousedown(event);
         }
-        document.body.onmousemove = (event)=>{
+        document.onmousemove = (event)=>{
             _this.onmousemove(event);
         }
-        document.body.onmouseup = (event)=>{
+        document.onmouseup = (event)=>{
             _this.onmouseup(event);
         }
-        document.body.onkeydown = (event)=>{
+        document.onkeydown = (event)=>{
             _this.onkeydown(event);
         }
-        document.body.onkeyup = (event)=>{
+        document.onkeyup = (event)=>{
             _this.onkeyup(event);
         }
+    }
+
+    endMonitDom(){
+        document.onmousedown = ()=>{}
+        document.onmousemove = ()=>{}
+        document.onmouseup = ()=>{}
+        document.onkeydown = ()=>{}
+        document.onkeyup = ()=>{}
     }
 
     onmousedown(event){

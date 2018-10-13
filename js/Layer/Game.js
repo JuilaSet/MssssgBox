@@ -6,21 +6,55 @@ class Game{
     // 开始游戏
     run(){
         
-        let dis = this.display.setFullScreen(false);
-        let trigger = this.trigger = new Trigger();
-        
-        ///
-        let rn = 0;
+        let dis = this.display;
+        dis.setFullScreen(false);
+
+        let iotrigger = new IOTrigger();
+        iotrigger.startMonitDom();
+
         let timer = new Timer();
-        this.display.render(($ctx)=>{
-            timer.interval(()=>{
-                rn = ( 10 + Math.sin(timer.tick * 4) + 
-                            Math.sin(timer.tick / 5) + 
-                            Math.sin(timer.tick / 7)
-                     ) * (Math.PI / 180);
-            }, 3);
-            this.display.drawTree(rn);
-        },($ctx)=>{
+        let animation = new Animation({
+            position:{x:0,y:0},
+            timer: timer
+        }); 
+        
+        let f = 0, a = 0;
+        let speed = 0;
+        animation.setAction(()=>{
+            animation.drawTree(f);
+            animation.drawFrame();
+        });
+
+        dis.addAnimation(animation);
+
+        iotrigger.setKeyUpEvent(()=>{
+            a = 0;
+        }, 68);
+
+        iotrigger.setKeyDownEvent(()=>{
+            f = speed = 0;
+            a = 0.1;
+        }, 68);
+
+        iotrigger.setKeyUpEvent(()=>{
+            a = 0;
+        }, 65);
+
+        iotrigger.setKeyDownEvent(()=>{
+            f = speed = 0;
+            a = -0.1;
+        }, 65);
+
+        iotrigger.setKeyDownEvent(()=>{
+            f = speed = a = 0;
+        }, 32);
+
+        ///
+        dis.render(()=>{}, ()=>{
+            speed += a;
+            animation.position.x += speed;
+            f += 10 * a;
+            iotrigger.update();
             timer.update();
         });
     }

@@ -17,19 +17,33 @@ class Display{
         document.body.appendChild(this.container);
 
         this.timer = $timer;
+        this.animations = []; // []][
     }
 
+    addAnimation($animation){
+        this.animations.push($animation);
+    }
+
+    // 帧循环渲染
     render($beforeFunc, $afterFunc){
         let _this = this;
         (function animation() {
-            $beforeFunc(_this.bufferContext);
-            
-            // 双缓冲
             _this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
-            _this.context.drawImage(_this.buffer, 0, 0);
-            _this.bufferContext.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
-            $afterFunc(_this.bufferContext);
+            $beforeFunc();
 
+            // 绘制动画
+            _this.animations.forEach((a)=>{
+                a.action();
+                let p = a.position;
+                _this.context.drawImage(a.buffer, p.x, p.y);
+                a.clearBuffer();
+            });
+
+            // 双缓冲
+            _this.context.drawImage(_this.buffer, 0, 0);
+            _this.bufferContext.clearRect(0, 0, _this.buffer.width, _this.buffer.height);
+
+            $afterFunc();
             window.requestAnimationFrame(animation);
         })();
     }
@@ -50,39 +64,5 @@ class Display{
         }else{
             this.container.onclick = ()=>{};
         }
-    }
-
-    // 绘制树
-    drawTree($rn=0){
-        //主干与枝干的夹角
-        var arg = Math.PI / 10;
-        var _this = this;
-        
-        (function drawTree(px, py, ang, scale, len) {
-
-            //引入偏移随机角度，改变一下形状
-            var x = Math.floor(scale*len*Math.cos(ang));
-            var y = Math.floor(scale*len*Math.sin(ang));
-
-            //设置线条颜色
-            _this.bufferContext.strokeStyle = 'white';
-            // 设置线条的宽度
-            _this.bufferContext.lineWidth = 0.03 * len;
-            // 绘制直线
-            _this.bufferContext.beginPath();
-            // 起点
-            _this.bufferContext.moveTo(px, py);
-            // 终点
-            _this.bufferContext.lineTo(px + x, py - y);
-            _this.bufferContext.closePath();
-            _this.bufferContext.stroke();
-
-            // 终止递归
-            if (scale*len < 7)return;
-
-            //递归画出左右分枝
-            drawTree(px + x, py - y, ang - arg + $rn, scale, scale*len);	//left
-            drawTree(px + x, py - y, ang + arg + $rn, scale, scale*len);	//right
-        })(this.canvas.width / 2 + 120, this.canvas.height / 2 + 70, Math.PI/2, 0.78, 50);
     }
 }
