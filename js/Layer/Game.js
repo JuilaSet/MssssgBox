@@ -6,18 +6,22 @@ class Game{
     // 开始游戏
     run(){
         
-        this.display.setFullScreen(true);
-
+        let dis = this.display.setFullScreen(false);
+        let trigger = this.trigger = new Trigger();
+        
         ///
-
-        var rn = 0;
-        this.display.render(($tick)=>{
-            
-        },($tick)=>{
-            if($tick % 5 == 0){
-                rn = (5 + 3 * Math.sin(Math.random() * 4)) * (Math.PI / 180);
-            }
+        let rn = 0;
+        let timer = new Timer();
+        this.display.render(($ctx)=>{
+            timer.interval(()=>{
+                rn = ( 10 + Math.sin(timer.tick * 4) + 
+                            Math.sin(timer.tick / 5) + 
+                            Math.sin(timer.tick / 7)
+                     ) * (Math.PI / 180);
+            }, 3);
             this.display.drawTree(rn);
+        },($ctx)=>{
+            timer.update();
         });
     }
 }

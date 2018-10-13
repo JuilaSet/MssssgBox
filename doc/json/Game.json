@@ -1,11 +1,11 @@
 {
-	"title": "Game类",
+	"title": "Game",
 	"type": "class",
 	"members":{
 		"description":[
 			{
 				"name":"职责",
-				"disc":"启动游戏，负责管理运行的效果。"
+				"disc":"负责管理游戏的启动、停止、保存和运行的效果。"
 			}
 		],
 		"methods": [

@@ -1,0 +1,35 @@
+{
+	"title": "Scene",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"管理游戏场景"
+			}
+		],
+		"methods": [
+			{
+				"name": "(example-methods)",
+				"disc": ["(describe1)",
+						"(describe2)"]
+			}
+		],
+		"properties": [
+			{
+				"name": "unitManager",
+				"disc": "单位管理器对象"
+			},
+			{
+				"name": "map",
+				"disc": "地图对象"
+			}
+		],
+		"<other>":[
+			{
+				"name": "(example-other)",
+				"disc": "(describe)"
+			}
+		]
+	}
+}

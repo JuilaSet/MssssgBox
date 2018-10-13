@@ -1,0 +1,32 @@
+{
+	"title": "Timer",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"管理时间。"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor()",
+				"disc": ""
+			},
+			{
+				"name": "init",
+				"disc": "初始化"
+			},
+			{
+				"name": "interval($func, $wait)",
+				"disc": "每$wait帧执行一下$func这个函数。"
+			}
+		],
+		"properties": [
+			{
+				"name": "tick",
+				"disc": "计时器，每一帧加1。初始值为0。"
+			}
+		]
+	}
+}

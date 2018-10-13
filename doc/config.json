@@ -1,3 +1,10 @@
 {
- "files": [ "(example)", "Game", "Display"]
+    "files": [
+        "(example)", 
+        "Game", 
+        "Display",
+        "Trigger",
+        "Scene",
+        "Timer"
+    ]
 }

@@ -16,21 +16,13 @@
 			{
 				"name": "render($beforeFunc, $afterFunc)",
 				"disc": ["开始渲染",
-						"<br>$beforeFunc(tick):在渲染前调用的回调函数，在一帧内不可见。", 
-						"$afterFunc(tick):在渲染后调用的回调函数。在一帧内可见。",
-						"参数tick是数字类型的计时器，每帧加1。"]
+						"<br>$beforeFunc(tick,context):在渲染前调用的回调函数。", 
+						"$afterFunc(tick,context):在渲染后调用的回调函数。",
+						"context是绘图上下文。"]
 			},
 			{
 				"name": "drawTree($rn=0)",
 				"disc": "绘制一颗树"
-			},
-			{
-				"name": "getCanvas()",
-				"disc": "返回_canvas对象"
-			},
-			{
-				"name": "getContainer()",
-				"disc": "返回_div对象"
 			},
 			{
 				"name": "setFullScreen($boolean)",
@@ -49,6 +41,14 @@
 			{
 				"name": "context",
 				"disc": "绘图上下文。"
+			},
+			{
+				"name": "buffer",
+				"disc": "双缓冲绘图时的缓冲。"
+			},
+			{
+				"name": "timer",
+				"disc": "计时器对象"
 			}
 		],
 		"option":[

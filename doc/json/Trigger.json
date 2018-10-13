@@ -1,0 +1,56 @@
+{
+	"title": "Trigger",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"根据用户的io，不断记录相应的状态，并反馈给其他对象。"
+			}
+		],
+		"methods": [
+			{
+				"name": "init($dn, $mv, $up, $kd, $ku)",
+				"disc": ["用于初始化记录状态的属性",
+						 "$dn:是否初始化downPosition",
+						 "$up:是否初始化upPosition",
+						 "$mv:是否初始化movePosition",
+						 "$kd:是否初始化keyDown",
+						 "$ku:是否初始化keyUp"
+						]
+			},
+			{
+				"name": "monitDom()",
+				"disc": "开始监听dom事件"
+			}
+		],
+		"properties": [
+			{
+				"name": "downPosition",
+				"disc": "一个二维数组，记录上一次点击时的坐标。初始值为[-1,-1]，代表它此时不可用。"
+			},
+			{
+				"name": "movePosition",
+				"disc": "一个二维数组，记录鼠标的坐标。初始值为[-1,-1]，代表它此时不可用。"
+			},
+			{
+				"name": "upPosition",
+				"disc": "一个二维数组，记录上一次鼠标抬起时的坐标。初始值为[-1,-1]，代表它此时不可用。"
+			},
+			{
+				"name": "keyDown",
+				"disc": "记录上次按键按下的值。初始值为undefined，代表它此时不可用。"
+			},
+			{
+				"name": "keyUp",
+				"disc": "记录上次抬起按键的值。初始值为undefined，代表它此时不可用。"
+			}
+		],
+		"<other>":[
+			{
+				"name": "(example-other)",
+				"disc": "(describe)"
+			}
+		]
+	}
+}
