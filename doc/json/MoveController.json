@@ -1,0 +1,84 @@
+{
+	"title": "MoveController",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":" 职责",
+				"disc":"控制物体在屏幕上进行2d移动。"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option)",
+				"disc": "(describe1)"
+			},
+			{
+				"name": "accLeft($a)",
+				"disc": "添加向左的加速度"
+			},
+			{
+				"name": "accRight($a)",
+				"disc": "添加向右的加速度"
+			},
+			{
+				"name": "accUp($a)",
+				"disc": "添加向上的加速度"
+			},
+			{
+				"name": "accDown($a)",
+				"disc": "添加向下的加速度"
+			},
+			{
+				"name": "setFrictionX($friction)",
+				"disc": ["设置横向摩擦力为$friction"]
+			},
+			{
+				"name": "setFrictionY($friction)",
+				"disc": ["设置纵向摩擦力为$friction"]
+			}
+		],
+		"properties": [
+			{
+				"name": "bindObj",
+				"disc": "绑定的控制对象。"
+			},
+			{
+				"name": "frictionX",
+				"disc": "横向摩擦力"
+			},
+			{
+				"name": "frictionY",
+				"disc": "纵向摩擦力"
+			},
+			{
+				"name": "aX",
+				"disc": "横向加速度"
+			},
+			{
+				"name": "aY",
+				"disc": "纵向加速度"
+			},
+			{
+				"name": "(example-properties)",
+				"disc": "(describe)"
+			}
+		],
+		
+		"<option>":[
+			{
+				"name": "bindObj",
+				"disc": "设置控制对象。"
+			},
+			{
+				"name": "frictionX",
+				"disc": "设置横向摩擦力"
+			},
+			{
+				"name": "frictionY",
+				"disc": "设置纵向摩擦力"
+			}
+			
+		]
+	}
+}

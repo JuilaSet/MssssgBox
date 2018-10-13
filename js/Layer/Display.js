@@ -21,7 +21,15 @@ class Display{
     }
 
     addAnimation($animation){
-        this.animations.push($animation);
+        if($animation.layer == undefined){
+            $animation.layer = this.animations.length;
+            console.exception("未指定层级的animation");
+        }
+        this.animations[$animation.layer] = $animation;
+    }
+
+    removeAnimation($layer){
+        delete this.animations[$layer];
     }
 
     // 帧循环渲染
@@ -33,7 +41,7 @@ class Display{
 
             // 绘制动画
             _this.animations.forEach((a)=>{
-                a.action();
+                a.update();
                 let p = a.position;
                 _this.context.drawImage(a.buffer, p.x, p.y);
                 a.clearBuffer();

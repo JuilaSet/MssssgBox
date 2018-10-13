@@ -1,6 +1,7 @@
 class Timer{
     constructor(){
         this.init();
+        this._timeScale = 1;
     }
 
     init(){
@@ -8,11 +9,15 @@ class Timer{
     }
 
     update(){
-        this.tick++;
+        this.tick += this._timeScale;
+    }
+    
+    setTimeScale($size){
+        this._timeScale = $size;
     }
 
     interval($func, $wait){
-        if(this.tick % $wait == 0){
+        if(this.tick % $wait*this._timeScale == 0){
             $func();
         }
     }

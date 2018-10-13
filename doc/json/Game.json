@@ -16,6 +16,10 @@
 			{
 				"name":"run()",
 				"disc":"开始游戏"
+			},
+			{
+				"name":"stop()",
+				"disc":"暂停游戏"
 			}
 		],
 		"properties": [

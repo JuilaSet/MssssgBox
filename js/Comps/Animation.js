@@ -11,6 +11,11 @@ class Animation{
         this.buffer.width = this.width;
         this.buffer.height = this.height;
         this.buffer.backgroundColor = "#FFF";
+
+        this.layer = $options.layer;
+        if($options.layer == undefined){
+            console.error("你需要给animation对象指定layer值");
+        }
     }
     
     clearBuffer(){
@@ -22,16 +27,32 @@ class Animation{
         this.action = $actionFunc;
     }
 
+    action($context){
+
+    }
+
+    update(){
+        this.action(this.context);
+    }
+
     // 绘制边
-    drawFrame($once){
+    drawFrame(){
         this.context.save();
-        this.context.fillStyle = "#FFF";
+        this.context.strokeStyle = "#FFF";
         this.context.lineWidth = 1;
         this.context.strokeRect(0, 0, this.width, this.height);
         this.context.restore();
     }
 
-    // 绘制树
+    fill(){
+        this.context.save();
+        this.context.fillStyle = "#FFF";
+        this.context.lineWidth = 1;
+        this.context.fillRect(0, 0, this.width, this.height);
+        this.context.restore();
+    }
+
+    // (测试用)绘制树
     drawTree($force=0){
         //主干与枝干的夹角
         var arg = Math.PI / 10;
@@ -47,7 +68,7 @@ class Animation{
             //设置线条颜色
             _this.context.strokeStyle = 'white';
             // 设置线条的宽度
-            _this.context.lineWidth = 0.03 * len;
+            _this.context.lineWidth = 0.02 * len;
             // 绘制直线
             _this.context.beginPath();
             // 起点
@@ -58,7 +79,7 @@ class Animation{
             _this.context.stroke();
 
             // 终止递归
-            if (scale*len < 6)return;
+            if (scale*len < 2)return;
 
             var rn = ( $force + Math.sin(_this.timer.tick / 3) + 
                         Math.sin(_this.timer.tick / 5) + 
@@ -70,7 +91,7 @@ class Animation{
             drawTree(px + x, py - y, ang + arg + rn, scale, scale*len);	//right
             _this.context.restore();
 
-        })(this.width/2, this.height/2 + 70, Math.PI/2, 0.78, 30);
+        })(this.width /2, this.height/2 + 15, Math.PI/2, 0.78, 10);
     }
     
 }

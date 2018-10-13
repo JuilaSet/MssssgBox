@@ -10,9 +10,8 @@
 		],
 		"methods": [
 			{
-				"name": "(example-methods)",
-				"disc": ["(describe1)",
-						"(describe2)"]
+				"name": "constructor()",
+				"disc": ""
 			},
 			{
 				"name": "setkeyUpEvent($func, $code)",

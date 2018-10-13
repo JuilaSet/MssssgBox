@@ -9,17 +9,28 @@ class Game{
         let dis = this.display;
         dis.setFullScreen(false);
 
+        let stats = new Stats();
+        dis.container.appendChild( stats.dom );
+        
         let iotrigger = new IOTrigger();
         iotrigger.startMonitDom();
 
         let timer = new Timer();
         let animation = new Animation({
+            layer:0,
             position:{x:0,y:0},
-            timer: timer
+            timer: timer,
+            width:30,
+            height:30
         }); 
-        
-        let f = 0, a = 0;
-        let speed = 0;
+
+        let mc = new MoveController({
+            bindObj: animation,
+            frictionX: 0.1,
+            frictionY: 0.1,
+        });
+
+        let f = 0;
         animation.setAction(()=>{
             animation.drawTree(f);
             animation.drawFrame();
@@ -27,35 +38,53 @@ class Game{
 
         dis.addAnimation(animation);
 
+        // X
         iotrigger.setKeyUpEvent(()=>{
-            a = 0;
+            mc.accRight(0);
         }, 68);
 
         iotrigger.setKeyDownEvent(()=>{
-            f = speed = 0;
-            a = 0.1;
+            mc.accRight(0.11);
         }, 68);
 
         iotrigger.setKeyUpEvent(()=>{
-            a = 0;
+            mc.accLeft(0);
         }, 65);
 
         iotrigger.setKeyDownEvent(()=>{
-            f = speed = 0;
-            a = -0.1;
+            mc.accLeft(0.11);
         }, 65);
 
+        // Y
+        iotrigger.setKeyUpEvent(()=>{
+            mc.accUp(0);
+        }, 87);
+
         iotrigger.setKeyDownEvent(()=>{
-            f = speed = a = 0;
-        }, 32);
+            mc.accUp(0.11);
+        }, 87);
+
+        iotrigger.setKeyUpEvent(()=>{
+            mc.accDown(0);
+        }, 83);
+
+        iotrigger.setKeyDownEvent(()=>{
+            mc.accDown(0.11);
+        }, 83);
 
         ///
-        dis.render(()=>{}, ()=>{
-            speed += a;
-            animation.position.x += speed;
-            f += 10 * a;
+        dis.render(()=>{
+        }, ()=>{
+            console.log(iotrigger.keyUp);
+            mc.update();
+            stats.update();
             iotrigger.update();
             timer.update();
         });
+    }
+
+    // 暂停
+    stop(){
+
     }
 }

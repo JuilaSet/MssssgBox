@@ -28,16 +28,24 @@
 			{
 				"name": "drawTree()",
 				"disc": "(测试用)绘制一颗树。"
+			},
+			{
+				"name": "action($context)",
+				"disc": "绘制动作，会不断在帧循环中被调用。"
+			},
+			{
+				"name": "update()",
+				"disc": "不断在帧循环中调用。"
 			}
 		],
 		"properties": [
 			{
-				"name": "action",
-				"disc": "绘制动作，会不断在帧循环中被调用"
+				"name": "layer",
+				"disc": "在display中显示的层级，数值高的会覆盖数值低的。同级的会被覆盖。"
 			},
 			{
 				"name": "timer",
-				"disc": "计时器对象"
+				"disc": "计时器对象。"
 			},
 			{
 				"name": "canvas",
@@ -70,8 +78,12 @@
 				"disc": "{x, y}坐标对象，设置左动画上角位置。"
 			},
 			{
+				"name": "layer",
+				"disc": "指定层级"
+			},
+			{
 				"name": "timer",
-				"disc": "计时器对象"
+				"disc": "指定计时器对象"
 			},
 			{
 				"name": "(example-other)",
