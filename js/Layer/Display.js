@@ -2,6 +2,8 @@ class Display{
     constructor($canvas, $container, $timer){
         this.canvas = $canvas || document.createElement('canvas');
         this.context = this.canvas.getContext('2d');
+        this.canvas.width = document.documentElement.clientWidth;
+        this.canvas.height = document.documentElement.clientHeight;
         
         // 缓冲
         this.buffer = document.createElement('canvas');
@@ -37,7 +39,7 @@ class Display{
         let _this = this;
         (function animation() {
             _this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
-            $beforeFunc();
+            $beforeFunc(_this.context);
 
             // 绘制动画
             _this.animations.forEach((a)=>{
@@ -50,8 +52,8 @@ class Display{
             // 双缓冲
             _this.context.drawImage(_this.buffer, 0, 0);
             _this.bufferContext.clearRect(0, 0, _this.buffer.width, _this.buffer.height);
-
-            $afterFunc();
+            
+            $afterFunc(_this.context);
             window.requestAnimationFrame(animation);
         })();
     }

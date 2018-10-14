@@ -12,10 +12,5 @@ class Component{
             width: this.width,
             position:this.position
         });
-
-        this.speedX;
-        this.speedY;
     }
-
-    ///
 }

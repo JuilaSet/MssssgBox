@@ -30,23 +30,28 @@ class IOTrigger extends Trigger {
     }
 
     setDblClick($comp, $func){
-        this.mouseDblClickEvents[`${$comp.id}`] = { func:$func, comp:$comp };
+        if(!$comp.layer)console.error('未指定层级的comp');
+        this.mouseDblClickEvents[`${$comp.layer}`] = { func:$func, comp:$comp };
     }
 
     setMouseDown($comp, $func){
-        this.mouseDownEvents[`${$comp.id}`] = { func:$func, comp:$comp };
+        if(!$comp.layer)console.error('未指定层级的comp');
+        this.mouseDownEvents[`${$comp.layer}`] = { func:$func, comp:$comp };
     }
 
     setMouseMove($comp, $func){
-        this.mouseMoveEvents[`${$comp.id}`] = { func:$func, comp:$comp };
+        if(!$comp.layer)console.error('未指定层级的comp');
+        this.mouseMoveEvents[`${$comp.layer}`] = { func:$func, comp:$comp };
     }
 
     setMouseStretch($comp, $func){
-        this.mouseStretchEvents[`${$comp.id}`] = { func:$func, comp:$comp };
+        if(!$comp.layer)console.error('未指定层级的comp');
+        this.mouseStretchEvents[`${$comp.layer}`] = { func:$func, comp:$comp };
     }
 
     setMouseUp($comp, $func){
-        this.mouseUpEvents[`${$comp.id}`] = { func:$func, comp:$comp };
+        if(!$comp.layer)console.error('未指定层级的comp');
+        this.mouseUpEvents[`${$comp.layer}`] = { func:$func, comp:$comp };
     }
 
     startMonitMouse(){

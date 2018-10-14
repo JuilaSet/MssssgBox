@@ -51,7 +51,7 @@ class Animation extends Component{
     }
 
     // (测试用)绘制树
-    drawTree($force=0){
+    drawTree($force=0, $size=10, $max=2){
         //主干与枝干的夹角
         var arg = Math.PI / 10;
         var _this = this;
@@ -77,7 +77,7 @@ class Animation extends Component{
             _this.context.stroke();
 
             // 终止递归
-            if (scale*len < 2)return;
+            if (scale*len < $max)return;
 
             var rn = ( $force + Math.sin(_this.timer.tick / 3) + 
                         Math.sin(_this.timer.tick / 5) + 
@@ -89,7 +89,7 @@ class Animation extends Component{
             drawTree(px + x, py - y, ang + arg + rn, scale, scale*len);	//right
             _this.context.restore();
 
-        })(this.width /2, this.height/2 + 15, Math.PI/2, 0.78, 10);
+        })(this.width /2, this.height/2 + $size, Math.PI/2, 0.78, $size);
     }
     
 }

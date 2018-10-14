@@ -1,7 +1,8 @@
 class Game{
-    constructor(){
-        this.display = new Display();
-        this.iotrigger = new IOTrigger({display: this.display});
+    constructor($option={}){
+        this.timer = new Timer();
+        this.display = new Display($option.canvas, $option.container, this.timer);
+        this.iotrigger = new IOTrigger({display: this.display}); // 单例对象
     }
 
     // 开始游戏
@@ -10,10 +11,10 @@ class Game{
         let dis = this.display;
         dis.setFullScreen(false);
 
+        let timer = this.timer;
+
         let stats = new Stats();
         dis.container.appendChild( stats.dom );
-        
-        let timer = new Timer();
 
         let iotrigger = this.iotrigger;
 
@@ -22,13 +23,15 @@ class Game{
             id:1,
             position:new Vector2d(100, 100),
             timer: timer,
-            width:30,
-            height:30
+            width:300,
+            height:300
         }); 
         let mc = new MoveController({
             bindObj: animation,
-            frictionX: 0.01,
-            frictionY: 0.01,
+            frictionX: 0.22,
+            frictionY: 0.22,
+            maxSpeedX: 7,
+            maxSpeedY: 7
         });
 
         mc.setOnMove(()=>{
@@ -39,28 +42,30 @@ class Game{
             id:2,
             position:new Vector2d(100, 40),
             timer: timer,
-            width:30,
-            height:30
+            width:35,
+            height:35
         }); 
         animation.setAction(()=>{
-            animation.drawTree();
+            animation.drawTree(0, 35, 8);
             animation.drawFrame();
         });
         dis.addAnimation(animation);
 
         animation2.setAction(()=>{
-            animation2.drawTree(12);
+            animation2.drawTree(12, 10, 2);
             animation2.drawFrame();
         });
         dis.addAnimation(animation2);
 
         // mouse
-        iotrigger.setDblClick(animation, (e)=>{
-            mc.bindObj = animation;
+        iotrigger.setMouseMove(animation, (e)=>{
+        //    mc.bindObj = animation;
+            console.log(1);
         });
         
-        iotrigger.setDblClick(animation2, (e)=>{
-            mc.bindObj = animation2;
+        iotrigger.setMouseMove(animation2, (e)=>{
+        //    mc.bindObj = animation2;
+            console.log(2);
         });
 
         // X
@@ -69,7 +74,7 @@ class Game{
         }, 68);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accRight(0.31);
+            mc.accRight(2);
         }, 68);
 
         iotrigger.setKeyUpEvent(()=>{
@@ -77,7 +82,7 @@ class Game{
         }, 65);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accLeft(0.31);
+            mc.accLeft(2);
         }, 65);
         
         // Y
@@ -86,7 +91,7 @@ class Game{
         }, 87);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accUp(0.31);
+            mc.accUp(2);
         }, 87);
 
         iotrigger.setKeyUpEvent(()=>{
@@ -94,19 +99,16 @@ class Game{
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accDown(0.31);
+            mc.accDown(2);
         }, 83);
 
-
-        console.log(iotrigger.downPosition);
         ///
         dis.render(()=>{
-        }, ()=>{
             mc.update();
             stats.update();
             timer.update();
-            // 
-            Math.atan(4/5);
+        }, (ctx)=>{
+
         });
     }
 
