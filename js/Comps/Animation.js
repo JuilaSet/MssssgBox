@@ -1,9 +1,7 @@
-class Animation{
-    constructor($options){
-        this.width = $options.width || 100;
-        this.height = $options.height || 100;
-        this.position = $options.position || {x:0, y:0};
-        this.timer = $options.timer;
+class Animation extends Component{
+    constructor($option){
+        super($option);
+        this.timer = $option.timer;
         
         this.buffer = document.createElement('canvas');
         this.context = this.buffer.getContext('2d');
@@ -12,8 +10,8 @@ class Animation{
         this.buffer.height = this.height;
         this.buffer.backgroundColor = "#FFF";
 
-        this.layer = $options.layer;
-        if($options.layer == undefined){
+        this.layer = $option.layer;
+        if($option.layer == undefined){
             console.error("你需要给animation对象指定layer值");
         }
     }

@@ -26,6 +26,10 @@
 			{
 				"name": "display",
 				"disc": "Display对象。"
+			},
+			{
+				"name": "iotrigger",
+				"disc": "IOTrigger对象。"
 			}
 		]
 	}

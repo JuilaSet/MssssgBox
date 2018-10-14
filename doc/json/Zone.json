@@ -1,0 +1,50 @@
+{
+	"title": "Zone",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"处理2d区域信息。"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option)",
+				"disc": "$option:选项。"
+			},
+			{
+				"name": "check($position)",
+				"disc": "检查点是否在此区域中。$position是Vector2d对象。"
+			}
+		],
+		"properties": [
+			{
+				"name": "position",
+				"disc": "左上角坐标位置。"
+			},
+			{
+				"name": "width",
+				"disc": "宽度"
+			},
+			{
+				"name": "height",
+				"disc": "长度"
+			}
+		],
+		"option":[
+			{
+				"name": "position",
+				"disc": "设置左上角坐标位置，是Vector2d对象。"
+			},
+			{
+				"name": "width",
+				"disc": "宽度"
+			},
+			{
+				"name": "height",
+				"disc": "长度"
+			}
+		]
+	}
+}

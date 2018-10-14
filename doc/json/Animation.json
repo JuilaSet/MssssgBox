@@ -5,7 +5,7 @@
 		"description":[
 			{
 				"name":"职责",
-				"disc":"负责绘制动画。绘制的动画在自己的画布上。"
+				"disc":"负责绘制动画。绘制的动画在自己的画布上。Component子类。"
 			}
 		],
 		"methods": [
@@ -56,18 +56,6 @@
 				"disc": "画笔"
 			},
 			{
-				"name": "position",
-				"disc": "左上角位置"
-			},
-			{
-				"name": "width",
-				"disc": "宽"
-			},
-			{
-				"name": "height",
-				"disc": "高"
-			},
-			{
 				"name": "(example-properties)",
 				"disc": "(describe)"
 			}
@@ -75,7 +63,7 @@
 		"options":[
 			{
 				"name": "position",
-				"disc": "{x, y}坐标对象，设置左动画上角位置。"
+				"disc": "Vector2d坐标对象，设置左动画上角位置。"
 			},
 			{
 				"name": "layer",

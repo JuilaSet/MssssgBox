@@ -5,7 +5,7 @@
 		"description":[
 			{
 				"name":" 职责",
-				"disc":"控制物体在屏幕上进行2d移动。"
+				"disc":"控制物体在屏幕上进行2d移动。物体必须要有position属性。"
 			}
 		],
 		"methods": [
@@ -30,18 +30,30 @@
 				"disc": "添加向下的加速度"
 			},
 			{
+				"name": "onmove()",
+				"disc": "控制对象移动时会不断调用这个方法。"
+			},
+			{
+				"name": "setOnMove($func)",
+				"disc": "设置对象移动事件的方法。"
+			},
+			{
 				"name": "setFrictionX($friction)",
 				"disc": ["设置横向摩擦力为$friction"]
 			},
 			{
 				"name": "setFrictionY($friction)",
 				"disc": ["设置纵向摩擦力为$friction"]
+			},
+			{
+				"name": "getNextFramePosition()",
+				"disc": ["得到下一帧的位置。"]
 			}
 		],
 		"properties": [
 			{
 				"name": "bindObj",
-				"disc": "绑定的控制对象。"
+				"disc": "绑定的控制对象。对象必须要有position属性。"
 			},
 			{
 				"name": "frictionX",
@@ -50,6 +62,14 @@
 			{
 				"name": "frictionY",
 				"disc": "纵向摩擦力"
+			},
+			{
+				"name": "maxSpeedX",
+				"disc": "横向最大速度"
+			},
+			{
+				"name": "maxSpeedY",
+				"disc": "纵向最大速度"
 			},
 			{
 				"name": "aX",
@@ -65,10 +85,18 @@
 			}
 		],
 		
-		"<option>":[
+		"option":[
 			{
 				"name": "bindObj",
 				"disc": "设置控制对象。"
+			},
+			{
+				"name": "maxSpeedX",
+				"disc": "设置横向最大速度"
+			},
+			{
+				"name": "maxSpeedY",
+				"disc": "设置纵向最大速度"
 			},
 			{
 				"name": "frictionX",

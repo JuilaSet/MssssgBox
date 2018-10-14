@@ -1,6 +1,7 @@
 class Game{
     constructor(){
         this.display = new Display();
+        this.iotrigger = new IOTrigger({display: this.display});
     }
 
     // 开始游戏
@@ -12,31 +13,55 @@ class Game{
         let stats = new Stats();
         dis.container.appendChild( stats.dom );
         
-        let iotrigger = new IOTrigger();
-        iotrigger.startMonitDom();
-
         let timer = new Timer();
+
+        let iotrigger = this.iotrigger;
+
         let animation = new Animation({
-            layer:0,
-            position:{x:0,y:0},
+            layer:1,
+            id:1,
+            position:new Vector2d(100, 100),
             timer: timer,
             width:30,
             height:30
         }); 
-
         let mc = new MoveController({
             bindObj: animation,
-            frictionX: 0.1,
-            frictionY: 0.1,
+            frictionX: 0.01,
+            frictionY: 0.01,
         });
 
-        let f = 0;
+        mc.setOnMove(()=>{
+
+        });
+        let animation2 = new Animation({
+            layer:2,
+            id:2,
+            position:new Vector2d(100, 40),
+            timer: timer,
+            width:30,
+            height:30
+        }); 
         animation.setAction(()=>{
-            animation.drawTree(f);
+            animation.drawTree();
             animation.drawFrame();
         });
-
         dis.addAnimation(animation);
+
+        animation2.setAction(()=>{
+            animation2.drawTree(12);
+            animation2.drawFrame();
+        });
+        dis.addAnimation(animation2);
+
+        // mouse
+        iotrigger.setDblClick(animation, (e)=>{
+            mc.bindObj = animation;
+        });
+        
+        iotrigger.setDblClick(animation2, (e)=>{
+            mc.bindObj = animation2;
+        });
 
         // X
         iotrigger.setKeyUpEvent(()=>{
@@ -44,7 +69,7 @@ class Game{
         }, 68);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accRight(0.11);
+            mc.accRight(0.31);
         }, 68);
 
         iotrigger.setKeyUpEvent(()=>{
@@ -52,16 +77,16 @@ class Game{
         }, 65);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accLeft(0.11);
+            mc.accLeft(0.31);
         }, 65);
-
+        
         // Y
         iotrigger.setKeyUpEvent(()=>{
             mc.accUp(0);
         }, 87);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accUp(0.11);
+            mc.accUp(0.31);
         }, 87);
 
         iotrigger.setKeyUpEvent(()=>{
@@ -69,17 +94,19 @@ class Game{
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accDown(0.11);
+            mc.accDown(0.31);
         }, 83);
 
+
+        console.log(iotrigger.downPosition);
         ///
         dis.render(()=>{
         }, ()=>{
-            console.log(iotrigger.keyUp);
             mc.update();
             stats.update();
-            iotrigger.update();
             timer.update();
+            // 
+            Math.atan(4/5);
         });
     }
 

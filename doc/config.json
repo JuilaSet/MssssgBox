@@ -1,6 +1,7 @@
 {
     "files": [
         "(example)", 
+        "Component",
         "Game", 
         "Display",
         "IOTrigger",
@@ -8,6 +9,8 @@
         "Scene",
         "Timer",
         "Animation",
-        "MoveController"
+        "MoveController",
+        "Vector2d",
+        "Zone"
     ]
 }

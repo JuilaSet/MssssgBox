@@ -13,25 +13,39 @@
 				"name": "init($String)",
 				"disc": ["用于初始化记录状态的属性",
 						 "$String用于表示初始化谁。",
-						 "$String=[\"dn\", \"mv\", \"up\", \"kd\", \"ku\"]"]
+						 "$String=[\"dn\", \"mv\", \"up\"]"]
 			},
 			{
-				"name": "init($dn, $mv, $up, $kd, $ku)",
+				"name": "init($dn, $mv, $up)",
 				"disc": ["用于初始化记录状态的属性",
 						 "$dn:是否初始化downPosition",
 						 "$up:是否初始化upPosition",
-						 "$mv:是否初始化movePosition",
-						 "$kd:是否初始化keyDown",
-						 "$ku:是否初始化keyUp"
+						 "$mv:是否初始化movePosition"
 						]
 			},
 			{
-				"name": "startMonitDom()",
-				"disc": "开始监听dom事件"
+				"name": "start()",
+				"disc": "开始监听"
 			},
 			{
-				"name": "endMonitDom()",
-				"disc": "取消监听dom事件"
+				"name": "end()",
+				"disc": "取消监听"
+			},
+			{
+				"name": "onkeydown(event)",
+				"disc": "按键按下时调用，event传入事件。"
+			},
+			{
+				"name": "onkeyup(event)",
+				"disc": "按键抬起时调用，event传入事件。"
+			},
+			{
+				"name": "onmousestretch(event)",
+				"disc": "鼠标按下并拖拽时调用，event传入事件。"
+			},
+			{
+				"name": "ondblclick(event)",
+				"disc": "鼠标双击时调用，event传入事件。"
 			}
 		],
 		"properties": [
@@ -48,18 +62,14 @@
 				"disc": "一个二维数组，记录上一次鼠标抬起时的坐标。初始值为[-1,-1]，代表它此时不可用。"
 			},
 			{
-				"name": "keyDown",
-				"disc": "记录上次按键按下的值。初始值为undefined，代表它此时不可用。"
-			},
-			{
-				"name": "keyUp",
-				"disc": "记录上次抬起按键的值。初始值为undefined，代表它此时不可用。"
+				"name": "stretch",
+				"disc": "鼠标按下并移动，直到抬起之前，这个值为true。"
 			}
 		],
-		"<other>":[
+		"option":[
 			{
-				"name": "(example-other)",
-				"disc": "(describe)"
+				"name": "display",
+				"disc": "指定display对象。"
 			}
 		]
 	}

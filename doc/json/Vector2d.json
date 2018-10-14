@@ -1,0 +1,35 @@
+{
+	"title": "Vector2d",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"{x, y}二维信息对象"
+			}
+		],
+		"methods": [
+			{
+				"name": "(example-methods)",
+				"disc": ["(describe1)",
+						"(describe2)"]
+			}
+		],
+		"properties": [
+			{
+				"name": "x",
+				"disc": "x坐标"
+			},
+			{
+				"name": "y",
+				"disc": "y坐标"
+			}
+		],
+		"<other>":[
+			{
+				"name": "(example-other)",
+				"disc": "(describe)"
+			}
+		]
+	}
+}

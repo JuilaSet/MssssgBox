@@ -1,0 +1,58 @@
+{
+	"title": "Component",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"是游戏上所有可控制对象的基类。"
+			}
+		],
+		"methods": [
+			{
+				"name": "$option",
+				"disc": "$option:选项。" 
+			}
+		],
+		"properties": [
+			{
+				"name": "position",
+				"disc": "位置，是Vector2d对象。代表这个组件左上角的位置。"
+			},
+			{
+				"name": "id",
+				"disc": "用于标识的唯一键"
+			},
+			{
+				"name": "width",
+				"disc": "宽"
+			},
+			{
+				"name": "height",
+				"disc": "高"
+			},
+			{
+				"name": "zone",
+				"disc": "区域对象"
+			}
+		],
+		"option":[
+			{
+				"name": "position",
+				"disc": "设置位置，Vector2d对象。"
+			},
+			{
+				"name": "width",
+				"disc": "设置宽度。"
+			},
+			{
+				"name": "height",
+				"disc": "设置高度。"
+			},
+			{
+				"name": "zone",
+				"disc": "设置区域。"
+			}
+		]
+	}
+}
