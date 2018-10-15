@@ -84,7 +84,7 @@
  </head>
  <body>
     <div id="panel">
-      <h1>说明文档</h1>
+      <h1>Document</h1>
       <ul></ul>
     </div>
     <div id="content">
@@ -111,6 +111,7 @@
             
             function createContent($data, $sign){
                 var div = document.createElement('div');
+                var type = $data.type;
                 div.innerHTML=`<h2>${$sign}</h2>`;
                 var ul = document.createElement('ul');
                 for(let x in $data){
@@ -146,7 +147,7 @@
                 $.getJSON(path + texts[x] + tail,function(data){
                     createTitle(data.title).onclick = ()=>{
                         content.innerHTML="<h1></h1>";
-                        content.getElementsByTagName("h1")[0].innerHTML = data.title;
+                        content.getElementsByTagName("h1")[0].innerHTML = data.type + "&nbsp;" + data.title;
                         for(let u in data.members){
                             content.appendChild(createContent(data.members[u], u));
                         }                        

@@ -10,8 +10,28 @@
 		],
 		"methods": [
 			{
-				"name": "$option",
+				"name": "constructor($option)",
 				"disc": "$option:选项。" 
+			},
+			{
+				"name": "setDblClick($func)",
+				"disc": "$func:双击此对象时调用的函数。" 
+			},
+			{
+				"name": "setMouseDown($func)",
+				"disc": "$func:鼠标按下此对象时调用的函数。" 
+			},
+			{
+				"name": "setMouseMove($func)",
+				"disc": "$func:鼠标在此对象上移动时调用的函数。" 
+			},
+			{
+				"name": "setMouseStretch($func)",
+				"disc": "$func:鼠标拖拽此对象时调用的函数。注意，在鼠标移开zone时无效果。" 
+			},
+			{
+				"name": "setMouseUp($func)",
+				"disc": "$func:鼠标在此对象上抬起时调用的函数。" 
 			}
 		],
 		"properties": [
@@ -32,8 +52,12 @@
 				"disc": "高"
 			},
 			{
+				"name": "iotrigger",
+				"disc": "io触发器"
+			},
+			{
 				"name": "zone",
-				"disc": "区域对象"
+				"disc": "区域对象，默认位置和长宽度与自身位置宽度相同。"
 			}
 		],
 		"option":[
@@ -48,6 +72,10 @@
 			{
 				"name": "height",
 				"disc": "设置高度。"
+			},
+			{
+				"name": "iotrigger",
+				"disc": "设置io触发器"
 			},
 			{
 				"name": "zone",

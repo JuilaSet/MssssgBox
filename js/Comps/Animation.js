@@ -10,7 +10,6 @@ class Animation extends Component{
         this.buffer.height = this.height;
         this.buffer.backgroundColor = "#FFF";
 
-        this.layer = $option.layer;
         if($option.layer == undefined){
             console.error("你需要给animation对象指定layer值");
         }

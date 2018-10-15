@@ -4,6 +4,12 @@ class Display{
         this.context = this.canvas.getContext('2d');
         this.canvas.width = document.documentElement.clientWidth;
         this.canvas.height = document.documentElement.clientHeight;
+
+        let dis_this = this;
+        window.onresize = ()=>{
+            dis_this.canvas.width = document.documentElement.clientWidth;
+            dis_this.canvas.height = document.documentElement.clientHeight;
+        }
         
         // 缓冲
         this.buffer = document.createElement('canvas');
@@ -70,7 +76,6 @@ class Display{
                     this.container.webkitRequestFullScreen();
                 }
             }
-        
         }else{
             this.container.onclick = ()=>{};
         }

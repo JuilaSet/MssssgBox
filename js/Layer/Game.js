@@ -9,7 +9,7 @@ class Game{
     run(){
         
         let dis = this.display;
-        dis.setFullScreen(false);
+        dis.setFullScreen(true);
 
         let timer = this.timer;
 
@@ -21,12 +21,13 @@ class Game{
         let animation = new Animation({
             layer:1,
             id:1,
+            iotrigger: iotrigger,
             position:new Vector2d(100, 100),
             timer: timer,
-            width:300,
-            height:300
+            width:150,
+            height:150
         }); 
-        let mc = new MoveController({
+        let moveController = new MoveController({
             bindObj: animation,
             frictionX: 0.22,
             frictionY: 0.22,
@@ -34,12 +35,10 @@ class Game{
             maxSpeedY: 7
         });
 
-        mc.setOnMove(()=>{
-
-        });
         let animation2 = new Animation({
             layer:2,
             id:2,
+            iotrigger: iotrigger,
             position:new Vector2d(100, 40),
             timer: timer,
             width:35,
@@ -51,63 +50,60 @@ class Game{
         });
         dis.addAnimation(animation);
 
+        animation.setDblClick(()=>{
+            moveController.setBindObj(animation);
+        });
+
         animation2.setAction(()=>{
             animation2.drawTree(12, 10, 2);
             animation2.drawFrame();
         });
         dis.addAnimation(animation2);
 
-        // mouse
-        iotrigger.setMouseMove(animation, (e)=>{
-        //    mc.bindObj = animation;
-            console.log(1);
-        });
-        
-        iotrigger.setMouseMove(animation2, (e)=>{
-        //    mc.bindObj = animation2;
-            console.log(2);
+        animation2.setDblClick(()=>{
+            moveController.setBindObj(animation2);
         });
 
         // X
         iotrigger.setKeyUpEvent(()=>{
-            mc.accRight(0);
+            moveController.accRight(0);
         }, 68);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accRight(2);
+            moveController.accRight(2);
         }, 68);
 
         iotrigger.setKeyUpEvent(()=>{
-            mc.accLeft(0);
+            moveController.accLeft(0);
         }, 65);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accLeft(2);
+            moveController.accLeft(2);
         }, 65);
         
         // Y
         iotrigger.setKeyUpEvent(()=>{
-            mc.accUp(0);
+            moveController.accUp(0);
         }, 87);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accUp(2);
+            moveController.accUp(2);
         }, 87);
 
         iotrigger.setKeyUpEvent(()=>{
-            mc.accDown(0);
+            moveController.accDown(0);
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            mc.accDown(2);
+            moveController.accDown(2);
         }, 83);
 
         ///
         dis.render(()=>{
-            mc.update();
+            moveController.update();
             stats.update();
             timer.update();
-        }, (ctx)=>{
+        }, ()=>{
 
         });
     }
