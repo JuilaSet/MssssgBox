@@ -1,0 +1,69 @@
+{
+	"title": "Point",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"一个可以自由地在world中运动的粒子。"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option)",
+				"disc": "$option：选项"
+			},
+			{
+				"name": "addSpeed($direction, $strength=1)",
+				"disc": ["添加一个初速度，在原有基础之上叠加速度。",
+						"$direction:方向，Vector2d对象",
+						"$strength:速度大小"]
+			},
+			{
+				"name": "getNextFramePosition()",
+				"disc": "得到下一帧的位置。返回Vector2d对象。"
+			},
+			{
+				"name": "onmove()",
+				"disc": "在速度不为0时调用。"
+			},
+			{
+				"name": "update()",
+				"disc": "不断在帧循环中调用。"
+			}
+		],
+		"properties": [
+			{
+				"name": "position",
+				"disc": "位置，Vector2d对象。"
+			},
+			{
+				"name": "frictionX",
+				"disc": "横向摩擦力"
+			},
+			{
+				"name": "frictionY",
+				"disc": "纵向摩擦力"
+			},
+			{
+				"name": "aX",
+				"disc": "横向加速度分量"
+			},
+			{
+				"name": "aY",
+				"disc": "纵向加速度分量"
+			}
+		],
+		"option":[
+			{
+				"name": "frictionX",
+				"disc": "设置横向摩擦力"
+			},
+			{
+				"name": "frictionY",
+				"disc": "设置纵向摩擦力"
+			}
+			
+		]
+	}
+}

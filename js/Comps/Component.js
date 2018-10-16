@@ -16,6 +16,16 @@ class Component{
         });
     }
     
+    kill(){
+        this.zone = undefined;
+        // 清空事件
+        this.iotrigger.setDblClick(this, ()=>{});
+        this.iotrigger.setMouseDown(this, ()=>{});
+        this.iotrigger.setMouseMove(this, ()=>{});
+        this.iotrigger.setMouseStretch(this, ()=>{});
+        this.iotrigger.setMouseUp(this, ()=>{});
+    }
+
     setDblClick($func){
         this.iotrigger.setDblClick(this, $func);
     }
@@ -34,5 +44,13 @@ class Component{
 
     setMouseUp($func){
         this.iotrigger.setMouseUp(this, $func);
+    }
+
+    action(){
+
+    }
+
+    update(){
+        this.action();
     }
 }

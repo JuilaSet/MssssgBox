@@ -1,0 +1,63 @@
+{
+	"title": "StateSpace",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"用于定义状态空间以及实现空间中目标的搜索"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option={})",
+				"disc": "describe1"
+			},
+			{
+				"name": "setGenRule($func)",
+				"disc": ["设置用于生成结点的函数",
+						"$func:设置生成结点函数"]
+			},
+			{
+				"name": "generate($father)",
+				"disc": ["返回Boolean，判断拓展结点是否符合规则。",
+						"默认返回空数组",
+						"返回根据$father生成的所有扩展的结点组成的数组。"]
+			},
+			{
+				"name": "setJudge($judge)",
+				"disc": ["设置用于判断结点是否是目标结点的函数",
+						"$judge:设置函数"]
+			},
+			{
+				"name": "judge($node)",
+				"disc": ["用于判断结点是否是目标结点，默认返回true",
+						"$node:待判断的结点"]
+			},
+			{
+				"name": "breathFirstSearch()",
+				"disc": ["进行广度优先遍历搜索",
+						"成功，返回结果路径1：node对象组成的数组",
+						"失败，返回空数组"]
+			}
+		],
+		"properties": [
+			{
+				"name": "open",
+				"disc": ["数组，存放待扩展的结点。",
+						"•shift:从数组中把第一个元素删除，并返回这个元素的值。",
+						"•unshift: 在数组的开头添加一个或更多元素，并返回新的长度"]
+			},
+			{
+				"name": "closed",
+				"disc": "数组，存放已扩展的结点。"
+			}
+		],
+		"option":[
+			{
+				"name": "example-other",
+				"disc": "describe"
+			}
+		]
+	}
+}

@@ -32,10 +32,6 @@
 			{
 				"name": "action($context)",
 				"disc": "绘制动作，会不断在帧循环中被调用。"
-			},
-			{
-				"name": "update()",
-				"disc": "不断在帧循环中调用。"
 			}
 		],
 		"properties": [
@@ -56,8 +52,8 @@
 				"disc": "画笔"
 			},
 			{
-				"name": "(example-properties)",
-				"disc": "(describe)"
+				"name": "rotation",
+				"disc": "旋转角度，需要在绘图时调用this.context.rotate(this.rotation)才有用"
 			}
 		],
 		"options":[

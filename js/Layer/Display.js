@@ -25,19 +25,19 @@ class Display{
         document.body.appendChild(this.container);
 
         this.timer = $timer;
-        this.animations = []; // []][
+        this.components = []; // []][
     }
 
     addAnimation($animation){
         if($animation.layer == undefined){
-            $animation.layer = this.animations.length;
+            $animation.layer = this.components.length;
             console.exception("未指定层级的animation");
         }
-        this.animations[$animation.layer] = $animation;
+        this.components[$animation.layer] = $animation;
     }
 
     removeAnimation($layer){
-        delete this.animations[$layer];
+        delete this.components[$layer];
     }
 
     // 帧循环渲染
@@ -48,7 +48,7 @@ class Display{
             $beforeFunc(_this.context);
 
             // 绘制动画
-            _this.animations.forEach((a)=>{
+            _this.components.forEach((a)=>{
                 a.update();
                 let p = a.position;
                 _this.context.drawImage(a.buffer, p.x, p.y);

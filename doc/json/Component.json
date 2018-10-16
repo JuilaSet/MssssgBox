@@ -32,6 +32,18 @@
 			{
 				"name": "setMouseUp($func)",
 				"disc": "$func:鼠标在此对象上抬起时调用的函数。" 
+			},
+			{
+				"name": "kill()",
+				"disc": "删除自己的所有事件。" 
+			},
+			{
+				"name": "action()",
+				"disc": "会不断在帧循环中被调用。" 
+			},
+			{
+				"name": "update()",
+				"disc": "不断在帧循环中调用。" 
 			}
 		],
 		"properties": [

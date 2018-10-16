@@ -53,6 +53,7 @@ class Trigger{
 
         document.onkeydown = (event)=>{
             _this.onkeydown(event);
+            _this.onkeypress(event);
         }
 
         document.onkeyup = (event)=>{
@@ -96,6 +97,10 @@ class Trigger{
     }
 
     onkeyup(event){
+        
+    }
+
+    onkeypress(event){
         
     }
 }

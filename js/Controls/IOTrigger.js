@@ -4,6 +4,7 @@ class IOTrigger extends Trigger {
         super($option);
         this.keyUpEvents = {any:{func:()=>{}}};
         this.keyDownEvents = {any:{func:()=>{}, down:false}};
+        this.keyPressEvents = {any:{func:()=>{}}};
         this.mouseDownEvents = {any:{func:()=>{}, comp:undefined}};
         this.mouseMoveEvents = {any:{func:()=>{}, comp:undefined}};
         this.mouseUpEvents = {any:{func:()=>{}, comp:undefined}};
@@ -18,6 +19,14 @@ class IOTrigger extends Trigger {
             this.keyUpEvents.any = {func:$func, down:false};
         }else{
             this.keyUpEvents[`${$code}`] = {func:$func, down:false};
+        }
+    }
+
+    setKeyPressEvent($func, $code){
+        if( arguments.length == 1 ){
+            this.keyPressEvents.any = {func:$func, down:false};
+        }else{
+            this.keyPressEvents[`${$code}`] = {func:$func, down:false};
         }
     }
 
@@ -62,18 +71,19 @@ class IOTrigger extends Trigger {
             event.mmp = mmp;
             this.mouseDownEvents.any.func(event);
             for(let x in this.mouseDownEvents){
-                if( this.mouseDownEvents[x].comp && this.mouseDownEvents[x].comp.zone.check(mmp)){
+                if( this.mouseDownEvents[x].comp && this.mouseDownEvents[x].comp.zone && this.mouseDownEvents[x].comp.zone.check(mmp)){
                     this.mouseDownEvents[x].func(event);
                 }
             }
         };
+
         // move
         this.onmousemove = (event)=>{
             let mmp = this.mouseMap(new Vector2d(event.clientX, event.clientY), this.display.canvas);
             event.mmp = mmp;
             this.mouseMoveEvents.any.func(event);
             for(let x in this.mouseMoveEvents){
-                if( this.mouseMoveEvents[x].comp && this.mouseMoveEvents[x].comp.zone.check(mmp)){
+                if( this.mouseMoveEvents[x].comp && this.mouseMoveEvents[x].comp.zone && this.mouseMoveEvents[x].comp.zone.check(mmp)){
                     this.mouseMoveEvents[x].func(event);    
                 }
             }
@@ -85,7 +95,7 @@ class IOTrigger extends Trigger {
             event.mmp = mmp;
             this.mouseUpEvents.any.func(event);
             for(let x in this.mouseUpEvents){
-                if( this.mouseUpEvents[x].comp && this.mouseUpEvents[x].comp.zone.check(mmp)){
+                if( this.mouseUpEvents[x].comp && this.mouseUpEvents[x].comp.zone && this.mouseUpEvents[x].comp.zone.check(mmp)){
                     this.mouseUpEvents[x].func(event);    
                 }
             }
@@ -97,7 +107,7 @@ class IOTrigger extends Trigger {
             event.mmp = mmp;
             this.mouseStretchEvents.any.func(event);
             for(let x in this.mouseStretchEvents){
-                if( this.mouseStretchEvents[x].comp && this.mouseStretchEvents[x].comp.zone.check(mmp)){
+                if( this.mouseStretchEvents[x].comp && this.mouseStretchEvents[x].comp.zone && this.mouseStretchEvents[x].comp.zone.check(mmp)){
                     this.mouseStretchEvents[x].func(event);    
                 }
             }
@@ -109,7 +119,7 @@ class IOTrigger extends Trigger {
             event.mmp = mmp;
             this.mouseDblClickEvents.any.func(event);
             for(let x in this.mouseDblClickEvents){
-                if( this.mouseDblClickEvents[x].comp && this.mouseDblClickEvents[x].comp.zone.check(mmp)){
+                if( this.mouseDblClickEvents[x].comp && this.mouseDblClickEvents[x].comp.zone && this.mouseDblClickEvents[x].comp.zone.check(mmp)){
                     this.mouseDblClickEvents[x].func(event);    
                 }
             }
@@ -117,6 +127,13 @@ class IOTrigger extends Trigger {
     }
 
     startMonitKey(){
+        this.onkeypress = (event)=>{
+            this.keyPressEvents.any.func(event);
+            if(this.keyPressEvents[`${event.keyCode}`]){
+                this.keyPressEvents[`${event.keyCode}`].func(event);
+            }
+        }
+
         this.onkeydown = (event)=>{
             this.keyDownEvents.any.func(event);
             if(this.keyDownEvents[`${event.keyCode}`]){

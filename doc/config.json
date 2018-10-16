@@ -11,6 +11,8 @@
         "Animation",
         "MoveController",
         "Vector2d",
-        "Zone"
+        "Zone",
+        "Point",
+        "StateSpace"
     ]
 }

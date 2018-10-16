@@ -6,6 +6,8 @@ class Animation extends Component{
         this.buffer = document.createElement('canvas');
         this.context = this.buffer.getContext('2d');
 
+        this.rotation = 0;
+
         this.buffer.width = this.width;
         this.buffer.height = this.height;
         this.buffer.backgroundColor = "#FFF";
@@ -16,7 +18,9 @@ class Animation extends Component{
     }
     
     clearBuffer(){
+        this.context.save();
         this.context.clearRect(0, 0, this.width, this.height);
+        this.context.restore();
     }
     
     // 设置动作
@@ -30,6 +34,14 @@ class Animation extends Component{
 
     update(){
         this.action(this.context);
+    }
+
+    drawRandomColor(){
+        this.context.save();
+        var c = Math.random()*255;
+        this.context.fillStyle = `rgb(${c}, ${c}, ${c})`; 
+        this.context.fillRect(0, 0, this.width, this.height);
+        this.context.restore();
     }
 
     // 绘制边
@@ -50,18 +62,20 @@ class Animation extends Component{
     }
 
     // (测试用)绘制树
-    drawTree($force=0, $size=10, $max=2){
+    drawTree($force=0, $size=10, $min=2, $arg, $rotation=Math.PI/2){
+        this.context.save();
+        this.context.translate(this.width/2, this.height/2);
+        this.context.rotate(this.rotation);
         //主干与枝干的夹角
-        var arg = Math.PI / 10;
+        var arg = $arg || Math.PI / 2;
         var _this = this;
-        
-        (function drawTree(px, py, ang, scale, len) {
+
+        (function drawTree(px, py, ang, scale, len, prob) {
 
             //引入偏移随机角度，改变一下形状
             var x = Math.floor(scale*len*Math.cos(ang));
             var y = Math.floor(scale*len*Math.sin(ang));
 
-            _this.context.save();
             //设置线条颜色
             _this.context.strokeStyle = 'white';
             // 设置线条的宽度
@@ -76,7 +90,8 @@ class Animation extends Component{
             _this.context.stroke();
 
             // 终止递归
-            if (scale*len < $max)return;
+            if (scale*len < $min)return;
+            // if ( prob && Math.floor(Math.random() * 100) > prob)return;
 
             var rn = ( $force + Math.sin(_this.timer.tick / 3) + 
                         Math.sin(_this.timer.tick / 5) + 
@@ -84,11 +99,11 @@ class Animation extends Component{
                     ) * (Math.PI / 180);
 
             //递归画出左右分枝
-            drawTree(px + x, py - y, ang - arg + rn, scale, scale*len);	//left
-            drawTree(px + x, py - y, ang + arg + rn, scale, scale*len);	//right
-            _this.context.restore();
+            drawTree(px + x, py - y, ang - arg + rn, scale, scale*len, 100 * (scale*len - $min) / ($size - $min));	//left
+            drawTree(px + x, py - y, ang + arg + rn, scale, scale*len, 100 * (scale*len - $min) / ($size - $min));	//right
+        })(0, 0 + $size, $rotation, 0.75, $size);
 
-        })(this.width /2, this.height/2 + $size, Math.PI/2, 0.78, $size);
+        this.context.restore();
     }
     
 }
