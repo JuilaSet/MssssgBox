@@ -1,6 +1,6 @@
 class MoveController{
     constructor($option){
-        this.bindObj = $option.bindObj;
+        this._bindObj = $option.bindObj;
 
         this.maxSpeedX = $option.maxSpeedX || 2;
         this.maxSpeedY = $option.maxSpeedY || 2;
@@ -24,9 +24,13 @@ class MoveController{
         this._fY = this.frictionY;
     }
 
-    setBindObj($obj){
+    set bindObj($obj){
         this.init();
-        this.bindObj = $obj;
+        this._bindObj = $obj;
+    }
+
+    get bindObj(){
+        return this._bindObj;
     }
 
     accLeft($a){
@@ -62,7 +66,7 @@ class MoveController{
     }
 
     getNextFramePosition(){
-        return new Vector2d( this.bindObj.position.x + this.speedX, this.bindObj.position.y + this.speedY );
+        return new Vector2d( this._bindObj.position.x + this.speedX, this._bindObj.position.y + this.speedY );
     }
 
     update(){
@@ -79,7 +83,7 @@ class MoveController{
             this.speedX = this.maxSpeedX * this.speedX / Math.abs(this.speedX);
         }
         this.speedX += (this.aX1 + this.aX2) - this._fX;
-        this.bindObj.position.x += this.speedX;
+        this._bindObj.position.x += this.speedX;
         
         // y:摩擦力
         if(Math.abs(this.speedY) > this.frictionY){
@@ -93,7 +97,7 @@ class MoveController{
             this.speedY = this.maxSpeedY * this.speedY / Math.abs(this.speedY);
         }
         this.speedY += (this.aY1 + this.aY2) - this._fY;
-        this.bindObj.position.y += this.speedY;
+        this._bindObj.position.y += this.speedY;
 
         if(this.speedX + this.speedY != 0){
             this.onmove();

@@ -61,11 +61,15 @@ class Animation extends Component{
         this.context.restore();
     }
 
+    applyRotation(){
+        this.context.rotate(this.rotation);
+    }
+
     // (测试用)绘制树
     drawTree($force=0, $size=10, $min=2, $arg, $rotation=Math.PI/2){
         this.context.save();
         this.context.translate(this.width/2, this.height/2);
-        this.context.rotate(this.rotation);
+        this.applyRotation();
         //主干与枝干的夹角
         var arg = $arg || Math.PI / 2;
         var _this = this;

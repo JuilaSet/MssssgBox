@@ -32,6 +32,10 @@
 			{
 				"name": "action($context)",
 				"disc": "绘制动作，会不断在帧循环中被调用。"
+			},
+			{
+				"name": "applyRotation()",
+				"disc": "应用旋转角度。"
 			}
 		],
 		"properties": [
@@ -53,7 +57,7 @@
 			},
 			{
 				"name": "rotation",
-				"disc": "旋转角度，需要在绘图时调用this.context.rotate(this.rotation)才有用"
+				"disc": "旋转角度，需要在绘图时调用applyRotation()才有效果"
 			}
 		],
 		"options":[

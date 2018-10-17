@@ -25,7 +25,7 @@
     #panel {
         position: fixed;
         left: 0px;
-        width: 260px;
+        width: 25%;
         height: 95%;
         overflow: auto;
         padding: 0px 10px 0px 20px;
@@ -51,11 +51,11 @@
     }
 
     #content {
-        position: fixed;
-        left: 265px;
-        background: #555;
-        width: 900px;
+        width: 75%;
         height: 95%;
+        position: fixed;
+        left: 341px;
+        background: #555;
 
         padding:30px;
         overflow:scroll;
@@ -143,16 +143,18 @@
                 return a;
             }
 
-            for(var x in texts){
-                $.getJSON(path + texts[x] + tail,function(data){
-                    createTitle(data.title).onclick = ()=>{
-                        content.innerHTML="<h1></h1>";
-                        content.getElementsByTagName("h1")[0].innerHTML = data.type + "&nbsp;" + data.title;
-                        for(let u in data.members){
-                            content.appendChild(createContent(data.members[u], u));
-                        }                        
-                    }
-                });
+            for(let x in texts){
+                if(texts[x] != "" && texts[x]){
+                    $.getJSON(path + texts[x] + tail,function(data){
+                        createTitle(texts[x]).onclick = ()=>{
+                            content.innerHTML="<h1></h1>";
+                            content.getElementsByTagName("h1")[0].innerHTML = data.type + "&nbsp;" + data.title;
+                            for(let u in data.members){
+                                content.appendChild(createContent(data.members[u], u));
+                            }                        
+                        }
+                    });
+                }
             }
         });
     }

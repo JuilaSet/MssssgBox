@@ -1,18 +1,19 @@
 {
     "files": [
-        "(example)", 
-        "Component",
-        "Game", 
-        "Display",
-        "IOTrigger",
-        "Trigger",
-        "Scene",
-        "Timer",
-        "Animation",
-        "MoveController",
-        "Vector2d",
-        "Zone",
-        "Point",
-        "StateSpace"
+        "(example)",
+        "Engine/Point",
+        "Layer/Game", 
+        "Layer/Display",
+        "Layer/Scene",
+        "util/Timer",
+        "util/Vector2d",
+        "util/Zone",
+        "AI/StateSpace",
+        "Comps/Component",
+        "Comps/Animation",
+        "Controls/IOTrigger",
+        "Controls/Trigger",
+        "Controls/MoveController",
+        ""
     ]
 }

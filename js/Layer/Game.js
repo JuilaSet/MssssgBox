@@ -8,25 +8,24 @@ class Game{
     // 开始游戏
     run(){
         
-        var sol = 75;
+        var sol = 15;
 
         let stateSpace = new StateSpace();
-        stateSpace.setEcho((step)=>{
-
-        });
         stateSpace.setGenRule(($father)=>{
-            let node1 = new Node($father.state + 5);
-            node1.msg = "+5";
-            let node2 = new Node($father.state + 7);
-            node2.msg = "+7";
-            if($father.state < 200)return [node1, node2];
+            let node1 = new Node($father.state + 4);
+            node1.msg = "+4";
+            let node2 = new Node($father.state + 3);
+            node2.msg = "+3";
+            let node3 = new Node($father.state + 12);
+            node3.msg = "+12";
+            if($father.state < 100)return [node3, node2, node1];
             else return [];
         });
         stateSpace.setJudge((node)=>{
             return (node.state == sol)? true:false;
         });
-        let res = stateSpace.breathFirstSearch(new Node(0));
-
+        let res = stateSpace.breathFirstSearch(new Node(0), 16);
+        console.log(res);
         var str = '';   
         if(res){ 
             res.forEach(element => {
@@ -66,7 +65,7 @@ class Game{
             height:450
         }); 
         
-        moveController.bindObj=animation;
+        moveController.bindObj = animation;
         animation.setAction(()=>{
             animation.drawTree(moveController.speedX, 75, 10, Math.PI / Math.abs(moveController.speedY + 10));
             animation.drawFrame();
@@ -112,7 +111,7 @@ class Game{
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{
-            animation.rotation += Math.PI / 10;
+
         }, 32);
 
         ///
