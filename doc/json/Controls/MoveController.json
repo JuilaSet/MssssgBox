@@ -42,10 +42,6 @@
 				"disc": "设置对象移动事件的方法。"
 			},
 			{
-				"name": "setBindObj($obj)",
-				"disc": "$obj:设置控制的对象。调用时会初始化自己的状态。"
-			},
-			{
 				"name": "setFrictionX($friction)",
 				"disc": "设置横向摩擦力为$friction"
 			},
@@ -61,7 +57,7 @@
 		"properties": [
 			{
 				"name": "bindObj",
-				"disc": "绑定的控制对象。对象必须要有position属性。"
+				"disc": "绑定的控制对象。对象要有代表位置的position属性才有效。"
 			},
 			{
 				"name": "frictionX",

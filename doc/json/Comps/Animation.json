@@ -30,18 +30,24 @@
 				"disc": "(测试用)绘制一颗树。"
 			},
 			{
-				"name": "action($context)",
-				"disc": "绘制动作，会不断在帧循环中被调用。"
+				"name": "action($context, $this)",
+				"disc": ["绘制动作，会不断在帧循环中被调用。",
+						"$context:animation对象的画布绘图上下文",
+						"$this: 指向animation的引用"]
 			},
 			{
 				"name": "applyRotation()",
 				"disc": "应用旋转角度。"
+			},
+			{
+				"name": "alignCenter()",
+				"disc": "绘制于画面中间"
 			}
 		],
 		"properties": [
 			{
 				"name": "layer",
-				"disc": "在display中显示的层级，数值高的会覆盖数值低的。同级的会被覆盖。"
+				"disc": "在display中显示的层级，数值高的会覆盖数值低的。同级的会被替换。"
 			},
 			{
 				"name": "timer",

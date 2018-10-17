@@ -1,5 +1,5 @@
 class StateSpace{
-    constructor($option){
+    constructor($option={}){
         this.open = [];
         this.closed = [];
     }
@@ -77,7 +77,7 @@ class StateSpace{
     depthFirstSearch($node, $maxDepth=15){
         this.init();
         if(!$node instanceof Node)console.error('$node必须为Node对象');
-        if($maxDepth > 20)console.exception("深度过大可能导致性能问题,当前maxDepth=" + $maxDepth);
+        if($maxDepth > 20)console.warn("深度过大可能导致性能问题,当前maxDepth=" + $maxDepth);
         let result = [], depth = 0, n = 0;
         let step = 0;
         $node.depth = depth;
@@ -116,9 +116,10 @@ class StateSpace{
         }
         return result;
     }
-
 }
-class Node{
+
+// 树结点
+class TNode{
     constructor($state=0, $father=0, $depth=0){
         this.state = $state;
         this.father = $father;
@@ -139,5 +140,28 @@ class Node{
 
     get depth(){
         return this._depth;
+    }
+}
+
+// 图结点
+class GNode{
+    constructor($state=0){
+        this.state = $state;
+        this.ins = [];
+        this.outs = [];
+        // 结点价值
+        this.f = 0;
+        // 结点距离初始点的代价
+        this.g = 0;
+        // 结点距离结束点的代价
+        this.h = 0;
+    }
+
+    addin($index){
+        this.ins.push($index);
+    }
+
+    addout($index){
+        this.outs.push($index);
     }
 }

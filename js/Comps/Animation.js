@@ -28,12 +28,12 @@ class Animation extends Component{
         this.action = $actionFunc;
     }
 
-    action($context){
-
+    action($context, $this){
+        
     }
 
     update(){
-        this.action(this.context);
+        this.action(this.context, this);
     }
 
     drawRandomColor(){
@@ -65,10 +65,14 @@ class Animation extends Component{
         this.context.rotate(this.rotation);
     }
 
+    alignCenter(){
+        this.context.translate(this.width/2, this.height/2);
+    }
+
     // (测试用)绘制树
     drawTree($force=0, $size=10, $min=2, $arg, $rotation=Math.PI/2){
         this.context.save();
-        this.context.translate(this.width/2, this.height/2);
+        this.alignCenter();
         this.applyRotation();
         //主干与枝干的夹角
         var arg = $arg || Math.PI / 2;

@@ -31,7 +31,7 @@ class Display{
     addAnimation($animation){
         if($animation.layer == undefined){
             $animation.layer = this.components.length;
-            console.exception("未指定层级的animation");
+            console.error("未指定层级的animation");
         }
         this.components[$animation.layer] = $animation;
     }

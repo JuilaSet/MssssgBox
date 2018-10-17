@@ -1,0 +1,37 @@
+{
+	"title": "Ticker",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"计时器"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor()",
+				"disc": ""
+			},
+			{
+				"name": "tick($callback)",
+				"disc": "计时，$callback:回调函数"
+			},
+			{
+				"name": "init()",
+				"disc": ["将时间重置",
+						"清空所有计时器"]
+			}
+		],
+		"properties": [
+			{
+				"name": "ticks",
+				"disc": "存放所有计时器的计时次数"
+			},
+			{
+				"name": "times",
+				"disc": "存放所有计时器的id"
+			}
+		]
+	}
+}

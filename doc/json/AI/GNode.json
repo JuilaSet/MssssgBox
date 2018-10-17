@@ -1,0 +1,52 @@
+{
+	"title": "StateSpace",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"图结点"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($state=0)",
+				"disc": "describe1"
+			},
+			{
+				"name": "addin($index)",
+				"disc": "将$index放入入点集合"
+			},
+			{
+				"name": "addout($index)",
+				"disc": "将$index放入入点集合"
+			}
+		],
+		"properties": [
+			{
+				"name": "ins",
+				"disc": "数组，入点下标集"
+			},
+			{
+				"name": "outs",
+				"disc": "数组，出点下标集"
+			},
+			{
+				"name": "f",
+				"disc": "结点价值"
+			},
+			{
+				"name": "g",
+				"disc": "结点距离初始点的代价"
+			},
+			{
+				"name": "h",
+				"disc": "结点距离结束点的代价"
+			},
+			{
+				"name": "state",
+				"disc": "状态"
+			}
+		]
+	}
+}

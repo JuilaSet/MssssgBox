@@ -7,36 +7,9 @@ class Game{
 
     // 开始游戏
     run(){
-        
-        var sol = 15;
-
-        let stateSpace = new StateSpace();
-        stateSpace.setGenRule(($father)=>{
-            let node1 = new Node($father.state + 4);
-            node1.msg = "+4";
-            let node2 = new Node($father.state + 3);
-            node2.msg = "+3";
-            let node3 = new Node($father.state + 12);
-            node3.msg = "+12";
-            if($father.state < 100)return [node3, node2, node1];
-            else return [];
-        });
-        stateSpace.setJudge((node)=>{
-            return (node.state == sol)? true:false;
-        });
-        let res = stateSpace.breathFirstSearch(new Node(0), 16);
-        console.log(res);
-        var str = '';   
-        if(res){ 
-            res.forEach(element => {
-                if(element.msg){
-                    str = element.msg + str; 
-                }
-            });
-        }else{
-            console.log("无解");
-        }
-        console.log(sol+"=0"+str);
+        let point = new Point();
+        let world = new World();
+        world.addBody(point);
 
         let moveController = new MoveController({
             frictionX : 0.9,
@@ -66,9 +39,11 @@ class Game{
         }); 
         
         moveController.bindObj = animation;
-        animation.setAction(()=>{
-            animation.drawTree(moveController.speedX, 75, 10, Math.PI / Math.abs(moveController.speedY + 10));
+        animation.setAction(($context, $this)=>{
             animation.drawFrame();
+            animation.drawTree(moveController.speedX, 75, 10, Math.PI / Math.abs(moveController.speedY + 10));
+
+            point.drawCircle($context, $this);
         });
         dis.addAnimation(animation);
         
@@ -110,12 +85,14 @@ class Game{
             animation.rotation += Math.PI / 10;
         }, 32);
         
-        iotrigger.setKeyUpEvent(()=>{
-
+        iotrigger.setKeyPressEvent(()=>{
+            point.force.x = -0.1;
         }, 32);
 
         ///
         dis.render(()=>{
+            world.update();
+
             moveController.update();
             stats.update();
             timer.update();

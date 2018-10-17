@@ -5,7 +5,7 @@
 		"description":[
 			{
 				"name":"职责",
-				"disc":"一个可以自由地在world中运动的粒子。"
+				"disc":"一个可以自由地在world中运动的质点。"
 			}
 		],
 		"methods": [
@@ -14,10 +14,21 @@
 				"disc": "$option：选项"
 			},
 			{
-				"name": "addSpeed($direction, $strength=1)",
-				"disc": ["添加一个初速度，在原有基础之上叠加速度。",
+				"name": "addLinearSpeed($direction, $strength=1)",
+				"disc": ["添加一个线速度，在原有基础之上叠加速度。",
 						"$direction:方向，Vector2d对象",
 						"$strength:速度大小"]
+			},
+			{
+				"name": "addAngularSpeed($strength=1)",
+				"disc": ["添加一个角速度，在原有基础之上叠加速度。",
+						"$strength:角速度大小"]
+			},
+			{
+				"name": "addForce($direction, $strength=1)",
+				"disc": ["添加一个力",
+						"$direction:力的方向",
+						"$strength:力的大小"]
 			},
 			{
 				"name": "getNextFramePosition()",
@@ -28,6 +39,10 @@
 				"disc": "在速度不为0时调用。"
 			},
 			{
+				"name": "stop()",
+				"disc": "线速度和角速度置为0"
+			},
+			{
 				"name": "update()",
 				"disc": "不断在帧循环中调用。"
 			}
@@ -36,6 +51,22 @@
 			{
 				"name": "position",
 				"disc": "位置，Vector2d对象。"
+			},
+			{
+				"name": "rotation",
+				"disc": "旋转角度，弧度"
+			},
+			{
+				"name": "linearVelocity",
+				"disc": "线性速度,Vector2d对象"
+			},
+			{
+				"name": "angularVelocity",
+				"disc": "角速度，弧度"
+			},
+			{
+				"name": "mass",
+				"disc": "质量"
 			},
 			{
 				"name": "frictionX",
@@ -62,6 +93,18 @@
 			{
 				"name": "frictionY",
 				"disc": "设置纵向摩擦力"
+			},
+			{
+				"name": "mass",
+				"disc": "设置质量"
+			},
+			{
+				"name": "linearVelocity",
+				"disc": "设置线性速度，Vector2d对象"
+			},
+			{
+				"name": "angularVelocity",
+				"disc": "设置角速度，弧度"
 			}
 			
 		]

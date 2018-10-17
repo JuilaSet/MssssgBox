@@ -10,9 +10,45 @@
 		],
 		"methods": [
 			{
-				"name": "(example-methods)",
-				"disc": ["(describe1)",
-						"(describe2)"]
+				"name": "constructor(x, y)",
+				"disc": ["x:x方向长度",
+						"y:y方向长度"]
+			},
+			{
+				"name": "clone()",
+				"disc": "复制自己"
+			},
+			{
+				"name": "length()",
+				"disc": "求向量长度"
+			},
+			{
+				"name": "normalize()",
+				"disc": "转单位向量"
+			},
+			{
+				"name": "add($vec)",
+				"disc": "向量叠加"
+			},
+			{
+				"name": "multiply($f)",
+				"disc": "向量翻倍"
+			},
+			{
+				"name": "dot($vec)",
+				"disc": "内积"
+			},
+			{
+				"name": "cross($vec)",
+				"disc": "外积"
+			},
+			{
+				"name": "angle($vec)",
+				"disc": "求两个向量的夹角"
+			},
+			{
+				"name": "distanceSquare($x, $y)",
+				"disc": "距离的平方"
 			}
 		],
 		"properties": [

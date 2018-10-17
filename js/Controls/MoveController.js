@@ -2,11 +2,14 @@ class MoveController{
     constructor($option){
         this._bindObj = $option.bindObj;
 
-        this.maxSpeedX = $option.maxSpeedX || 2;
-        this.maxSpeedY = $option.maxSpeedY || 2;
+        if($option.maxSpeedX < 0 || $option.maxSpeedY < 0){
+            console.warn("最大速度自动调整为正数");
+        }
+        this.maxSpeedX = Math.abs($option.maxSpeedX) || 2;
+        this.maxSpeedY = Math.abs($option.maxSpeedY) || 2;
+
         this.frictionX = $option.frictionX || 0.1;
         this.frictionY = $option.frictionY || 0.1;
-        // private
         this.init();
     }
 

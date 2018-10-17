@@ -1,0 +1,36 @@
+{
+	"title": "StateSpace",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"树结点"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($state=0, $father=0, $depth=0)",
+				"disc": "describe1"
+			}
+		],
+		"properties": [
+			{
+				"name": "depth",
+				"disc": "结点深度"
+			},
+			{
+				"name": "index",
+				"disc": "结点下标"
+			},
+			{
+				"name": "father",
+				"disc": "父结点下标"
+			},
+			{
+				"name": "state",
+				"disc": "结点状态"
+			}
+		]
+	}
+}
