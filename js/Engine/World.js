@@ -3,9 +3,12 @@ class World{
         this.bodies = $option.bodies || [];
         this.bodiesLen = this.bodies.length;
         this.timeStep = $option.timeStep || 1/60;   // 时间片
+
+        this.gravity = $option.gravity || new Vector2d(0, 0);
     }
 
     addBody($body){
+        $body.world = this;
         this.bodies.push($body);
         this.bodiesLen = this.bodies.length;
     }

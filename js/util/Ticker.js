@@ -3,6 +3,7 @@ class Ticker{
         this._lastTime = 0;
         this.ticks = [];
         this.times = [];
+        this._stop = false;
     }
 
     tick($callback){
@@ -11,7 +12,7 @@ class Ticker{
         var timeToCall = Math.max(0, 16 - (currTime - this._lastTime));
         this.ticks.push(0);
         var id = window.setInterval(()=>{
-                if($callback)$callback(currTime + timeToCall);   // 回调函数
+                if($callback && !this._stop)$callback(currTime + timeToCall);   // 回调函数
                 this.ticks[this.ticks.length - 1]++;     // 计时次数
             }, timeToCall);
         this._lastTime = currTime + timeToCall;
@@ -24,5 +25,13 @@ class Ticker{
             clearInterval(x);
         });
         this.times = [];
+    }
+
+    stop(){
+        this._stop = true;
+    }
+
+    continue(){
+        this._stop = false;
     }
 }

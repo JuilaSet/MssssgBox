@@ -35,32 +35,37 @@
 			{
 				"name": "setDblClick($comp, $func)",
 				"disc": ["设置鼠标在$comp组件的zone上双击时调用$func, 根据鼠标位置判断是否点击到组件。",
-						"$func(event):回调函数，参数event是事件对象。",
-						"$comp:组件对象。"]
+						"$func(event):回调函数，参数event是事件对象。event.offset可以得到鼠标相对自己的坐标。",
+						"$comp:组件对象。",
+						"$offset:鼠标坐标偏移量"]
 			},
 			{
 				"name": "setMouseStretch($comp, $func)",
 				"disc": ["设置鼠标在$comp组件的zone上拖拽时调用$func, 根据鼠标位置判断是否点击到组件。",
-						"$func(event):回调函数，参数event是事件对象。",
-						"$comp:组件对象。"]
+						"$func(event):回调函数，参数event是事件对象。event.offset可以得到鼠标相对自己的坐标。",
+						"$comp:组件对象。",
+						"$offset:鼠标坐标偏移量"]
 			},
 			{
 				"name": "setMouseDown($comp, $func)",
 				"disc": ["设置鼠标在$comp组件的zone上拖拽时调用$func, 根据鼠标位置判断是否点击到组件。",
-						"$func(event):回调函数，参数event是事件对象。",
-						"$comp:组件对象。"]
+						"$func(event):回调函数，参数event是事件对象。event.offset可以得到鼠标相对自己的坐标。",
+						"$comp:组件对象。",
+						"$offset:鼠标坐标偏移量"]
 			},
 			{
 				"name": "setMouseMove($comp, $func)",
 				"disc": ["设置鼠标在$comp组件的zone上移动时调用$func, 根据鼠标位置判断是否点击到组件。",
-						"$func(event):回调函数，参数event是事件对象。",
-						"$comp:组件对象。"]
+						"$func(event):回调函数，参数event是事件对象。event.offset可以得到鼠标相对自己的坐标。",
+						"$comp:组件对象。",
+						"$offset:鼠标坐标偏移量"]
 			},
 			{
 				"name": "setMouseUp($comp, $func)",
 				"disc": ["设置鼠标在$comp组件的zone上抬起时调用$func, 根据鼠标位置判断是否点击到组件。",
-						"$func(event):回调函数，参数event是事件对象。",
-						"$comp:组件对象。"]
+						"$func(event):回调函数，参数event是事件对象。event.offset可以得到鼠标相对自己的坐标。",
+						"$comp:组件对象。",
+						"$offset:鼠标坐标偏移量"]
 			},
 			{
 				"name": "mouseMap($position, $obj)",

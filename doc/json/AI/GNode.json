@@ -25,11 +25,19 @@
 		"properties": [
 			{
 				"name": "ins",
-				"disc": "数组，入点下标集"
+				"disc": "数组，入点集"
 			},
 			{
 				"name": "outs",
-				"disc": "数组，出点下标集"
+				"disc": "数组，出点集"
+			},
+			{
+				"name": "index",
+				"disc": "下标"
+			},
+			{
+				"name": "father",
+				"disc": "返回指针"
 			},
 			{
 				"name": "f",

@@ -1,8 +1,7 @@
 class Point{
     constructor($option={}){
-        this.frictionX = $option.frictionX || 0.1;
-        this.frictionY = $option.frictionY || 0.1;
-
+        this.world = $option.world;
+        
         this.position = $option.position || new Vector2d(0, 0);
         this.rotation = $option.rotation || 0; // 角度
 
@@ -10,7 +9,7 @@ class Point{
         this.invMass = 1 / this._mass;
 
         this.force = $option.force || new Vector2d(0, 0);
-        this.torque = $option.angularForce || 0;
+        this.torque = $option.torque || 0;
 
         this.linearVelocity = $option.linearVelocity || new Vector2d(0, 0);
         this.angularVelocity = $option.angularVelocity || 0; // 角度
@@ -24,28 +23,25 @@ class Point{
         if(isNaN(this.linearVelocity.y))console.error("linearVelocity.y", this.linearVelocity.y);
     }
 
-    // v = a * t
+    // dv = a * dt
     integrateVelocity(dt){
-        this._check();
         this.linearVelocity.x += this.force.x * this.invMass * dt;
         this.linearVelocity.y += this.force.y * this.invMass * dt;
     }
     
-    // s = m * v
+    // ds = v * dt
     integratePosition(dt){
-        this._check();
         this.position.x += this.linearVelocity.x * dt;
         this.position.y += this.linearVelocity.y * dt;
     }
 
+    // drv =  ra * dt
     integrateAngularVelocity(dt){
-        this._check();
         this.angularVelocity += this.torque * this.invMass * dt;
     }
 
-    // r = m * v
+    // dr = rv * dt
     integrateRotation(dt){
-        this._check();
         if (this.rotation >= 360) this.rotation %= 360;
         this.rotation += this.angularVelocity * 180 * dt / Math.PI;
     }
@@ -68,14 +64,13 @@ class Point{
     }
 
     addLinearSpeed($direction, $strength=1){
-        this.linearVelocity.x += $strength * $direction.x;
-        this.linearVelocity.y += $strength * $direction.y;
-        this._check();
+        this.linearVelocity.add($direction.multiply($strength));
+        return this;
     }
 
     addLinearSpeed($strength){
         this.angularVelocity += $strength;
-        this._check();
+        return this;
     }
 
     onmove(){
@@ -89,11 +84,49 @@ class Point{
     }
 
     // 测试用
+    bounce($width = 450){
+        // 碰撞检测
+        if (this.position.y - 12 < 0) {
+            this.linearVelocity.y *= -0.95;
+            this.angularVelocity *= 0.9;
+            this.position.y = 12;
+        }
+        if (this.position.y + 12 > $width ) {
+            this.linearVelocity.y *= -0.95;
+            this.angularVelocity *= 0.9;
+            this.position.y  = $width-12;
+        }
+
+        if (this.position.x + 12 > $width) {
+            this.linearVelocity.x *= -0.95;
+            this.angularVelocity *= 0.9;
+            this.position.x = $width - 12;
+        }
+        if (this.position.x - 12 < 0) {
+            this.linearVelocity.x *= -0.95;
+            this.angularVelocity *= 0.9;
+            this.position.x = 12;
+        }
+        
+
+        // 休眠处理
+        if (Math.abs(this.linearVelocity.y) < 1){
+            this.linearVelocity.y = 0;
+            this.linearVelocity.x *= 0.95;
+        }
+        if (Math.abs(this.linearVelocity.x) < 1) {
+            this.linearVelocity.y *= 0.95;
+            this.linearVelocity.x = 0;
+        }
+    }
+
+
+    // 测试用
     drawCircle($context, $animation){
         ((x, y, r, rotation)=>{
             $context.save();
-            $context.translate($animation.width/2, $animation.height/2);
             $context.beginPath();
+            $context.strokeStyle = '#FFF';
             $context.arc(x, y, r, 0, 2 * Math.PI, false);
             $context.arc(x, y, 3, 0, 2 * Math.PI, false);
             $context.stroke();
@@ -114,5 +147,6 @@ class Point{
         this.integratePosition($timeStep);
         this.integrateAngularVelocity($timeStep);
         this.integrateRotation($timeStep);
+        this.bounce();
     }
 }

@@ -8,7 +8,7 @@
 				"disc":"计时器"
 			}
 		],
-		"methods": [
+		"methods": [ 
 			{
 				"name": "constructor()",
 				"disc": ""
@@ -16,6 +16,14 @@
 			{
 				"name": "tick($callback)",
 				"disc": "计时，$callback:回调函数"
+			},
+			{
+				"name": "stop()",
+				"disc": "将时间重置"
+			},
+			{
+				"name": "continue()",
+				"disc": "将时间重置"
 			},
 			{
 				"name": "init()",

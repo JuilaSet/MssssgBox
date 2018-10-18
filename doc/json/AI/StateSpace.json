@@ -38,21 +38,49 @@
 				"disc": "将open和closed清空"
 			},
 			{
-				"name": "breathFirstSearch($node)",
+				"name": "breathFirstSearch($tnode)",
 				"disc": ["进行广度优先遍历搜索，结果与生成结点的顺序无关，并且得到的是最短路径",
 						"适用于需要求得最短解答路径的问题",
 						"成功，返回结果路径(node对象组成的数组)",
 						"失败，返回空数组",
-						"$node: 第一个结点"]
+						"$tnode: 第一个结点, TNode对象"]
 			},
 			{
-				"name": "depthFirstSearch($node, $maxDepth)",
+				"name": "depthFirstSearch($tnode, $maxDepth)",
 				"disc": ["进行深度优先遍历搜索，结果与生成结点的顺序有关，得到的不一定是最短路径",
 						"适用于有多个路径且只需要求得其中一个的问题",
 						"成功，返回结果路径：(node对象组成的数组)",
 						"失败，返回空数组",
-						"$node: 第一个结点",
+						"$tnode: 第一个结点, TNode对象",
 						"$maxDepth: 搜索最大深度，大于20时可能会出现性能问题"]
+			},
+			{
+				"name": "localOptimizationSearch($tnode)",
+				"disc": ["进行局部择优搜索,需要用setHeuristicFunc方法设置启发函数",
+						"成功，返回结果路径组成的数组",
+						"失败，返回空数组", 
+						"$tnode: 第一个结点, TNode对象"]
+			},
+			{
+				"name": "globalOptimizationSearch($tnode)",
+				"disc": ["进行全局择优搜索,需要用setHeuristicFunc方法设置启发函数",
+						"成功，返回结果路径组成的数组",
+						"失败，返回空数组", 
+						"$tnode: 第一个结点, TNode对象"]
+			},
+			{
+				"name": "setHowFarFromOriginFunc($g)",
+				"disc": ["$g($gnode, $graphic):设置启发函数，传入图结点对象，返回到起点的实际代价值。",
+						"$graphic:当前生成的搜索图，用于计算到起点的路径"]
+			},
+			{
+				"name": "setHeuristicFunc($h)",
+				"disc": ["$h($gnode, $graphic):设置启发函数，传入图结点对象，返回到目标的估计代价值。",
+						"$graphic:当前生成的搜索图，用于计算到起点的路径"]
+			},
+			{
+				"name": "init()",
+				"disc": "将open和closed清空"
 			}
 		],
 		"properties": [
@@ -63,12 +91,17 @@
 			{
 				"name": "closed",
 				"disc": "数组，存放已扩展的结点。"
+			},
+			{
+				"name": "step",
+				"disc": "步数"
 			}
 		],
-		"option":[
+		"notice":[
 			{
-				"name": "example-other",
-				"disc": "describe"
+				"name": "使用该类时至少要做的事情",
+				"disc": ["设置生成规则：setGenRule",
+						"设置目标结点的判断规则：setJudge"]
 			}
 		]
 	}

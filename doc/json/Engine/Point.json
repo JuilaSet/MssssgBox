@@ -14,25 +14,16 @@
 				"disc": "$option：选项"
 			},
 			{
-				"name": "addLinearSpeed($direction, $strength=1)",
-				"disc": ["添加一个线速度，在原有基础之上叠加速度。",
-						"$direction:方向，Vector2d对象",
-						"$strength:速度大小"]
+				"name": "update()",
+				"disc": "不断在帧循环中调用。"
 			},
 			{
-				"name": "addAngularSpeed($strength=1)",
-				"disc": ["添加一个角速度，在原有基础之上叠加速度。",
-						"$strength:角速度大小"]
+				"name": "addLinearSpeed($vec, $strength)",
+				"disc": "叠加线速度, $vec是新向量，$strength是大小。"
 			},
 			{
-				"name": "addForce($direction, $strength=1)",
-				"disc": ["添加一个力",
-						"$direction:力的方向",
-						"$strength:力的大小"]
-			},
-			{
-				"name": "getNextFramePosition()",
-				"disc": "得到下一帧的位置。返回Vector2d对象。"
+				"name": "addLinearSpeed($strength)",
+				"disc": "叠加角速度, $strength是角度大小。"
 			},
 			{
 				"name": "onmove()",
@@ -47,10 +38,22 @@
 				"disc": "不断在帧循环中调用。"
 			}
 		],
-		"properties": [
+		"properties": [    
 			{
 				"name": "position",
 				"disc": "位置，Vector2d对象。"
+			},
+			{
+				"name": "world",
+				"disc": "所在世界"
+			},
+			{
+				"name": "force",
+				"disc": "作用在自己身上的合力"
+			},
+			{
+				"name": "torque",
+				"disc": "扭力"
 			},
 			{
 				"name": "rotation",
@@ -62,41 +65,33 @@
 			},
 			{
 				"name": "angularVelocity",
-				"disc": "角速度，弧度"
+				"disc": "角速度，角度"
 			},
 			{
 				"name": "mass",
 				"disc": "质量"
-			},
-			{
-				"name": "frictionX",
-				"disc": "横向摩擦力"
-			},
-			{
-				"name": "frictionY",
-				"disc": "纵向摩擦力"
-			},
-			{
-				"name": "aX",
-				"disc": "横向加速度分量"
-			},
-			{
-				"name": "aY",
-				"disc": "纵向加速度分量"
 			}
 		],
 		"option":[
 			{
-				"name": "frictionX",
-				"disc": "设置横向摩擦力"
-			},
-			{
-				"name": "frictionY",
-				"disc": "设置纵向摩擦力"
-			},
-			{
 				"name": "mass",
 				"disc": "设置质量"
+			},
+			{
+				"name": "position",
+				"disc": "设置位置"
+			},
+			{
+				"name": "rotation",
+				"disc": "设置角度"
+			},
+			{
+				"name": "force",
+				"disc": "设置合力"
+			},
+			{
+				"name": "torque",
+				"disc": "设置扭力"
 			},
 			{
 				"name": "linearVelocity",

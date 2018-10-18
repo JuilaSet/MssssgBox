@@ -95,9 +95,8 @@
  </body>
  <script>
     window.onload=()=>{
-        let texts;
         $.getJSON("./config.json", function(data){
-            texts = data.files.sort();
+            let texts = data.files.sort();
             
             const path = "json/", tail = ".json";
             //

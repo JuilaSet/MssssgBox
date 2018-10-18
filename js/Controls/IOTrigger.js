@@ -48,7 +48,7 @@ class IOTrigger extends Trigger {
         this.mouseDownEvents[`${$comp.layer}`] = { func:$func, comp:$comp };
     }
 
-    setMouseMove($comp, $func){
+    setMouseMove($comp, $func,){
         if(!$comp.layer)console.error('未指定层级的comp');
         this.mouseMoveEvents[`${$comp.layer}`] = { func:$func, comp:$comp };
     }
@@ -72,6 +72,10 @@ class IOTrigger extends Trigger {
             this.mouseDownEvents.any.func(event);
             for(let x in this.mouseDownEvents){
                 if( this.mouseDownEvents[x].comp && this.mouseDownEvents[x].comp.zone && this.mouseDownEvents[x].comp.zone.check(mmp)){
+                    let offset = this.mouseDownEvents[x].comp.zone.position.clone();
+                    offset.x = mmp.x - offset.x;
+                    offset.y = mmp.y - offset.y;
+                    event.offset = offset;
                     this.mouseDownEvents[x].func(event);
                 }
             }
@@ -84,7 +88,11 @@ class IOTrigger extends Trigger {
             this.mouseMoveEvents.any.func(event);
             for(let x in this.mouseMoveEvents){
                 if( this.mouseMoveEvents[x].comp && this.mouseMoveEvents[x].comp.zone && this.mouseMoveEvents[x].comp.zone.check(mmp)){
-                    this.mouseMoveEvents[x].func(event);    
+                    let offset = this.mouseMoveEvents[x].comp.position.clone();
+                    offset.x = mmp.x - offset.x;
+                    offset.y = mmp.y - offset.y;
+                    event.offset = offset;
+                    this.mouseMoveEvents[x].func(event);
                 }
             }
         };
@@ -96,6 +104,10 @@ class IOTrigger extends Trigger {
             this.mouseUpEvents.any.func(event);
             for(let x in this.mouseUpEvents){
                 if( this.mouseUpEvents[x].comp && this.mouseUpEvents[x].comp.zone && this.mouseUpEvents[x].comp.zone.check(mmp)){
+                    let offset = this.mouseUpEvents[x].comp.position.clone();
+                    offset.x = mmp.x - offset.x;
+                    offset.y = mmp.y - offset.y;
+                    event.offset = offset;
                     this.mouseUpEvents[x].func(event);    
                 }
             }
@@ -108,6 +120,10 @@ class IOTrigger extends Trigger {
             this.mouseStretchEvents.any.func(event);
             for(let x in this.mouseStretchEvents){
                 if( this.mouseStretchEvents[x].comp && this.mouseStretchEvents[x].comp.zone && this.mouseStretchEvents[x].comp.zone.check(mmp)){
+                    let offset = this.mouseStretchEvents[x].comp.position.clone();
+                    offset.x = mmp.x - offset.x;
+                    offset.y = mmp.y - offset.y;
+                    event.offset = offset;
                     this.mouseStretchEvents[x].func(event);    
                 }
             }
@@ -120,6 +136,10 @@ class IOTrigger extends Trigger {
             this.mouseDblClickEvents.any.func(event);
             for(let x in this.mouseDblClickEvents){
                 if( this.mouseDblClickEvents[x].comp && this.mouseDblClickEvents[x].comp.zone && this.mouseDblClickEvents[x].comp.zone.check(mmp)){
+                    let offset = this.mouseDblClickEvents[x].comp.position.clone();
+                    offset.x = mmp.x - offset.x;
+                    offset.y = mmp.y - offset.y;
+                    event.offset = offset;
                     this.mouseDblClickEvents[x].func(event);    
                 }
             }
