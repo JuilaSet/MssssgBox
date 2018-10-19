@@ -11,7 +11,7 @@ class World{
         });
 
         this._ground = $option.ground || new Ground({   // +
-            chain: [
+            groundChain: [
                 new GroundSegment({
                     origionPosition:new Vector2d(0, 300),
                     direction:new Vector2d(0, document.documentElement.clientWidth)
@@ -24,65 +24,100 @@ class World{
         this._ground = $grd;
     }
 
-    addBody($body){
-        $body.world = this;
-        this.bodies.push($body);
-        this.bodiesLen = this.bodies.length;
+    getGroundUndered($position){    // +
+        let ox, dx;
+        for(let g of this._ground.segments){
+            ox = g.origionPosition.x;
+            dx = g.direction.x;
+            if($position.x >= ox && $position.x < ox + dx){
+                return g;
+            }
+        }
     }
 
     update(){
         for (let k = 0; k < this.bodiesLen; k++) {
             this.bodies[k].update(this.timeStep);
-            this.bounce(this.bodies[k]);
+            this.strictBounce(this.bodies[k]);
+            this.groundBounce(this.bodies[k]);
+            // 休眠处理
+            this.bodies[k].sleepCheck();
         }
     }
 
     render($animation){
         this.bodies.forEach((d)=>{
             d.render($animation.context, $animation);
-            // ground
-            this.ground.render($animation.context);
         })
+        // ground
+        this._ground.render($animation.context);
+    }
+
+    isUnderGround($ground, $position){
+        let p = $position.clone().sub($ground.origionPosition);
+        return $ground.direction.cross(p) > 0? true : false;
+    }
+
+    addBody($body){
+        $body.world = this;
+        this.bodies.push($body);
+        this.bodiesLen = this.bodies.length;
+    }
+
+    // +
+    onGroundHit($point, $ground){
+        let v = $point.linearVelocity;
+        let oy = $ground.origionPosition.y;
+        let arg = $ground.argue * (oy < oy + $ground.direction.y?-1:1);
+        console.log(arg * 180 / Math.PI);
+        // 反弹
+        let cos2 = Math.cos(arg) * Math.cos(arg), 
+            sin2 = Math.sin(arg) * Math.sin(arg);
+        v.x = v.x * cos2 - 2 * v.y * Math.sin(arg) * Math.cos(arg) - v.x * sin2;
+        v.y = v.y * -0.95;
+    }
+
+    // 地表碰撞效果
+    groundBounce($point){
+        // 碰撞检测
+        let p = $point.getNextFramePosition(1/60);
+        let g = this.getGroundUndered(p);
+        if(!g)return;
+        
+        if(this.isUnderGround(g, p)){
+            this.onGroundHit($point, g);
+        }
     }
 
     // 边界碰撞效果
-    bounce($point){
+    strictBounce($point){
         let width = this.strict.width, height = this.strict.height;
         let x = this.strict.position.x, y = this.strict.position.y;
 
         // 碰撞检测
-        if ($point.position.y - $point.border < y) {
+        let p = $point.position;
+        if (p.y - $point.border < y) {
             $point.linearVelocity.y *= -0.95;
             $point.angularVelocity *= 0.9;
-            $point.position.y = y + $point.border;
+            p.y = y + $point.border;
         }
 
-        if ($point.position.y + $point.border > y + height ) {
+        if (p.y + $point.border > y + height ) {
             $point.linearVelocity.y *= -0.95;
             $point.angularVelocity *= 0.9;
-            $point.position.y  = y + height - $point.border;
+            p.y  = y + height - $point.border;
         }
 
-        if ($point.position.x + $point.border > x + width) {
+        if (p.x + $point.border > x + width) {
             $point.linearVelocity.x *= -0.95;
             $point.angularVelocity *= 0.9;
-            $point.position.x = x + width - $point.border;
+            p.x = x + width - $point.border;
         }
 
-        if ($point.position.x - $point.border < x) {
+        if (p.x - $point.border < x) {
             $point.linearVelocity.x *= -0.95;
             $point.angularVelocity *= 0.9;
-            $point.position.x = x + $point.border;
-        }
-
-        // 休眠处理
-        if (Math.abs($point.linearVelocity.y) < 1){
-            $point.linearVelocity.y = 0;
-            $point.linearVelocity.x *= 0.95;
-        }
-        if (Math.abs($point.linearVelocity.x) < 1) {
-            $point.linearVelocity.y *= 0.95;
-            $point.linearVelocity.x = 0;
+            p.x = x + $point.border;
         }
     }
 }

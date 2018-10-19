@@ -1,25 +1,29 @@
 class Ground {
     constructor($option){
-        this.segments = []; // 地面片段
+        this._segments = []; // 地面片段
         this.size = 0;
 
-        for(let s of $option.chain){ //chain @Array
+        for(let s of $option.groundChain){ //chain @Array
             this.addSegments(s);
         }
     }
+    
+    get segments(){
+        return this._segments;
+    }
 
     render($ctx){
-        this.segments.forEach(element => {
+        this._segments.forEach(element => {
             element.render($ctx);
         });
     }
 
     addSegments($seg){
         if(this.size != 0){
-            this.segments[this.size - 1].setNextSegment($seg);
+            this._segments[this.size - 1].setNextSegment($seg);
         }
-        this.segments.push($seg);
-        this.size = this.segments.length;
+        this._segments.push($seg);
+        this.size = this._segments.length;
     }
 }
 
@@ -29,8 +33,8 @@ class GroundSegment{
         this._direction = $option.direction || new Vector2d(1, 0);   // 方向
 
         // 无option的属性
-        this._argue = Math.atan(this._direction.x, this._direction.y);
         this._length = this._direction.length();
+        this._argue = Math.acos(this._length / this._direction.x);
 
         this.next = $option.next || {}; // 下一个片段
     }
@@ -77,7 +81,7 @@ class GroundSegment{
     }
 
     get direction(){
-        return this.direction;
+        return this._direction;
     }
 
     set argue($argue){
@@ -90,3 +94,4 @@ class GroundSegment{
         return this._argue;
     }
 }
+GroundSegment.NULL_SEGMENT = 0x462ce08;

@@ -1,3 +1,4 @@
+"strict mode";
 class Game{
     constructor($option={}){
         this.timer = new Timer();
@@ -75,16 +76,9 @@ class Game{
         });
 
         // 物理模块
-        let world = new World({
-            strict : new Zone({
-                position: new Vector2d(0, 0),
-                width: animation.width,
-                height: animation.height
-            })
-        });
         
         let ground = new Ground({
-            chain: [
+            groundChain: [
                 new GroundSegment({
                     origionPosition:new Vector2d(0, 300 - Math.random()*100)
                 }),
@@ -102,7 +96,14 @@ class Game{
                 })
             ]
         });
-        console.log(ground.segments);
+        let world = new World({
+            strict : new Zone({
+                position: new Vector2d(0, 0),
+                width: animation.width,
+                height: animation.height
+            })
+            ,ground: ground
+        });
 
         moveController.bindObj = animation;
         let a1 = Math.random() * 10 + 3, f1 = Math.random() * 20 - 10, h1 = Math.random() * 15 + 20;
@@ -122,17 +123,21 @@ class Game{
                 Math.PI / Math.abs(moveController.speedY + a2)
             );
             world.render($this);
-            ground.render($context);
         });
         dis.addAnimation(animation);
 
         animation.setMouseDown((event)=>{
             world.addBody(new Point({
                 position : event.offset,
-                linearVelocity : new Vector2d(155, -145),
+                linearVelocity : new Vector2d(0, 200),
+                    // Math.random() * 200 - 100, Math.random() * 200 - 100),
                 force : new Vector2d(0, 100),
-                border : 1
+                border : 10
             }));
+        });
+
+        animation.setDblClick((event)=>{
+
         });
         
         // X
@@ -170,11 +175,11 @@ class Game{
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            t.stop();
+            
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{
-            t.continue();
+
         }, 32);
 
         ///

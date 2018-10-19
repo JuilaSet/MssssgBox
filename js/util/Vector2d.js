@@ -48,7 +48,7 @@ class Vector2d{
     }
 
     cross($vec) {
-        return this.x * $vec.y + this.y * $vec.x;
+        return this.x * $vec.y - this.y * $vec.x;
     }
 
     angle($vec) {

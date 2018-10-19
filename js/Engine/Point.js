@@ -29,6 +29,23 @@ class Point{
 
     }
 
+    sleepCheck($minv=1){    // +
+        if (Math.abs(this.linearVelocity.y) < $minv){
+            this.linearVelocity.y = 0;
+        }
+        if (Math.abs(this.linearVelocity.x) < $minv) {
+            this.linearVelocity.x = 0;
+        }
+    }
+
+    isMove($minv=1){
+        if (Math.abs(this.linearVelocity.y) < $minv && 
+            Math.abs(this.linearVelocity.x) < $minv) {
+                return false;
+        }
+        return true;
+    }
+
     // dv = a * dt
     integrateVelocity(dt){
         this.linearVelocity.x += this.force.x * this.invMass * dt;
@@ -64,9 +81,9 @@ class Point{
         this.linearVelocity.x = 0;
         this.linearVelocity.y = 0;
         this.angularVelocity = 0;
-
-        this._fX = this.frictionX;
-        this._fY = this.frictionY;
+        this.force.x = 0;
+        this.force.y = 0;
+        this.torque = 0;
     }
 
     set mass($mass){
