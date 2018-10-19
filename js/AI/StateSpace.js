@@ -185,7 +185,7 @@ class StateSpace{
                 }
                 // 对exts列表进行排序
                 exts.sort((n1 ,n2)=>{
-                    return (n1.h - n2.h);
+                    return (n2.h - n1.h);
                 });
                 // 一一放入
                 for(let i = 0; i < exts.length; i++){
@@ -344,10 +344,12 @@ class StateSpace{
 
 // 树结点
 class TNode{
-    constructor($state=0, $father=0, $depth=0){
-        this.state = $state;
-        this.father = $father;
-        this._depth = $depth;
+    constructor($option){
+        this.state = $option.state;
+        this.father = $option.father;
+        this._depth = $option.depth;
+
+        this.handleMsg = $option.handleMsg;
         this.f = 0;
         this.g = 0;
         this.h = 0;
@@ -372,10 +374,11 @@ class TNode{
 
 // 图结点
 class GNode{
-    constructor($state=0, $father=0){
-        this.state = $state;
-        this.father = $father;
-        
+    constructor($option){
+        this.state = $option.state;
+        this.father = $option.father;
+        this.handleMsg = $option.handleMsg;
+
         this.ins = [];
         this.outs = [];
         this.f = 0;

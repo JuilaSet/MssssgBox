@@ -174,14 +174,14 @@ class IOTrigger extends Trigger {
         }
     }
 
-    mouseMap($position, $obj){
+    mouseMap($position, $domObj){
         let cx = $position.x, cy = $position.y;
-        var mouseX = cx - $obj.offsetLeft;
-        var mouseY = cy - $obj.offsetTop;
+        var mouseX = cx - $domObj.offsetLeft;
+        var mouseY = cy - $domObj.offsetTop;
       
         // scale mouse coordinates to canvas coordinates
-        var eobjX = mouseX * $obj.width / $obj.clientWidth;
-        var eobjY = mouseY * $obj.height / $obj.clientHeight;
+        var eobjX = mouseX * $domObj.width / $domObj.clientWidth;
+        var eobjY = mouseY * $domObj.height / $domObj.clientHeight;
 
         return new Vector2d(eobjX, eobjY);
     }

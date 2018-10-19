@@ -10,8 +10,8 @@
 		],
 		"methods": [
 			{
-				"name": "constructor($state=0)",
-				"disc": "describe1"
+				"name": "constructor($option)",
+				"disc": "$option:选项"
 			},
 			{
 				"name": "addin($index)",

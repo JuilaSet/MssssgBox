@@ -12,8 +12,10 @@ class Ticker{
         var timeToCall = Math.max(0, 16 - (currTime - this._lastTime));
         this.ticks.push(0);
         var id = window.setInterval(()=>{
-                if($callback && !this._stop)$callback(currTime + timeToCall);   // 回调函数
-                this.ticks[this.ticks.length - 1]++;     // 计时次数
+                if($callback && !this._stop){
+                    $callback(currTime + timeToCall);   // 回调函数
+                    this.ticks[this.ticks.length - 1]++;     // 计时次数
+                }
             }, timeToCall);
         this._lastTime = currTime + timeToCall;
         this.times.push(id);

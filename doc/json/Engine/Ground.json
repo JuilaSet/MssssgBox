@@ -1,0 +1,30 @@
+{
+	"title": "Ground",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"设置由连续片段组成的地面。"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option)",
+				"disc": "$option：选项"
+			}
+		],
+		"properties": [
+			{
+				"name": "xxxxx",
+				"disc": "xxxxx"
+			}
+		],
+		"option":[
+			{
+				"name": "xxxxx",
+				"disc": "xxxxxxx"
+			}
+		]
+	}
+}

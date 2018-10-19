@@ -8,6 +8,12 @@ class Vector2d{
         return new Vector2d(this.x, this.y);
     }
 
+    set($x, $y){
+        this.x = $x;
+        this.y = $y;
+        return this;
+    }
+
     length() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
@@ -16,6 +22,12 @@ class Vector2d{
         var inv = 1 / this.length();
         this.x *= inv;
         this.y *= inv;
+        return this;
+    }
+
+    sub($vec) {
+        this.x -= $vec.x;
+        this.y -= $vec.y;
         return this;
     }
 

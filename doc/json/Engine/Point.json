@@ -9,6 +9,8 @@
 			}
 		],
 		"methods": [
+			
+			
 			{
 				"name": "constructor($option)",
 				"disc": "$option：选项"
@@ -18,11 +20,27 @@
 				"disc": "不断在帧循环中调用。"
 			},
 			{
+				"name": "onCollide($position)",
+				"disc": "撞击时调用，$position:碰撞点"
+			},
+			{
+				"name": "applyForce($force, $point)",
+				"disc": ["创造冲量。",
+						"$force:一个Vector2对象的实例，代表了力的沿着x、y方向上的大小。",
+						"$point:施力点的世界坐标"]
+			},
+			{
+				"name": "applyImpulse($impulse, $point)",
+				"disc": ["创造冲量。",
+						"$impulse:一个Vector2对象的实例，代表了冲量的沿着x、y方向上的大小。",
+						"$point:施放冲量点的世界坐标"]
+			},
+			{
 				"name": "addLinearSpeed($vec, $strength)",
 				"disc": "叠加线速度, $vec是新向量，$strength是大小。"
 			},
 			{
-				"name": "addLinearSpeed($strength)",
+				"name": "addAngularSpeed($strength)",
 				"disc": "叠加角速度, $strength是角度大小。"
 			},
 			{
@@ -46,6 +64,10 @@
 			{
 				"name": "world",
 				"disc": "所在世界"
+			},
+			{
+				"name": "border",
+				"disc": "点的碰撞边距"
 			},
 			{
 				"name": "force",
@@ -88,6 +110,10 @@
 			{
 				"name": "force",
 				"disc": "设置合力"
+			},
+			{
+				"name": "border",
+				"disc": "设置点的碰撞边距"
 			},
 			{
 				"name": "torque",

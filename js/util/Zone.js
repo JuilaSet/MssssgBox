@@ -1,8 +1,8 @@
 class Zone{
     constructor($option){
-        this.position = $option.position || console.error("没有定义区域位置");
-        this.width = $option.width;
-        this.height = $option.height;
+        this.position = $option.position || new Vector2d(0, 0);
+        this.width = $option.width || 0;
+        this.height = $option.height || 0;
     }
 
     check($position){

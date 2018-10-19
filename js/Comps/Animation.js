@@ -70,9 +70,9 @@ class Animation extends Component{
     }
 
     // (测试用)绘制树
-    drawTree($force=0, $size=10, $min=2, $arg, $rotation=Math.PI/2){
+    drawTree($position, $force=0, $size=10, $min=2, $arg, $rotation=Math.PI/2){
         this.context.save();
-        this.alignCenter();
+        // this.alignCenter();
         this.applyRotation();
         //主干与枝干的夹角
         var arg = $arg || Math.PI / 2;
@@ -109,7 +109,7 @@ class Animation extends Component{
             //递归画出左右分枝
             drawTree(px + x, py - y, ang - arg + rn, scale, scale*len, 100 * (scale*len - $min) / ($size - $min));	//left
             drawTree(px + x, py - y, ang + arg + rn, scale, scale*len, 100 * (scale*len - $min) / ($size - $min));	//right
-        })(0, 0 + $size, $rotation, 0.75, $size);
+        })($position.x, $position.y + $size, $rotation, 0.75, $size);
 
         this.context.restore();
     }

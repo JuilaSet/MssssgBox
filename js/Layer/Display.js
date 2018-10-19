@@ -4,7 +4,7 @@ class Display{
         this.context = this.canvas.getContext('2d');
         this.canvas.width = document.documentElement.clientWidth;
         this.canvas.height = document.documentElement.clientHeight;
-
+        
         let dis_this = this;
         window.onresize = ()=>{
             dis_this.canvas.width = document.documentElement.clientWidth;

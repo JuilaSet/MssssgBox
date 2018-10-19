@@ -14,6 +14,7 @@ class Point{
         this.linearVelocity = $option.linearVelocity || new Vector2d(0, 0);
         this.angularVelocity = $option.angularVelocity || 0; // 角度
 
+        this.border = $option.border || 1;
         this._check();
     }
     
@@ -21,6 +22,11 @@ class Point{
         if(isNaN(this.angularVelocity))console.error("angularVelocity", this.angularVelocity);
         if(isNaN(this.linearVelocity.x))console.error("linearVelocity.x", this.linearVelocity.x);
         if(isNaN(this.linearVelocity.y))console.error("linearVelocity.y", this.linearVelocity.y);
+    }
+
+    // []][
+    applyImpulse($impulse, $point) {
+
     }
 
     // dv = a * dt
@@ -46,6 +52,14 @@ class Point{
         this.rotation += this.angularVelocity * 180 * dt / Math.PI;
     }
 
+    getNextFramePosition(dt){
+    //  return this.position.clone.add(this.linearVelocity.multiply(dt));
+        return new Vector2d(
+            this.position.x + this.linearVelocity.x * dt,
+            this.position.y + this.linearVelocity.y * dt
+        );
+    }
+
     init(){
         this.linearVelocity.x = 0;
         this.linearVelocity.y = 0;
@@ -68,13 +82,17 @@ class Point{
         return this;
     }
 
-    addLinearSpeed($strength){
+    addAngularSpeed($strength){
         this.angularVelocity += $strength;
         return this;
     }
 
     onmove(){
         
+    }
+
+    onCollide($position){
+
     }
 
     stop(){
@@ -84,45 +102,7 @@ class Point{
     }
 
     // 测试用
-    bounce($width = 450){
-        // 碰撞检测
-        if (this.position.y - 12 < 0) {
-            this.linearVelocity.y *= -0.95;
-            this.angularVelocity *= 0.9;
-            this.position.y = 12;
-        }
-        if (this.position.y + 12 > $width ) {
-            this.linearVelocity.y *= -0.95;
-            this.angularVelocity *= 0.9;
-            this.position.y  = $width-12;
-        }
-
-        if (this.position.x + 12 > $width) {
-            this.linearVelocity.x *= -0.95;
-            this.angularVelocity *= 0.9;
-            this.position.x = $width - 12;
-        }
-        if (this.position.x - 12 < 0) {
-            this.linearVelocity.x *= -0.95;
-            this.angularVelocity *= 0.9;
-            this.position.x = 12;
-        }
-        
-
-        // 休眠处理
-        if (Math.abs(this.linearVelocity.y) < 1){
-            this.linearVelocity.y = 0;
-            this.linearVelocity.x *= 0.95;
-        }
-        if (Math.abs(this.linearVelocity.x) < 1) {
-            this.linearVelocity.y *= 0.95;
-            this.linearVelocity.x = 0;
-        }
-    }
-
-
-    // 测试用
-    drawCircle($context, $animation){
+    render($context, $animation){
         ((x, y, r, rotation)=>{
             $context.save();
             $context.beginPath();
@@ -135,7 +115,7 @@ class Point{
             $context.lineTo(x + r * Math.cos(rotation * 180 / Math.PI), y + r * Math.sin(rotation * 180 / Math.PI));
             $context.stroke();
             $context.restore();
-        })(this.position.x, this.position.y, 12, this.rotation);
+        })(this.position.x, this.position.y, this.border, this.rotation);
     }
 
     update($timeStep=1/60){
@@ -147,6 +127,5 @@ class Point{
         this.integratePosition($timeStep);
         this.integrateAngularVelocity($timeStep);
         this.integrateRotation($timeStep);
-        this.bounce();
     }
 }

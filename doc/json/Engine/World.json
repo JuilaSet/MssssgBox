@@ -18,6 +18,15 @@
 				"disc": "添加一个物体"
 			},
 			{
+				"name": "render($animation)",
+				"disc": "渲染所有物体, $animation:渲染到的动画组件"
+			},
+			{
+				"name": "bounce($point)",
+				"disc": ["判断点是否碰撞,并产生边界碰撞效果",
+						"$point:Point对象"]
+			},
+			{
 				"name": "update()",
 				"disc": "更新所有物体"
 			}
@@ -30,6 +39,11 @@
 			{
 				"name": "bodiesLen",
 				"disc": "物体的数量"
+			},
+			{
+				"name": "strict",
+				"disc": ["限制方框，Vector2d对象，x:宽，y:高",
+						"如果没有设置就表示无限制, 不会产生撞到边界的反弹效果。"]
 			},
 			{
 				"name": "timeStep",

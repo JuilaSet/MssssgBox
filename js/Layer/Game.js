@@ -8,45 +8,37 @@ class Game{
     // 开始游戏
     run(){
         // AI模块
-        var sol = 12;
+        var sol = 378;
         let stateSpace = new StateSpace();
         stateSpace.setGenRule(($father)=>{
-            let node1 = new TNode($father.state + 5);
-            node1.msg = "+5";
-            let node2 = new TNode($father.state + 7);
-            node2.msg = "+7";
-            let node3 = new TNode($father.state + 6);
-            node3.msg = "+6";
-            if($father.h > 0)
-                return [node1, node2, node3];
+            if($father.state < sol)
+                return [new TNode({
+                    state :$father.state * 2,
+                    handleMsg : "*2"
+                }), new TNode({
+                    state :$father.state * 3,
+                    handleMsg : "*3"
+                }), new TNode({
+                    state :$father.state * 7,
+                    handleMsg : "*7"
+                })];
             else return [];
         });
+
         stateSpace.setJudge((node)=>{
             return (node.state == sol)? true:false;
         });
         stateSpace.setHeuristicFunc((node)=>{
-            return (sol - node.state);
+            return (sol / node.state);
         });
 
-        let first = new TNode(0);
+        let first = new TNode({state:1});
         let res = stateSpace.localOptimizationSearch(first);
 
         for(var x of res){
-            console.log("t:", x.state, x.msg, "index", x.index, "father", x.father);
+            console.log("t:", x.state, x.handleMsg, "index", x.index, "father", x.father);
         }
         console.log("TOTAL STEP", stateSpace.step);
-
-        // 物理模块
-        let point = new Point({
-            force : new Vector2d(0, 1000)
-        });
-        let world = new World();
-        world.addBody(point);
-        
-        let t = new Ticker();
-        t.tick(()=>{
-            world.update();
-        });
 
         // 控制器模块
         let moveController = new MoveController({
@@ -61,37 +53,85 @@ class Game{
 
         let timer = this.timer;
 
-        let stats = new Stats();
-        dis.container.appendChild( stats.dom );
+        //let stats = new Stats();
+        //dis.container.appendChild( stats.dom );
 
         let iotrigger = this.iotrigger;
 
+        let p = new Vector2d(0, 0);
         let animation = new Animation({
             layer:1,
             id:1,
             iotrigger: iotrigger,
-            position:new Vector2d(100, 100),
+            position:p,
             timer: timer,
-            width:450,
-            height:450
+            width:400,
+            height:400
+            // ,zone: new Zone({
+            //     position: new Vector2d(0, 0),
+            //     width: this.display.canvas.width,
+            //     height: this.display.canvas.height
+            // })
+        });
+
+        // 物理模块
+        let world = new World({
+            strict : new Zone({
+                position: new Vector2d(0, 0),
+                width: animation.width,
+                height: animation.height
+            })
         });
         
+        let ground = new Ground({
+            chain: [
+                new GroundSegment({
+                    origionPosition:new Vector2d(0, 300 - Math.random()*100)
+                }),
+                new GroundSegment({
+                    origionPosition:new Vector2d(100, 300 - Math.random()*100)
+                }),
+                new GroundSegment({
+                    origionPosition:new Vector2d(200, 300 - Math.random()*100)
+                }),
+                new GroundSegment({
+                    origionPosition:new Vector2d(300, 300 - Math.random()*100)
+                }),
+                new GroundSegment({
+                    origionPosition:new Vector2d(400, 300 - Math.random()*100) 
+                })
+            ]
+        });
+        console.log(ground.segments);
+
         moveController.bindObj = animation;
+        let a1 = Math.random() * 10 + 3, f1 = Math.random() * 20 - 10, h1 = Math.random() * 15 + 20;
+        let a2 = Math.random() * 10 + 3, f2 = Math.random() * 20 - 10, h2 = Math.random() * 15 + 20;
         animation.setAction(($context, $this)=>{
             animation.drawFrame();
-            animation.drawTree(moveController.speedX, 75, 10, Math.PI / Math.abs(moveController.speedY + 10));
-
-            world.bodies.forEach((d)=>{
-                d.drawCircle($context, $this);
-            })
+            animation.drawTree(
+                ground.segments[2].origionPosition.clone().sub(new Vector2d(0, h1)), 
+                moveController.speedX + f1, 
+                h1, 5, 
+                Math.PI / Math.abs(moveController.speedY + a1)
+            );
+            animation.drawTree(
+                ground.segments[3].origionPosition.clone().sub(new Vector2d(0, h2)), 
+                moveController.speedX + f2, 
+                h2, 5, 
+                Math.PI / Math.abs(moveController.speedY + a2)
+            );
+            world.render($this);
+            ground.render($context);
         });
         dis.addAnimation(animation);
 
-        animation.setMouseStretch((event)=>{
+        animation.setMouseDown((event)=>{
             world.addBody(new Point({
                 position : event.offset,
                 linearVelocity : new Vector2d(155, -145),
-                force : new Vector2d(0, 100)
+                force : new Vector2d(0, 100),
+                border : 1
             }));
         });
         
@@ -139,8 +179,9 @@ class Game{
 
         ///
         dis.render(()=>{
+            world.update();
             moveController.update();
-            stats.update();
+        //    stats.update();
             timer.update();
         }, ()=>{
 

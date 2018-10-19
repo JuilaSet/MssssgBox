@@ -27,6 +27,10 @@
 				"disc": "转单位向量"
 			},
 			{
+				"name": "sub($vec)",
+				"disc": "向量相减"
+			},
+			{
 				"name": "add($vec)",
 				"disc": "向量叠加"
 			},
