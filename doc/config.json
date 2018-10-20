@@ -1,10 +1,13 @@
 {
     "files": [
         "(example)",
+        "Engine/Unit",
         "Engine/Point",
         "Engine/World",
         "Engine/Ground",
-        "Engine/GroundSegment",
+        "Engine/StaticSquares",
+        "Engine/StaticSquare",
+        "Engine/GroundSegment", 
         "Layer/Game", 
         "Layer/Display",
         "Layer/Scene",

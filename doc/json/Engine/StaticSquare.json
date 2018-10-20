@@ -1,0 +1,40 @@
+{
+	"title": "StaticSquare",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"可碰撞静态方形物体"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option)",
+				"disc": ["$option:选项",
+						"describe2"]
+			},
+			{
+				"name": "kill()",
+				"disc": "使自己无效"
+			},
+			{
+				"name": "render($context)",
+				"disc": ["绘制自己的边框",
+						"$context:绘图上下文"]
+			}
+		],
+		"properties": [
+			{
+				"name": "zone",
+				"disc": "describe"
+			}
+		],
+		"<other>":[
+			{
+				"name": "example-other",
+				"disc": "describe"
+			}
+		]
+	}
+}

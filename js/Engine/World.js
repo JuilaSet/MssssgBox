@@ -17,7 +17,8 @@ class World{
                     direction:new Vector2d(0, document.documentElement.clientWidth)
                 })
             ]});
-    //    this.gravity = $option.gravity || new Vector2d(0, 0);
+
+        this._statics = $option.statics || [];  // + 静态碰撞物体
     }
 
     set ground($grd){
@@ -35,20 +36,27 @@ class World{
                 p.update(this.timeStep);
                 if(p.enableStrictBounce)this.strictBounce(p);
                 if(p.enableGroundBounce)this.groundBounce(p);
-                p.sleepCheck();    
-                if(p.border < 0.1){ // []][
-                    p.kill();
-                }
+                if(p.enableStaticBounce)this.staticBounce(p);
             }
         }
     }
 
     render($animation){
+        // points
         for(let x = 0; x < this._bodiesLen; x++){
             let d = this.bodies[x];
             if(d){
                 if(d.living){
                     d.render($animation.context, $animation)
+                };
+            }
+        }
+        // statics []][
+        for(let x = 0; x < this._statics.length; x++){
+            let s = this._statics[x];
+            if(s){
+                if(s.isLiving()){
+                    s.render($animation.context);
                 };
             }
         }
@@ -60,13 +68,17 @@ class World{
     cleanBodies(){
         for(let x = 0; x < this._bodiesLen; x++){
             if(!this.bodies[x].living){
-                this.bodies.splice(x, x);
+                this.bodies.splice(x, 1);
                 this._bodiesLen = this.bodies.length;
-                x++;
+            }
+        }
+
+        for(let x = 0; x < this._statics.length; x++){
+            if(!this._statics[x].isLiving()){
+                this._statics.splice(x, 1);
             }
         }
     }
-
 
     isUnderGround($groundSeg, $position){
         let p = $position.clone().sub($groundSeg.origionPosition);
@@ -74,9 +86,22 @@ class World{
     }
 
     addBody($body){
-        $body.world = this;
-        this.bodies.push($body);
-        this._bodiesLen = this.bodies.length;
+        if($body instanceof Array){
+            for(let i = 0; i < $body.length; i++){
+                $body[i].world = this;
+                this.bodies.push($body[i]);
+            }
+            this._bodiesLen = this.bodies.length;
+        }else if($body instanceof Point){
+            $body.world = this;
+            this.bodies.push($body);
+            this._bodiesLen = this.bodies.length;
+        }else if($body instanceof StaticSquares){
+            $body.world = this;
+            this._statics.push($body);
+        }else if($body instanceof StaticSquare){
+            this._statics.push($body);
+        }
     }
 
     // 地表碰撞效果
@@ -85,8 +110,12 @@ class World{
         let g = this._ground.getGroundUndered(p);
         
         // 碰撞检测
-        if(g && this.isUnderGround(g, p)){
-            $point.onGroundHit(g);
+        if(g){
+            if(this.isUnderGround(g, p)){
+                $point.onGroundHit(g);
+            }else{
+                $point.onGroundHover(g);
+            }
         }
     }
 
@@ -113,6 +142,23 @@ class World{
             $point.onStrictHit(this.strict, "left");
         }
     }
+
+    // 静态物体碰撞效果
+    staticBounce($point){
+        let p = $point.getNextFramePosition(this.timeStep);
+        let sqs = this._statics;
+        // 碰撞检测
+        for(let x = 0; x < this._statics.length; x++){
+            let sq = sqs[x].getSquareIn(p);
+            if(sq){
+                let pos = $point.position;
+                let psq = sq.position;
+                if(pos.y > psq.y && pos.y < psq.y + sq.zone.height){
+                    $point.onStaticHit('left', sq);
+                }else{
+                    $point.onStaticHit('top', sq);
+                }
+            }
+        }
+    }
 }
-// 动态对象
-World.DYNAMIC = 0x1;

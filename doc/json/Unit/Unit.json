@@ -1,0 +1,31 @@
+{
+	"title": "Unit",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"是游戏中的所有角色的父类"
+			}
+		],
+		"methods": [
+			{
+				"name": "example-methods",
+				"disc": ["describe1",
+						"describe2"]
+			}
+		],
+		"properties": [
+			{
+				"name": "example-properties",
+				"disc": "describe"
+			}
+		],
+		"<other>":[
+			{
+				"name": "example-other",
+				"disc": "describe"
+			}
+		]
+	}
+}

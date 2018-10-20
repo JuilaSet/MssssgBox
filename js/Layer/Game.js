@@ -8,38 +8,6 @@ class Game{
 
     // 开始游戏
     run(){
-        // AI模块
-        var sol = 378;
-        let stateSpace = new StateSpace();
-        stateSpace.setGenRule(($father)=>{
-            if($father.state < sol)
-                return [new TNode({
-                    state :$father.state * 2,
-                    handleMsg : "*2"
-                }), new TNode({
-                    state :$father.state * 3,
-                    handleMsg : "*3"
-                }), new TNode({
-                    state :$father.state * 7,
-                    handleMsg : "*7"
-                })];
-            else return [];
-        });
-
-        stateSpace.setJudge((node)=>{
-            return (node.state == sol)? true:false;
-        });
-        stateSpace.setHeuristicFunc((node)=>{
-            return (sol / node.state);
-        });
-
-        let first = new TNode({state:1});
-        let res = stateSpace.localOptimizationSearch(first);
-
-        for(var x of res){
-            console.log("t:", x.state, x.handleMsg, "index", x.index, "father", x.father);
-        }
-        console.log("TOTAL STEP", stateSpace.step);
 
         // 控制器模块
         let moveController = new MoveController({
@@ -68,26 +36,23 @@ class Game{
             timer: timer,
             width:1350,
             height:600
-            // ,zone: new Zone({
-            //     position: new Vector2d(0, 0),
-            //     width: this.display.canvas.width,
-            //     height: this.display.canvas.height
-            // })
         });
 
         // 物理模块
-        let segnum = 100, segs = [], last = 400;
+        let segnum = 10, segs = [], last = 400;
         for(let x = 0; x <= segnum; x++){
-            last = (Math.random() * 10 - 5) + last;
+            last = (Math.random() * 100 - 50) + last;
             segs[x] = new GroundSegment({
                 origionPosition:new Vector2d(
                     (animation.width / segnum) * x, last
                 )
             });
         }
+
         let ground = new Ground({
             groundChain: segs
         });
+
         let world = new World({
             strict : new Zone({
                 position: new Vector2d(0, 0),
@@ -96,57 +61,105 @@ class Game{
             }),
             ground: ground
         });
-        let point = new Point({
-            linearVelocity : new Vector2d(Math.random() * 120 - 120/2, Math.random() * 120 - 120/2),
-            position : new Vector2d(100, 50),
-            force : new Vector2d(0, 100),
-            border : 10
+        let sqrs = new StaticSquares({
+            sqrts: [
+                new StaticSquare({
+                    position: new Vector2d(150, 150),
+                    zone: new Zone({
+                        position: new Vector2d(150, 150),
+                        width: 45,
+                        height: 10
+                    })
+                }),
+                new StaticSquare({
+                    position: new Vector2d(150, 140),
+                    zone: new Zone({
+                        position: new Vector2d(150, 140),
+                        width: 45,
+                        height: 10
+                    })
+                }),
+                new StaticSquare({
+                    position: new Vector2d(150, 130),
+                    zone: new Zone({
+                        position: new Vector2d(150, 130),
+                        width: 45,
+                        height: 10
+                    })
+                })
+            ]
         });
-        moveController.bindObj = point;
-        world.addBody(point);
+        world.addBody(sqrs);
+
+        
+        // moveController.bindObj = point;
 
         // moveController.bindObj = animation;
         let a1 = Math.random() * 10 + 3, f1 = Math.random() * 20 - 10, h1 = Math.random() * 15 + 20;
-        let a2 = Math.random() * 10 + 3, f2 = Math.random() * 20 - 10, h2 = Math.random() * 15 + 20;
         let rn1 = Math.floor(Math.random() * (segnum - 1)+ 1);
-        let rn2 = Math.floor(Math.random() * (segnum - 1)+ 1);
         animation.setAction(($context, $this)=>{
             animation.drawFrame();
             animation.drawTree(
                 ground.segments[rn1].origionPosition.clone().sub(new Vector2d(0, h1)), 
-                -moveController.speedX - f1, 
+                moveController.speedX - f1, 
                 h1, 5, 
-                Math.PI / Math.abs(moveController.speedY + a1)
-            );
-            animation.drawTree(
-                ground.segments[rn2].origionPosition.clone().sub(new Vector2d(0, h2)), 
-                -moveController.speedX - f2, 
-                h2, 5, 
-                Math.PI / Math.abs(moveController.speedY + a2)
+                Math.PI / Math.abs(moveController.speedY - a1)
             );
             world.render($this);
         });
         dis.addAnimation(animation);
 
         animation.setMouseUp((event)=>{
-            
+            if(event.button == 2){
+                sqrs.addStaticSquare(
+                    new StaticSquare({
+                        position: event.offset,
+                        zone: new Zone({
+                            position: event.offset,
+                            width: 45,
+                            height: 10
+                        })
+                    })
+                );
+            }
         });
 
-        let s = 40;
-        point.setOnMove(()=>{
-            let p = new Point({
-                position : point.position.clone(),
-                linearVelocity : new Vector2d(Math.random() * s - s/2, Math.random() * s - s/2),
-                border : 10
+        animation.setDblClick((event, down)=>{
+            let point = new Point({
+                linearVelocity : new Vector2d(Math.random() * 120 - 120/2, Math.random() * 120 - 120/2),
+                position : event.offset,
+                force : new Vector2d(0, 100),
+                border : Math.random() * 10 + 3
             });
-            p.onmove = ()=>{
-                p.border-= 0.4;
-            };
-            world.addBody(p);
-        });
-
-        animation.setMouseStretch((event, down)=>{
-            point.position = event.offset;
+            point.setOnUpdate(()=>{
+                let p = new Point({
+                    linearVelocity : new Vector2d(Math.random() * 45 - 45/2, Math.random() * 45 - 45/2),
+                    position : point.position.clone(),
+                    enableStrictBounce : false,
+                    enableGroundBounce : false,
+                    enableStaticBounce : false,
+                    border : point.border
+                });
+                p.setOnUpdate(()=>{
+                    p.border -= 0.4;
+                    if(p.border < 0.4){
+                        p.kill();
+                    }
+                });
+                world.addBody(p);
+            });
+    
+            point.setOnGroundHit(($ground)=>{
+                point.downBounce($ground.argue);
+                point.setPositionToGroundSegment($ground.origionPosition, $ground.argue);
+                point.border -= 3;
+                if(point.border < 3){
+                    point.setPositionToGroundSegment(ground.getGroundUndered(point.position));
+                    point.kill();
+                }
+            });
+    
+            world.addBody(point);
         });
         
         // X
@@ -163,7 +176,7 @@ class Game{
         }, 65);
 
         iotrigger.setKeyDownEvent(()=>{
-           moveController.accLeft(8);
+            moveController.accLeft(8);
          }, 65);
         
         // Y
@@ -184,7 +197,7 @@ class Game{
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-
+            console.log(world.bodies);
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{

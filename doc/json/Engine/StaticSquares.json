@@ -1,0 +1,40 @@
+{
+	"title": "StaticSquares",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"可碰撞静态方形物体集"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option)",
+				"disc": ["$option:选项",
+						"describe2"]
+			},
+			{
+				"name": "getSquareIn($position)",
+				"disc": ["根据位置$position检查在自己的哪个方块内，返回最后一个检查到的方块",
+						"$position: Vector2d对象"]
+			},
+			{
+				"name": "kill()",
+				"disc": "使自己无效"
+			}
+		],
+		"properties": [
+			{
+				"name": "example-properties",
+				"disc": "describe"
+			}
+		],
+		"<other>":[
+			{
+				"name": "example-other",
+				"disc": "describe"
+			}
+		]
+	}
+}

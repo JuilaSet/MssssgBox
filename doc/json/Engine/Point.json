@@ -45,6 +45,17 @@
 				"disc": "不断在帧循环中调用。"
 			},
 			{
+				"name": "setPositionToGroundSegment($orgPosition, $argue)",
+				"disc": ["将点位置移动到对应的地面片段处",
+						"$orgPosition: 片段的起点", 
+						"$argue: 片段角度"]
+			},
+			{
+				"name": "setPositionToGroundSegment($groundSeg)",
+				"disc": ["将点位置移动到对应的地面片段处",
+						"$groundSeg: 片段"]
+			},
+			{
 				"name": "setOnStrictHit($callBackFunc)",
 				"disc": "设置撞击限制框时回调的函数onStrictHit"
 			},
@@ -60,7 +71,15 @@
 			},
 			{
 				"name": "onGroundHit($ground)",
-				"disc": "撞击地面时调用，$ground:碰撞地面"
+				"disc": "撞击地面时调用，$ground:碰撞地面片段"
+			},
+			{
+				"name": "setOnGroundHover($callBackFunc)",
+				"disc": "设置在地面上方时回调的函数onGroundHit"
+			},
+			{
+				"name": "onGroundHover($ground)",
+				"disc": "在地面上方时调用，$ground:下方地面片段"
 			},
 			{
 				"name": "addLinearSpeed($vec, $strength)",
@@ -71,12 +90,32 @@
 				"disc": "叠加角速度, $strength是角度大小。"
 			},
 			{
+				"name": "setOnMove($callBackFunc)",
+				"disc": "设置移动时调用的函数：$callBackFunc"
+			},
+			{
 				"name": "onmove()",
 				"disc": "在速度不为0时调用。"
 			},
 			{
+				"name": "setOnStop($callBackFunc)",
+				"disc": "设置移动时调用的函数：$callBackFunc"
+			},
+			{
+				"name": "onstop()",
+				"disc": "在速度为0时调用。"
+			},
+			{
 				"name": "stop()",
 				"disc": "线速度和角速度置为0"
+			},
+			{
+				"name": "setOnUpdate()",
+				"disc": "设置更新时调用的函数"
+			},
+			{
+				"name": "onupdate()",
+				"disc": "更新时调用"
 			},
 			{
 				"name": "update()",
@@ -91,7 +130,11 @@
 			{
 				"name": "enableGroundBounce",
 				"disc": "允许地面碰撞"
-			},  
+			},
+			{
+				"name": "enableStaticBounce",
+				"disc": "允许与静态物体碰撞"
+			},
 			{
 				"name": "position",
 				"disc": "位置，Vector2d对象。"
@@ -137,7 +180,11 @@
 			{
 				"name": "enableGroundBounce",
 				"disc": "设置是否允许地面碰撞"
-			},  
+			},
+			{
+				"name": "enableStaticBounce",
+				"disc": "设置是否允许与静态物体碰撞"
+			},
 			{
 				"name": "mass",
 				"disc": "设置质量"

@@ -73,37 +73,39 @@ class MoveController{
     }
 
     update(){
-        // x:摩擦力
-        if(Math.abs(this.speedX) > this.frictionX){
-            this._fX = this.frictionX * this.speedX / Math.abs(this.speedX);
-        }else{
-            this._fX = 0;
-            this.speedX = 0;
-        }
+        if(this._bindObj){
+            // x:摩擦力
+            if(Math.abs(this.speedX) > this.frictionX){
+                this._fX = this.frictionX * this.speedX / Math.abs(this.speedX);
+            }else{
+                this._fX = 0;
+                this.speedX = 0;
+            }
 
-        // x:速度上限
-        if(Math.abs(this.speedX) > this.maxSpeedX){
-            this.speedX = this.maxSpeedX * this.speedX / Math.abs(this.speedX);
-        }
-        this.speedX += (this.aX1 + this.aX2) - this._fX;
-        this._bindObj.position.x += this.speedX;
-        
-        // y:摩擦力
-        if(Math.abs(this.speedY) > this.frictionY){
-            this._fY = this.frictionY * this.speedY / Math.abs(this.speedY);
-        }else{
-            this._fY = 0;
-            this.speedY = 0;
-        }
-        // y:速度上限
-        if(Math.abs(this.speedY) > this.maxSpeedY){
-            this.speedY = this.maxSpeedY * this.speedY / Math.abs(this.speedY);
-        }
-        this.speedY += (this.aY1 + this.aY2) - this._fY;
-        this._bindObj.position.y += this.speedY;
+            // x:速度上限
+            if(Math.abs(this.speedX) > this.maxSpeedX){
+                this.speedX = this.maxSpeedX * this.speedX / Math.abs(this.speedX);
+            }
+            this.speedX += (this.aX1 + this.aX2) - this._fX;
+            this._bindObj.position.x += this.speedX;
+            
+            // y:摩擦力
+            if(Math.abs(this.speedY) > this.frictionY){
+                this._fY = this.frictionY * this.speedY / Math.abs(this.speedY);
+            }else{
+                this._fY = 0;
+                this.speedY = 0;
+            }
+            // y:速度上限
+            if(Math.abs(this.speedY) > this.maxSpeedY){
+                this.speedY = this.maxSpeedY * this.speedY / Math.abs(this.speedY);
+            }
+            this.speedY += (this.aY1 + this.aY2) - this._fY;
+            this._bindObj.position.y += this.speedY;
 
-        if(this.speedX + this.speedY != 0){
-            this.onmove();
+            if(this.speedX + this.speedY != 0){
+                this.onmove();
+            }
         }
     }
 }

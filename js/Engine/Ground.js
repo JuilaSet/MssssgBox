@@ -3,8 +3,10 @@ class Ground {
         this._segments = []; // 地面片段
         this._size = 0;
 
-        for(let s of $option.groundChain){ //chain @Array
-            this.addSegments(s);
+        if($option.groundChain){
+            for(let s of $option.groundChain){ //chain @Array
+                this.addSegments(s);
+            }
         }
     }
     

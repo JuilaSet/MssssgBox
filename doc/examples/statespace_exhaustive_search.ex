@@ -68,3 +68,35 @@ stateSpace.setHeuristicFunc((node)=>{
 
 let first = new TNode(0);
 let res = stateSpace.globalOptimizationSearch(first);
+        // AIÄ£¿é
+        var sol = 378;
+        let stateSpace = new StateSpace();
+        stateSpace.setGenRule(($father)=>{
+            if($father.state < sol)
+                return [new TNode({
+                    state :$father.state * 2,
+                    handleMsg : "*2"
+                }), new TNode({
+                    state :$father.state * 3,
+                    handleMsg : "*3"
+                }), new TNode({
+                    state :$father.state * 7,
+                    handleMsg : "*7"
+                })];
+            else return [];
+        });
+
+        stateSpace.setJudge((node)=>{
+            return (node.state == sol)? true:false;
+        });
+        stateSpace.setHeuristicFunc((node)=>{
+            return (sol / node.state);
+        });
+
+        let first = new TNode({state:1});
+        let res = stateSpace.localOptimizationSearch(first);
+
+        for(var x of res){
+            console.log("t:", x.state, x.handleMsg, "index", x.index, "father", x.father);
+        }
+        console.log("TOTAL STEP", stateSpace.step);

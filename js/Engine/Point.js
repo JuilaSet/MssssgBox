@@ -17,10 +17,10 @@ class Point{
         this.border = $option.border || 1;
         this.living = true; // 死亡时删除
 
-        this.enableStrictBounce = ($option.enableStrictBounce!=undefined)?$option.enableStrictBounce:true;
-        this.enableGroundBounce = ($option.enableGroundBounce!=undefined)?$option.enableGroundBounce:true;
+        this.enableStrictBounce = ($option.enableStrictBounce != undefined)?$option.enableStrictBounce:true;
+        this.enableGroundBounce = ($option.enableGroundBounce != undefined)?$option.enableGroundBounce:true;
+        this.enableStaticBounce = ($option.enableStaticBounce != undefined)?$option.enableStaticBounce:true;
         
-        this.onmove = $option.onmove || (()=>{});
         this._check();
     }
     
@@ -83,14 +83,13 @@ class Point{
     }
 
     getNextFramePosition(dt){
-    //[]][  return this.position.clone.add(this.linearVelocity.multiply(dt));
         return new Vector2d(
             this.position.x + this.linearVelocity.x * dt,
             this.position.y + this.linearVelocity.y * dt
         );
     }
 
-    init(){
+    init(){ // +
         this.linearVelocity.x = 0;
         this.linearVelocity.y = 0;
         this.angularVelocity = 0;
@@ -126,6 +125,24 @@ class Point{
 
     }
 
+    setOnStop($callBackFunc){
+        this.onstop = $callBackFunc;
+        return this;
+    }
+
+    onstop(){
+
+    }
+
+    setOnUpdate($callBackFunc){
+        this.onupdate = $callBackFunc;
+        return this;
+    }
+
+    onupdate(){
+
+    }
+
     setOnStrictHit($callBackFunc){
         this.onStrictHit = $callBackFunc;
         return this;
@@ -140,16 +157,41 @@ class Point{
         return this;
     }
 
+    setOnGroundHover($callBackFunc){
+        this.onGroundHover = $callBackFunc;
+        return this;
+    }
+
     onGroundHit($ground){
         this.downBounce($ground.argue);
-        this.setPositionToGround($ground.origionPosition, $ground.argue);
+        this.setPositionToGroundSegment($ground.origionPosition, $ground.argue);
+    }
+
+    onGroundHover($ground){
+
+    }
+
+    onStaticHit($which, $static){   // +
+        this.staticBounce($which);
+        this.init();
+        // $static.kill();
+        // $static.group.cleanSqures();
+        // if($static.group.size == 0){
+        //     $static.group.kill();
+        // }
     }
 
     // 设置位置到地面
-    setPositionToGround($orgPosition, $argue){
+    setPositionToGroundSegment($orgPosition, $argue){
         let p = this.position;
-        let dx = p.x - $orgPosition.x;
-        p.y = $orgPosition.y - Math.tan($argue) * dx;
+        if(!$orgPosition)return;
+        if($orgPosition instanceof GroundSegment){
+            let dx = p.x - $orgPosition.origionPosition.x;
+            p.y = $orgPosition.origionPosition.y - Math.tan($orgPosition.argue) * dx;
+        }else{
+            let dx = p.x - $orgPosition.x;
+            p.y = $orgPosition.y - Math.tan($argue) * dx;
+        }
         return this;
     }
 
@@ -166,7 +208,6 @@ class Point{
         let x = $strict.position.x, y = $strict.position.y;
         let p = this.position;
 
-        // 碰撞检测
         switch($which){
             case "top":
                 this.linearVelocity.y *= -0.95;
@@ -192,6 +233,23 @@ class Point{
                 console.warn("strict-judging problem");
         }
     }
+
+    staticBounce($which){   // +
+        switch($which){
+            case "top":
+            case "bottom":
+                this.linearVelocity.y *= -0.95;
+                this.angularVelocity *= 0.9;
+                break;
+            case "right":
+            case "left":
+                this.linearVelocity.x *= -0.95;
+                this.angularVelocity *= 0.9;
+                break;
+            default:
+                console.warn("static-judging problem");
+        }
+    }
     
     stop(){
         this.linearVelocity.x = 0;
@@ -213,17 +271,20 @@ class Point{
             $context.lineTo(x + r * Math.cos(rotation * 180 / Math.PI), y + r * Math.sin(rotation * 180 / Math.PI));
             $context.stroke();
             $context.restore();
-        })(this.position.x, this.position.y, this.border, this.rotation);
+        })(this.position.x, this.position.y, this.border>0?this.border:0, this.rotation);
     }
 
     update($timeStep=1/60){
+        this.sleepCheck();
         if(this.linearVelocity.x != 0 || this.linearVelocity.y != 0){
             this.onmove();
+        }else{
+            this.onstop();
         }
-
         this.integrateVelocity($timeStep);
         this.integratePosition($timeStep);
         this.integrateAngularVelocity($timeStep);
         this.integrateRotation($timeStep);
+        this.onupdate();
     }
 }
