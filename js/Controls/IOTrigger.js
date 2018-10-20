@@ -124,7 +124,7 @@ class IOTrigger extends Trigger {
                     offset.x = mmp.x - offset.x;
                     offset.y = mmp.y - offset.y;
                     event.offset = offset;
-                    this.mouseStretchEvents[x].func(event);    
+                    this.mouseStretchEvents[x].func(event, this.downPosition);    
                 }
             }
         }

@@ -97,7 +97,9 @@ class Game{
             ground: ground
         });
         let point = new Point({
+            linearVelocity : new Vector2d(Math.random() * 120 - 120/2, Math.random() * 120 - 120/2),
             position : new Vector2d(100, 50),
+            force : new Vector2d(0, 100),
             border : 10
         });
         moveController.bindObj = point;
@@ -126,16 +128,24 @@ class Game{
         });
         dis.addAnimation(animation);
 
-        animation.setMouseDown((event)=>{
-            world.addBody(new Point({
-                position : event.offset,
-                linearVelocity : new Vector2d(Math.random() * 200 - 100, Math.random() * 200 - 100),
-                force : new Vector2d(0, 100),
-                border : 10
-            }));
+        animation.setMouseUp((event)=>{
+            
         });
 
-        animation.setMouseStretch((event)=>{
+        let s = 40;
+        point.setOnMove(()=>{
+            let p = new Point({
+                position : point.position.clone(),
+                linearVelocity : new Vector2d(Math.random() * s - s/2, Math.random() * s - s/2),
+                border : 10
+            });
+            p.onmove = ()=>{
+                p.border-= 0.4;
+            };
+            world.addBody(p);
+        });
+
+        animation.setMouseStretch((event, down)=>{
             point.position = event.offset;
         });
         

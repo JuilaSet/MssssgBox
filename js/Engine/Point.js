@@ -19,6 +19,8 @@ class Point{
 
         this.enableStrictBounce = ($option.enableStrictBounce!=undefined)?$option.enableStrictBounce:true;
         this.enableGroundBounce = ($option.enableGroundBounce!=undefined)?$option.enableGroundBounce:true;
+        
+        this.onmove = $option.onmove || (()=>{});
         this._check();
     }
     
@@ -115,12 +117,18 @@ class Point{
         return this;
     }
 
+    setOnMove($callBackFunc){
+        this.onmove = $callBackFunc;
+        return this;
+    }
+
     onmove(){
-        
+
     }
 
     setOnStrictHit($callBackFunc){
         this.onStrictHit = $callBackFunc;
+        return this;
     }
 
     onStrictHit($strict, $which){
@@ -129,6 +137,7 @@ class Point{
 
     setOnGroundHit($callBackFunc){
         this.onGroundHit = $callBackFunc;
+        return this;
     }
 
     onGroundHit($ground){
@@ -141,6 +150,7 @@ class Point{
         let p = this.position;
         let dx = p.x - $orgPosition.x;
         p.y = $orgPosition.y - Math.tan($argue) * dx;
+        return this;
     }
 
     downBounce($argue){

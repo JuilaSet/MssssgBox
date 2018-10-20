@@ -15,23 +15,23 @@
 			},
 			{
 				"name": "setDblClick($func)",
-				"disc": "$func:双击此对象时调用的函数。" 
+				"disc": "$func(event):双击此对象时调用的函数。" 
 			},
 			{
 				"name": "setMouseDown($func)",
-				"disc": "$func:鼠标按下此对象时调用的函数。" 
+				"disc": "$func(event):鼠标按下此对象时调用的函数。" 
 			},
 			{
 				"name": "setMouseMove($func)",
-				"disc": "$func:鼠标在此对象上移动时调用的函数。" 
+				"disc": "$func(event):鼠标在此对象上移动时调用的函数。" 
 			},
 			{
 				"name": "setMouseStretch($func)",
-				"disc": "$func:鼠标拖拽此对象时调用的函数。注意，在鼠标移开zone时无效果。" 
+				"disc": "$func(event, down):鼠标拖拽此对象时调用的函数。注意，在鼠标移开zone时无效果。down:鼠标按下时的位置。" 
 			},
 			{
 				"name": "setMouseUp($func)",
-				"disc": "$func:鼠标在此对象上抬起时调用的函数。" 
+				"disc": "$func(event):鼠标在此对象上抬起时调用的函数。" 
 			},
 			{
 				"name": "kill()",

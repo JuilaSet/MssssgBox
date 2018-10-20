@@ -31,22 +31,42 @@ class World{
     update(){
         for (let k = 0; k < this._bodiesLen; k++) {
             let p = this.bodies[k];
-            if(p.living){
+            if(p && p.living){
                 p.update(this.timeStep);
                 if(p.enableStrictBounce)this.strictBounce(p);
                 if(p.enableGroundBounce)this.groundBounce(p);
-                p.sleepCheck();    // []][
+                p.sleepCheck();    
+                if(p.border < 0.1){ // []][
+                    p.kill();
+                }
             }
         }
     }
 
     render($animation){
-        this.bodies.forEach((d)=>{
-            if(d.living)d.render($animation.context, $animation);
-        })
+        for(let x = 0; x < this._bodiesLen; x++){
+            let d = this.bodies[x];
+            if(d){
+                if(d.living){
+                    d.render($animation.context, $animation)
+                };
+            }
+        }
         // ground
         this._ground.render($animation.context);
+        this.cleanBodies();
     }
+
+    cleanBodies(){
+        for(let x = 0; x < this._bodiesLen; x++){
+            if(!this.bodies[x].living){
+                this.bodies.splice(x, x);
+                this._bodiesLen = this.bodies.length;
+                x++;
+            }
+        }
+    }
+
 
     isUnderGround($groundSeg, $position){
         let p = $position.clone().sub($groundSeg.origionPosition);
