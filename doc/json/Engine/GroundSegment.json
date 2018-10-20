@@ -1,0 +1,57 @@
+{
+	"title": "GroundSegment",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"一小片地皮"
+			}
+		],
+		"methods": [ 
+			{
+				"name": "constructor($option)",
+				"disc": "$option:选项"
+			},
+			{
+				"name": "render($context, $color)",
+				"disc": ["绘制这个片段",
+						"$context:画笔，绘图上下文",
+						"$color:颜色"]
+			},
+			{
+				"name": "setNextSegment($seg)",
+				"disc": ["设置下一块地皮，地皮必须在自己的右边",
+						"$seg:下一块地皮"]
+			}
+		],
+		"properties": [
+			{
+				"name": "origionPosition",
+				"disc": "地皮初始坐标"
+			},
+			{
+				"name": "direction",
+				"disc": "地皮指向"
+			},
+			{
+				"name": "argue",
+				"disc": "地皮角度"
+			}
+		],
+		"option":[
+			{
+				"name": "origionPosition",
+				"disc": "设置地皮初始坐标"
+			},
+			{
+				"name": "direction",
+				"disc": "设置地皮指向"
+			},
+			{
+				"name": "argue",
+				"disc": "设置地皮角度"
+			}
+		]
+	}
+}

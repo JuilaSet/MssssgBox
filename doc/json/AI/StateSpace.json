@@ -71,7 +71,7 @@
 			},
 			{
 				"name": "setHowFarFromOriginFunc($g)",
-				"disc": ["$g($gnode, $graphic):设置启发函数，传入图结点对象，返回到起点的实际代价值。",
+				"disc": ["$g($gnode, $graphic):设置距离出发点的代价函数，传入图结点对象，返回到起点的实际代价值。",
 						"$graphic:当前生成的搜索图，用于计算到起点的路径"]
 			},
 			{

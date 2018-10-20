@@ -54,8 +54,8 @@ class Game{
 
         let timer = this.timer;
 
-        //let stats = new Stats();
-        //dis.container.appendChild( stats.dom );
+        let stats = new Stats();
+        dis.container.appendChild( stats.dom );
 
         let iotrigger = this.iotrigger;
 
@@ -66,8 +66,8 @@ class Game{
             iotrigger: iotrigger,
             position:p,
             timer: timer,
-            width:400,
-            height:400
+            width:1350,
+            height:600
             // ,zone: new Zone({
             //     position: new Vector2d(0, 0),
             //     width: this.display.canvas.width,
@@ -76,49 +76,49 @@ class Game{
         });
 
         // 物理模块
-        
+        let segnum = 100, segs = [], last = 400;
+        for(let x = 0; x <= segnum; x++){
+            last = (Math.random() * 10 - 5) + last;
+            segs[x] = new GroundSegment({
+                origionPosition:new Vector2d(
+                    (animation.width / segnum) * x, last
+                )
+            });
+        }
         let ground = new Ground({
-            groundChain: [
-                new GroundSegment({
-                    origionPosition:new Vector2d(0, 300 - Math.random()*100)
-                }),
-                new GroundSegment({
-                    origionPosition:new Vector2d(100, 300 - Math.random()*100)
-                }),
-                new GroundSegment({
-                    origionPosition:new Vector2d(200, 300 - Math.random()*100)
-                }),
-                new GroundSegment({
-                    origionPosition:new Vector2d(300, 300 - Math.random()*100)
-                }),
-                new GroundSegment({
-                    origionPosition:new Vector2d(400, 300 - Math.random()*100) 
-                })
-            ]
+            groundChain: segs
         });
         let world = new World({
             strict : new Zone({
                 position: new Vector2d(0, 0),
                 width: animation.width,
                 height: animation.height
-            })
-            ,ground: ground
+            }),
+            ground: ground
         });
+        let point = new Point({
+            position : new Vector2d(100, 50),
+            border : 10
+        });
+        moveController.bindObj = point;
+        world.addBody(point);
 
-        moveController.bindObj = animation;
+        // moveController.bindObj = animation;
         let a1 = Math.random() * 10 + 3, f1 = Math.random() * 20 - 10, h1 = Math.random() * 15 + 20;
         let a2 = Math.random() * 10 + 3, f2 = Math.random() * 20 - 10, h2 = Math.random() * 15 + 20;
+        let rn1 = Math.floor(Math.random() * (segnum - 1)+ 1);
+        let rn2 = Math.floor(Math.random() * (segnum - 1)+ 1);
         animation.setAction(($context, $this)=>{
             animation.drawFrame();
             animation.drawTree(
-                ground.segments[2].origionPosition.clone().sub(new Vector2d(0, h1)), 
-                moveController.speedX + f1, 
+                ground.segments[rn1].origionPosition.clone().sub(new Vector2d(0, h1)), 
+                -moveController.speedX - f1, 
                 h1, 5, 
                 Math.PI / Math.abs(moveController.speedY + a1)
             );
             animation.drawTree(
-                ground.segments[3].origionPosition.clone().sub(new Vector2d(0, h2)), 
-                moveController.speedX + f2, 
+                ground.segments[rn2].origionPosition.clone().sub(new Vector2d(0, h2)), 
+                -moveController.speedX - f2, 
                 h2, 5, 
                 Math.PI / Math.abs(moveController.speedY + a2)
             );
@@ -129,15 +129,14 @@ class Game{
         animation.setMouseDown((event)=>{
             world.addBody(new Point({
                 position : event.offset,
-                linearVelocity : new Vector2d(0, 200),
-                    // Math.random() * 200 - 100, Math.random() * 200 - 100),
+                linearVelocity : new Vector2d(Math.random() * 200 - 100, Math.random() * 200 - 100),
                 force : new Vector2d(0, 100),
                 border : 10
             }));
         });
 
-        animation.setDblClick((event)=>{
-
+        animation.setMouseStretch((event)=>{
+            point.position = event.offset;
         });
         
         // X
@@ -175,7 +174,7 @@ class Game{
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            
+
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{
@@ -186,7 +185,7 @@ class Game{
         dis.render(()=>{
             world.update();
             moveController.update();
-        //    stats.update();
+            stats.update();
             timer.update();
         }, ()=>{
 

@@ -12,18 +12,37 @@
 			{
 				"name": "constructor($option)",
 				"disc": "$option：选项"
+			},
+			{
+				"name": "render($ctx)",
+				"disc": ["绘制每块地皮片段",
+						"$ctx:画笔，绘图上下文"]
+			},
+			{
+				"name": "getGroundUndered($position)",
+				"disc": ["得到位置下方的地皮片段",
+						"$position：位置"]
+			},
+			{
+				"name": "addSegments($seg)",
+				"disc": ["加入地皮片段",
+						"$seg：地皮片段"]
 			}
 		],
 		"properties": [
 			{
-				"name": "xxxxx",
-				"disc": "xxxxx"
+				"name": "segments",
+				"disc": "连续的地皮片段"
+			},
+			{
+				"name": "size",
+				"disc": "地皮片段个数"
 			}
 		],
 		"option":[
 			{
-				"name": "xxxxx",
-				"disc": "xxxxxxx"
+				"name": "groundChain",
+				"disc": "连续的地皮片段组成的数组"
 			}
 		]
 	}

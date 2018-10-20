@@ -27,6 +27,12 @@
 						"$point:Point对象"]
 			},
 			{
+				"name": "isUnderGround($groundseg, $position) ",
+				"disc": ["是否在地表以下，返回bool类型",
+						"$groundSeg:地面片段",
+						"$position:要判断的位置"]
+			},
+			{
 				"name": "update()",
 				"disc": "更新所有物体"
 			}
@@ -41,6 +47,10 @@
 				"disc": "物体的数量"
 			},
 			{
+				"name": "ground",
+				"disc": "下表面地皮，Ground类，由连续片段组成的地面。"
+			},
+			{
 				"name": "strict",
 				"disc": ["限制方框，Vector2d对象，x:宽，y:高",
 						"如果没有设置就表示无限制, 不会产生撞到边界的反弹效果。"]
@@ -52,8 +62,21 @@
 		],
 		"option":[
 			{
-				"name": "xxxxx",
-				"disc": "xxxxxxx"
+				"name": "bodies",
+				"disc": "设置存放的所有物体"
+			},
+			{
+				"name": "ground",
+				"disc": "设置下表面地皮，Ground类，由连续片段组成的地面。"
+			},
+			{
+				"name": "strict",
+				"disc": ["设置限制方框，Vector2d对象，x:宽，y:高",
+						"如果没有设置就表示无限制, 不会产生撞到边界的反弹效果。"]
+			},
+			{
+				"name": "timeStep",
+				"disc": "设置最小时间片段"
 			}
 		]
 	}

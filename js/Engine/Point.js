@@ -15,6 +15,10 @@ class Point{
         this.angularVelocity = $option.angularVelocity || 0; // 角度
 
         this.border = $option.border || 1;
+        this.living = true; // 死亡时删除
+
+        this.enableStrictBounce = ($option.enableStrictBounce!=undefined)?$option.enableStrictBounce:true;
+        this.enableGroundBounce = ($option.enableGroundBounce!=undefined)?$option.enableGroundBounce:true;
         this._check();
     }
     
@@ -24,12 +28,18 @@ class Point{
         if(isNaN(this.linearVelocity.y))console.error("linearVelocity.y", this.linearVelocity.y);
     }
 
+    kill(){
+        this.init();
+        this.border = 0;
+        this.living = false;
+    }
+
     // []][
     applyImpulse($impulse, $point) {
 
     }
 
-    sleepCheck($minv=1){    // +
+    sleepCheck($minv=1){
         if (Math.abs(this.linearVelocity.y) < $minv){
             this.linearVelocity.y = 0;
         }
@@ -38,12 +48,13 @@ class Point{
         }
     }
 
-    isMove($minv=1){
+    isMoving($minv=1){
         if (Math.abs(this.linearVelocity.y) < $minv && 
             Math.abs(this.linearVelocity.x) < $minv) {
                 return false;
-        }
-        return true;
+        }else{
+            return true;
+        };
     }
 
     // dv = a * dt
@@ -70,7 +81,7 @@ class Point{
     }
 
     getNextFramePosition(dt){
-    //  return this.position.clone.add(this.linearVelocity.multiply(dt));
+    //[]][  return this.position.clone.add(this.linearVelocity.multiply(dt));
         return new Vector2d(
             this.position.x + this.linearVelocity.x * dt,
             this.position.y + this.linearVelocity.y * dt
@@ -108,10 +119,70 @@ class Point{
         
     }
 
-    onCollide($position){
-
+    setOnStrictHit($callBackFunc){
+        this.onStrictHit = $callBackFunc;
     }
 
+    onStrictHit($strict, $which){
+        this.strictBounce($strict, $which);
+    }
+
+    setOnGroundHit($callBackFunc){
+        this.onGroundHit = $callBackFunc;
+    }
+
+    onGroundHit($ground){
+        this.downBounce($ground.argue);
+        this.setPositionToGround($ground.origionPosition, $ground.argue);
+    }
+
+    // 设置位置到地面
+    setPositionToGround($orgPosition, $argue){
+        let p = this.position;
+        let dx = p.x - $orgPosition.x;
+        p.y = $orgPosition.y - Math.tan($argue) * dx;
+    }
+
+    downBounce($argue){
+        let v = this.linearVelocity;
+        let cos2 = Math.cos($argue) * Math.cos($argue), 
+            sin2 = Math.sin($argue) * Math.sin($argue);
+        v.x = (v.x * cos2 - 2 * v.y * Math.sin($argue) * Math.cos($argue) - v.x * sin2) * 0.95;
+        v.y = v.y * -0.95;
+    }
+
+    strictBounce($strict, $which){
+        let width = $strict.width, height = $strict.height;
+        let x = $strict.position.x, y = $strict.position.y;
+        let p = this.position;
+
+        // 碰撞检测
+        switch($which){
+            case "top":
+                this.linearVelocity.y *= -0.95;
+                this.angularVelocity *= 0.9;
+                p.y = y + this.border;
+                break;
+            case "bottom":
+                this.linearVelocity.y *= -0.95;
+                this.angularVelocity *= 0.9;
+                p.y  = y + height - this.border;
+                break;
+            case "right":
+                this.linearVelocity.x *= -0.95;
+                this.angularVelocity *= 0.9;
+                p.x = x + width - this.border;
+                break;
+            case "left":
+                this.linearVelocity.x *= -0.95;
+                this.angularVelocity *= 0.9;
+                p.x = x + this.border;
+                break;
+            default:
+                console.warn("strict-judging problem");
+        }
+    }
+    
     stop(){
         this.linearVelocity.x = 0;
         this.linearVelocity.y = 0;

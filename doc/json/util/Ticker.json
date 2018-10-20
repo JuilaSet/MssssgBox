@@ -19,11 +19,11 @@
 			},
 			{
 				"name": "stop()",
-				"disc": "将时间重置"
+				"disc": "计时器暂停"
 			},
 			{
 				"name": "continue()",
-				"disc": "将时间重置"
+				"disc": "计时器继续"
 			},
 			{
 				"name": "init()",

@@ -9,31 +9,58 @@
 			}
 		],
 		"methods": [
-			
-			
 			{
 				"name": "constructor($option)",
 				"disc": "$option：选项"
+			},
+			{
+				"name": "kill()",
+				"disc": "杀死这个点"
+			},
+			{
+				"name": "downBounce($argue)",
+				"disc": ["撞击到地面的反弹",
+						"$argue:反弹平面的角度"]
+			},
+			{
+				"name": "strictBounce($strict, $which)",
+				"disc": ["撞击到限制框的反弹",
+						"$which:撞击到限制框的哪个边：top:上，right:右，bottom:下，left:左",
+						"$strict:限制框"]
+			},
+			{
+				"name": "sleepCheck($minv=1)",
+				"disc": "休眠检测，$miv：速度小于这个时被设置为0"
+			},
+			{
+				"name": "isMoving($minv=1)",
+				"disc": "是否在移动，$miv：速度小于这个时被认为是静止的"
+			},
+			{
+				"name": "getNextFramePosition(dt)",
+				"disc": "得到下一帧的位置，dt：时间片"
 			},
 			{
 				"name": "update()",
 				"disc": "不断在帧循环中调用。"
 			},
 			{
-				"name": "onCollide($position)",
-				"disc": "撞击时调用，$position:碰撞点"
+				"name": "setOnStrictHit($callBackFunc)",
+				"disc": "设置撞击限制框时回调的函数onStrictHit"
 			},
 			{
-				"name": "applyForce($force, $point)",
-				"disc": ["创造冲量。",
-						"$force:一个Vector2对象的实例，代表了力的沿着x、y方向上的大小。",
-						"$point:施力点的世界坐标"]
+				"name": "onStrictHit($strict, $which)",
+				"disc": ["撞击限制框时调用",
+						"$strict:限制框，Zone类型",
+						"$which:撞击的方向，top:上，right:右，bottom:下，left:左"]
 			},
 			{
-				"name": "applyImpulse($impulse, $point)",
-				"disc": ["创造冲量。",
-						"$impulse:一个Vector2对象的实例，代表了冲量的沿着x、y方向上的大小。",
-						"$point:施放冲量点的世界坐标"]
+				"name": "setOnGroundHit($callBackFunc)",
+				"disc": "设置撞击地面时回调的函数onGroundHit"
+			},
+			{
+				"name": "onGroundHit($ground)",
+				"disc": "撞击地面时调用，$ground:碰撞地面"
 			},
 			{
 				"name": "addLinearSpeed($vec, $strength)",
@@ -56,7 +83,15 @@
 				"disc": "不断在帧循环中调用。"
 			}
 		],
-		"properties": [    
+		"properties": [
+			{
+				"name": "enableStrictBounce",
+				"disc": "允许边界碰撞"
+			},
+			{
+				"name": "enableGroundBounce",
+				"disc": "允许地面碰撞"
+			},  
 			{
 				"name": "position",
 				"disc": "位置，Vector2d对象。"
@@ -95,6 +130,14 @@
 			}
 		],
 		"option":[
+			{
+				"name": "enableStrictBounce",
+				"disc": "设置是否允许边界碰撞"
+			},
+			{
+				"name": "enableGroundBounce",
+				"disc": "设置是否允许地面碰撞"
+			},  
 			{
 				"name": "mass",
 				"disc": "设置质量"

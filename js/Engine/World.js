@@ -1,7 +1,7 @@
 class World{
     constructor($option={}){
         this.bodies = $option.bodies || [];
-        this.bodiesLen = this.bodies.length;
+        this._bodiesLen = this.bodies.length;
         this.timeStep = $option.timeStep || 1/60;   // 时间片
 
         this.strict = $option.strict || new Zone({
@@ -10,82 +10,63 @@ class World{
             position : new Vector2d(-Infinity, -Infinity)
         });
 
-        this._ground = $option.ground || new Ground({   // +
+        this._ground = $option.ground || new Ground({
             groundChain: [
                 new GroundSegment({
                     origionPosition:new Vector2d(0, 300),
                     direction:new Vector2d(0, document.documentElement.clientWidth)
                 })
             ]});
-        this.gravity = $option.gravity || new Vector2d(0, 0);
+    //    this.gravity = $option.gravity || new Vector2d(0, 0);
     }
 
-    set ground($grd){   // +
+    set ground($grd){
         this._ground = $grd;
     }
 
-    getGroundUndered($position){    // +
-        let ox, dx;
-        for(let g of this._ground.segments){
-            ox = g.origionPosition.x;
-            dx = g.direction.x;
-            if($position.x >= ox && $position.x < ox + dx){
-                return g;
-            }
-        }
+    get ground(){
+        return this._ground;
     }
 
     update(){
-        for (let k = 0; k < this.bodiesLen; k++) {
-            this.bodies[k].update(this.timeStep);
-            this.strictBounce(this.bodies[k]);
-            this.groundBounce(this.bodies[k]);
-            // 休眠处理
-            this.bodies[k].sleepCheck();
+        for (let k = 0; k < this._bodiesLen; k++) {
+            let p = this.bodies[k];
+            if(p.living){
+                p.update(this.timeStep);
+                if(p.enableStrictBounce)this.strictBounce(p);
+                if(p.enableGroundBounce)this.groundBounce(p);
+                p.sleepCheck();    // []][
+            }
         }
     }
 
     render($animation){
         this.bodies.forEach((d)=>{
-            d.render($animation.context, $animation);
+            if(d.living)d.render($animation.context, $animation);
         })
         // ground
         this._ground.render($animation.context);
     }
 
-    isUnderGround($ground, $position){
-        let p = $position.clone().sub($ground.origionPosition);
-        return $ground.direction.cross(p) > 0? true : false;
+    isUnderGround($groundSeg, $position){
+        let p = $position.clone().sub($groundSeg.origionPosition);
+        return $groundSeg.direction.cross(p) > 0? true : false;
     }
 
     addBody($body){
         $body.world = this;
         this.bodies.push($body);
-        this.bodiesLen = this.bodies.length;
-    }
-
-    // +
-    onGroundHit($point, $ground){
-        let v = $point.linearVelocity;
-        let oy = $ground.origionPosition.y;
-        let arg = $ground.argue * (oy < oy + $ground.direction.y?-1:1);
-        console.log(arg * 180 / Math.PI);
-        // 反弹
-        let cos2 = Math.cos(arg) * Math.cos(arg), 
-            sin2 = Math.sin(arg) * Math.sin(arg);
-        v.x = v.x * cos2 - 2 * v.y * Math.sin(arg) * Math.cos(arg) - v.x * sin2;
-        v.y = v.y * -0.95;
+        this._bodiesLen = this.bodies.length;
     }
 
     // 地表碰撞效果
     groundBounce($point){
-        // 碰撞检测
-        let p = $point.getNextFramePosition(1/60);
-        let g = this.getGroundUndered(p);
-        if(!g)return;
+        let p = $point.getNextFramePosition(this.timeStep);
+        let g = this._ground.getGroundUndered(p);
         
-        if(this.isUnderGround(g, p)){
-            this.onGroundHit($point, g);
+        // 碰撞检测
+        if(g && this.isUnderGround(g, p)){
+            $point.onGroundHit(g);
         }
     }
 
@@ -97,27 +78,19 @@ class World{
         // 碰撞检测
         let p = $point.position;
         if (p.y - $point.border < y) {
-            $point.linearVelocity.y *= -0.95;
-            $point.angularVelocity *= 0.9;
-            p.y = y + $point.border;
+            $point.onStrictHit(this.strict, "top");
         }
 
         if (p.y + $point.border > y + height ) {
-            $point.linearVelocity.y *= -0.95;
-            $point.angularVelocity *= 0.9;
-            p.y  = y + height - $point.border;
+            $point.onStrictHit(this.strict, "bottom");
         }
 
         if (p.x + $point.border > x + width) {
-            $point.linearVelocity.x *= -0.95;
-            $point.angularVelocity *= 0.9;
-            p.x = x + width - $point.border;
+            $point.onStrictHit(this.strict, "right");
         }
 
         if (p.x - $point.border < x) {
-            $point.linearVelocity.x *= -0.95;
-            $point.angularVelocity *= 0.9;
-            p.x = x + $point.border;
+            $point.onStrictHit(this.strict, "left");
         }
     }
 }
