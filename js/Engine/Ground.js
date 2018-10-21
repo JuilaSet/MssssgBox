@@ -48,6 +48,7 @@ class Ground {
     }
 
     addSegments($seg){
+        $seg.ground = this;
         if(this._size != 0){
             this._segments[this._size - 1].setNextSegment($seg);
         }
@@ -60,13 +61,20 @@ class GroundSegment{
     constructor($option){
         this._origionPosition = $option.origionPosition || new Vector2d(0, 0);  // 起点
         this._direction = $option.direction || new Vector2d(1, 0);   // 方向
-
+        this._ground = $option.ground;    // 所属地面
         // 无option的属性
-        this._length = this._direction.length();
-        let oy = this._origionPosition.y;
-        this._argue = Math.acos(this._length / this._direction.x) * (oy < oy + this._direction.y?-1:1);;
-
         this.next = $option.next || {}; // 下一个片段
+    }
+
+    set ground($g){
+        if(this._ground && this.ground != $g){
+            console.warn("ground changed incorrectly");
+        }
+        this._ground = $g;
+    }
+
+    get ground(){
+        return this._ground;
     }
 
     render($context, $color){
@@ -81,20 +89,37 @@ class GroundSegment{
         $context.restore();
     }
 
+    setOnHit($func){
+        this.onHit = $func;
+    }
+
+    //小球撞击到地表及以下时调用，每有一个point就调用一次
+    onHit($point){
+
+    }
+
+    setOnHover($func){
+        this.onHover = $func;
+    }
+
+    // 小球在地表以上时调用，每有一个point就调用一次
+    onHover($point){
+
+    }
+
     setNextSegment($seg){
         if(this._origionPosition.x > $seg._origionPosition.x)console.error("必须将片段从左向右连接");
         else{
-            let dx = $seg.origionPosition.x - this._origionPosition.x;
-            let dy = $seg.origionPosition.y - this._origionPosition.y;
-            let length = Math.sqrt(dx * dx + dy * dy);
-            let theta = Math.acos(dx / length);
-            this._direction.set(dx, dy);
-            this._length = length;
-            let oy = this._origionPosition.y;
-            this._argue = theta * (oy < oy + this._direction.y?-1:1);
+            this.calcDirectionBasedOnNextSeg($seg);
             this.next = $seg
             return $seg; // 链式调用
         }
+    }
+
+    calcDirectionBasedOnNextSeg($seg){
+        let dx = $seg.origionPosition.x - this._origionPosition.x;
+        let dy = $seg.origionPosition.y - this._origionPosition.y;
+        this._direction.set(dx, dy);
     }
 
     set origionPosition($position){
@@ -107,24 +132,25 @@ class GroundSegment{
 
     set direction($vec){
         this._direction = $vec;
-        this._length = this._direction.length();
-        let oy = this._origionPosition.y;
-        this._argue = Math.atan(this._direction.x, this._direction.y) * (oy < oy + this._direction.y?-1:1);
     }
 
     get direction(){
         return this._direction;
     }
 
-    set argue($argue){
-        let oy = this._origionPosition.y;
-        this._argue = $argue;
-        this._direction.x = this._length * Math.cos(this._argue);
-        this._direction.y = this._length * Math.sin(this._argue);
+    set angle($angle){
+        let length = this._direction.length();
+        let dx = length * Math.cos($angle), dy = length * Math.sin($angle - Math.PI *2);
+        this._direction.x = dx;
+        this._direction.y = dy;
     }
 
-    get argue(){
-        return this._argue;
+    get angle(){
+        let length = this._direction.length(), dy = this._direction.y;
+        return Math.asin(dy / length);
+    }
+
+    get length(){
+        return this._direction.length();
     }
 }
-GroundSegment.NULL_SEGMENT = 0x462ce08;

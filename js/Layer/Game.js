@@ -39,13 +39,16 @@ class Game{
         });
 
         // 物理模块
-        let segnum = 100, segs = [], last = 400;
+        let segnum = 2, segs = [], last = 400;
         for(let x = 0; x <= segnum; x++){
-            last = (Math.random() * 50 - 25) + last;
+            last = (Math.random() * 200 - 100) + last;
             segs[x] = new GroundSegment({
                 origionPosition:new Vector2d(
                     (animation.width / segnum) * x, last
                 )
+            });
+            segs[x].setOnHit(($point)=>{
+               segs[x].argue = segs[x].argue - Math.PI / 12;
             });
         }
 
@@ -92,16 +95,15 @@ class Game{
 
         animation.setMouseStretch((event)=>{
             if(event.downbutton == 0){
-                sqrs.addStaticSquare(
-                    new StaticSquare({
+                let sq = new StaticSquare({
+                    position: event.offset,
+                    zone: new Zone({
                         position: event.offset,
-                        zone: new Zone({
-                            position: event.offset,
-                            width: Math.random() * 20 + 10,
-                            height: Math.random() * 20 + 10
-                        })
+                        width: Math.random() * 20 + 10,
+                        height: Math.random() * 20 + 10
                     })
-                );
+                });
+                sqrs.addStaticSquare(sq);
             }
         });
 
@@ -152,7 +154,7 @@ class Game{
                 if($static.group){
                     $static.group.calcCenter();
                     if($static.group.size == 0){
-                        $static.group.kill();
+                       $static.group.kill();
                     }
                 }
                 for(let f=0; f < point.border / 2; f++){
@@ -171,11 +173,11 @@ class Game{
                     });
                     p0.setOnStaticHit(($which, $static)=>{
                         p0.staticBounce($which);
-                        if(sqr != $static)$static.kill();
+                       if(sqr != $static)$static.kill();
                         if($static.group){
                             $static.group.calcCenter();
                             if($static.group.size == 0){
-                                $static.group.kill();
+                               $static.group.kill();
                             }
                         }
                         setTimeout(()=>{
@@ -223,7 +225,7 @@ class Game{
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            console.log(world.statics);
+
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{

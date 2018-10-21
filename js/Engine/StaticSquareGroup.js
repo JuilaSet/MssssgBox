@@ -212,8 +212,25 @@ class StaticSquare{
         return this.zone.height;
     }
 
+    setOnHit($func){
+        this.onHit = $func;
+    }
+
+    onHit($point, $which, $isInside){
+
+    }
+
+    setOnKilled($func){
+        this.onKilled = $func;
+    }
+
+    onKilled(){
+        
+    }
+
     kill(){
         this._living = false;
+        this.onKilled();
     }
 
     render($context){

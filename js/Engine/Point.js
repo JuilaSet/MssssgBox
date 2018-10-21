@@ -34,6 +34,7 @@ class Point{
         this.init();
         this.border = 0;
         this.living = false;
+        this.onKilled();
     }
 
     // []][
@@ -179,6 +180,14 @@ class Point{
         this.staticBounce($which);
     }
 
+    setOnKilled($func){
+        this.onKilled = $func;
+    }
+
+    onKilled(){
+
+    }
+
     // 设置位置到地面
     setPositionToGroundSegment($orgPosition, $argue){
         let p = this.position;
@@ -194,6 +203,7 @@ class Point{
     }
 
     downBounce($argue){
+        console.log("hit");
         let v = this.linearVelocity;
         let cos2 = Math.cos($argue) * Math.cos($argue), 
             sin2 = Math.sin($argue) * Math.sin($argue);

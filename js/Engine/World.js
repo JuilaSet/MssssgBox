@@ -129,8 +129,10 @@ class World{
         if(g){
             if(this.isUnderGround(g, p)){
                 $point.onGroundHit(g);
+                g.onHit($point);
             }else{
                 $point.onGroundHover(g);
+                g.onHover($point);
             }
         }
     }
@@ -190,29 +192,37 @@ class World{
                     if(pos.y > psq.y && pos.y < psq.y + sq.height){
                         if(pos.x <= psq.x){
                             $point.onStaticHit('left', sq);
+                            sq.onHit($point, 'left', false);
                         }else if(pos.x >= psq.x + sq.width){
                             $point.onStaticHit('right', sq);
+                            sq.onHit($point, 'right', false);
                         }else{
                             let centP = new Vector2d(psq.x + sq.width / 2, psq.y + sq.height / 2);
                             console.warn('point-position "left&right" on static judged inside');
                             if(pos.x < centP.x){
                                 $point.onStaticHit('left', sq);
+                                sq.onHit($point, 'left', true);
                             }else{
                                 $point.onStaticHit('right', sq);
+                                sq.onHit($point, 'right', true);
                             }
                         }
                     }else{
                         if(pos.y <= psq.y){
                             $point.onStaticHit('top', sq);
+                            sq.onHit($point, 'top', false);
                         }else if(pos.y >= psq.y + sq.height){
                             $point.onStaticHit('bottom', sq);
+                            sq.onHit($point, 'bottom', false);
                         }else{
                             let centP = new Vector2d(psq.x + sq.width / 2, psq.y + sq.height / 2);
                             console.warn('point-position "top&bottom" on static judged inside');
                             if(pos.y < centP.y){
                                 $point.onStaticHit('top', sq);
+                                sq.onHit($point, 'top', true);
                             }else{
                                 $point.onStaticHit('bottom', sq);
+                                sq.onHit($point, 'bottom', true);
                             }
                         }
                     }
@@ -223,29 +233,37 @@ class World{
                     if(pos.y > psq.y && pos.y < psq.y + collideList[x].height){
                         if(pos.x <= psq.x){
                             $point.onStaticHit('left', collideList[x]);
+                            collideList[x].onHit($point, 'left', false);
                         }else if(pos.x >= psq.x + collideList[x].width){
                             $point.onStaticHit('right', collideList[x]);
+                            collideList[x].onHit($point, 'right', false);
                         }else{
                             console.warn('point-position "left&right" on static judged inside');
                             let centP = new Vector2d(psq.x + collideList[x].width / 2, psq.y + collideList[x].height / 2);
                             if(pos.x < centP.x){
                                 $point.onStaticHit('left', collideList[x]);
+                                collideList[x].onHit($point, 'left', true);
                             }else{
                                 $point.onStaticHit('right', collideList[x]);
+                                collideList[x].onHit($point, 'right', true);
                             }
                         }
                     }else{
                         if(pos.y <= psq.y){
                             $point.onStaticHit('top', collideList[x]);
+                            collideList[x].onHit($point, 'top', false);
                         }else if(pos.y >= psq.y + collideList[x].height){
                             $point.onStaticHit('bottom', collideList[x]);
+                            collideList[x].onHit($point, 'bottom', false);
                         }else{
                             console.warn('point-position "top&bottom" on static judged inside');
                             let centP = new Vector2d(psq.x + collideList[x].width / 2, psq.y + collideList[x].height / 2);
                             if(pos.y < centP.y){
                                 $point.onStaticHit('top', collideList[x]);
+                                collideList[x].onHit($point, 'top', true);
                             }else{
                                 $point.onStaticHit('bottom', collideList[x]);
+                                collideList[x].onHit($point, 'bottom', true);
                             }
                         }
                     }

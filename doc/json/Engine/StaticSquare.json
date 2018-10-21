@@ -21,6 +21,26 @@
 				"name": "render($context)",
 				"disc": ["绘制自己的边框",
 						"$context:绘图上下文"]
+			},
+			{
+				"name": "setOnHit($func)",
+				"disc": ["设置对象撞击到自己时调用的方法",
+						"$func:设置的方法"]
+			},
+			{
+				"name": "onHit($point, $which, $isInside)",
+				"disc": ["对象撞击到自己时调用的方法",
+						"$point:撞击到自己的对象，Point类",
+						"$which:撞击的边：top:上，right:右，bottom:下，left:左",
+						"$isInside:结果是否是在自己内部判断的"]
+			},
+			{
+				"name": "setOnKilled()",
+				"disc": "设置被杀死时调用的函数"
+			},
+			{
+				"name": "onKilled()",
+				"disc": "被杀死时调用"
 			}
 		],
 		"properties": [

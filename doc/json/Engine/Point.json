@@ -135,6 +135,14 @@
 				"disc": "更新时调用"
 			},
 			{
+				"name": "setOnKilled()",
+				"disc": "设置被杀死时调用的函数"
+			},
+			{
+				"name": "onKilled()",
+				"disc": "被杀死时调用"
+			},
+			{
 				"name": "init()",
 				"disc": "清空速度和作用在自己上面的力"
 			},
@@ -146,15 +154,15 @@
 		"properties": [
 			{
 				"name": "enableStrictBounce",
-				"disc": "允许边界碰撞"
+				"disc": "允许边界检测"
 			},
 			{
 				"name": "enableGroundBounce",
-				"disc": "允许地面碰撞"
+				"disc": "允许地面检测"
 			},
 			{
 				"name": "enableStaticBounce",
-				"disc": "允许与静态物体碰撞"
+				"disc": "允许与静态物体检测"
 			},
 			{
 				"name": "position",

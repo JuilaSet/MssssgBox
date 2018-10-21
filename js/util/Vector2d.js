@@ -52,7 +52,7 @@ class Vector2d{
     }
 
     angle($vec) {
-        return Math.acos(this.dot($vec) / (this.length() * $vec.length())) * 180 / Math.PI;
+        return Math.acos(this.dot($vec) / (this.length() * $vec.length()));
     }
 
     distanceSquare($x, $y) {

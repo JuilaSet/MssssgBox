@@ -23,6 +23,26 @@
 				"name": "setNextSegment($seg)",
 				"disc": ["设置下一块地皮，地皮必须在自己的右边",
 						"$seg:下一块地皮"]
+			},
+			{
+				"name": "setOnHit($func)",
+				"disc": ["设置被物体撞击时调用的函数",
+						"$func($point)：设置的函数，参数是撞击自己的Point对象。每有一个调用一次"]
+			},
+			{
+				"name": "onHit($point)",
+				"disc": ["被物体撞击时调用的函数",
+						"$point：撞击自己的Point对象"]
+			},
+			{
+				"name": "setOnHover($func)",
+				"disc": ["设置物体在自己上方时调用的函数",
+						"$func($point)：设置的函数，参数$point是在上方的Point对象。每有一个调用一次"]
+			},
+			{
+				"name": "onHover($point)",
+				"disc": ["物体在自己上方时调用的函数",
+						"$point:在上方的Point对象"]
 			}
 		],
 		"properties": [
