@@ -39,16 +39,13 @@ class Game{
         });
 
         // 物理模块
-        let segnum = 2, segs = [], last = 400;
+        let segnum = 70, segs = [], last = 400;
         for(let x = 0; x <= segnum; x++){
-            last = (Math.random() * 200 - 100) + last;
+            last = (Math.random() * 50 - 25) + last;
             segs[x] = new GroundSegment({
                 origionPosition:new Vector2d(
                     (animation.width / segnum) * x, last
                 )
-            });
-            segs[x].setOnHit(($point)=>{
-               segs[x].argue = segs[x].argue - Math.PI / 12;
             });
         }
 
@@ -136,8 +133,9 @@ class Game{
             });
     
             point.setOnGroundHit(($ground)=>{
-                point.downBounce($ground.argue);
-                point.setPositionToGroundSegment($ground.origionPosition, $ground.argue);
+                point.downBounce($ground.angle);
+                $ground.angle = $ground.angle + Math.PI / 24;
+                point.setPositionToGroundSegment($ground.origionPosition, $ground.angle);
                 point.border -= 3;
                 if(point.border < 3){
                     point.kill();
@@ -166,7 +164,7 @@ class Game{
                         border : 3
                     });
                     p0.setOnGroundHit(($ground)=>{
-                        p0.downBounce($ground.argue);
+                        p0.downBounce($ground.angle);
                         setTimeout(()=>{
                             p0.kill();
                         }, 1000);

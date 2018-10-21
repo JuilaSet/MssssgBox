@@ -138,7 +138,7 @@ class GroundSegment{
         return this._direction;
     }
 
-    set angle($angle){
+    set angle($angle){  // 上减，下加
         let length = this._direction.length();
         let dx = length * Math.cos($angle), dy = length * Math.sin($angle - Math.PI *2);
         this._direction.x = dx;

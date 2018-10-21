@@ -164,8 +164,8 @@ class Point{
     }
 
     onGroundHit($ground){
-        this.downBounce($ground.argue);
-        this.setPositionToGroundSegment($ground.origionPosition, $ground.argue);
+        this.downBounce($ground.angle);
+        this.setPositionToGroundSegment($ground.origionPosition, $ground.angle);
     }
 
     onGroundHover($ground){
@@ -189,26 +189,29 @@ class Point{
     }
 
     // 设置位置到地面
-    setPositionToGroundSegment($orgPosition, $argue){
+    setPositionToGroundSegment($orgPosition, $angle){
         let p = this.position;
         if(!$orgPosition)return;
         if($orgPosition instanceof GroundSegment){
             let dx = p.x - $orgPosition.origionPosition.x;
-            p.y = $orgPosition.origionPosition.y - Math.tan($orgPosition.argue) * dx;
+            p.y = $orgPosition.origionPosition.y + Math.tan($orgPosition.angle) * dx;
         }else{
             let dx = p.x - $orgPosition.x;
-            p.y = $orgPosition.y - Math.tan($argue) * dx;
+            p.y = $orgPosition.y + Math.tan($angle) * dx;
         }
         return this;
     }
 
-    downBounce($argue){
-        console.log("hit");
+    downBounce($angle){
         let v = this.linearVelocity;
-        let cos2 = Math.cos($argue) * Math.cos($argue), 
-            sin2 = Math.sin($argue) * Math.sin($argue);
-        v.x = (v.x * cos2 - 2 * v.y * Math.sin($argue) * Math.cos($argue) - v.x * sin2) * 0.95;
+        let cos2 = Math.cos($angle) * Math.cos($angle), 
+            sin2 = Math.sin($angle) * Math.sin($angle);
+        v.x = (v.x * cos2 - 2 * v.y * Math.sin($angle) * Math.cos($angle) - v.x * sin2) * 0.95;
         v.y = v.y * -0.95;
+
+        if(isNaN(v.x) || isNaN(v.y)){
+            console.error("linearVelocity calc error");
+        }
     }
 
     strictBounce($strict, $which){
