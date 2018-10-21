@@ -19,6 +19,28 @@
 						"$staticSqr:StaticSquare方块对象"]
 			},
 			{
+				"name": "setOnHit($func)",
+				"disc": ["设置组内的静态方块被撞击时调用的函数",
+						"$func:设置的函数"]
+			},
+			{
+				"name": "onHit($point, $which, $staticSqr)",
+				"disc": ["组内的静态方块被Point对象撞击时调用",
+						"$point:撞击到自己的对象，Point类",
+						"$which:撞击的边：top:上，right:右，bottom:下，left:左",
+						"$staticSqr:被撞击的静态方块，StaticSquare方块对象"]
+			},
+			{
+				"name": "setOnThrough($func)",
+				"disc": ["设置Point对象物体穿过自己的外边框时调用的函数",
+						"$func:设置的函数"]
+			},
+			{
+				"name": "onThrough($point, $which, $staticSqr)",
+				"disc": ["Point对象物体穿过自己的外边框时调用",
+						"$point:穿过自己的外边框的Point对象"]
+			},
+			{
 				"name": "calcCenter()",
 				"disc": "根据所有子方块计算中心点"
 			},

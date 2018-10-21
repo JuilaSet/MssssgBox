@@ -7,6 +7,11 @@ class Zone{
 
     check($position){
         let p = this.position;
+        if(this.width == Infinity && p.x == -Infinity || this.height == Infinity && p.y == -Infinity){
+            return true;
+        }else if(isNaN(this.height + p.y) || isNaN(this.height + p.y)){
+            console.warn("zone calc meet NaN", this.width + p.x, this.height + p.y);
+        }
         if( $position.x > p.x && 
             $position.y > p.y && 
             $position.x < this.width + p.x && 
@@ -18,3 +23,8 @@ class Zone{
             }
     }
 }
+Zone.INFINITY_ZONE = new Zone({
+    position: {x: -Infinity, y: -Infinity},
+    width: Infinity,
+    height: Infinity
+});

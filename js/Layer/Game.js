@@ -94,6 +94,7 @@ class Game{
         }));
 
         animation.setMouseStretch((event)=>{
+            let sqrs2 = sqrs;   // 闭包陷阱
             if(event.downbutton == 2){
                 let sq = new StaticSquare({
                     position: event.offset,
@@ -103,95 +104,102 @@ class Game{
                         height: Math.random() * 20 + 10
                     })
                 });
-                sqrs.addStaticSquare(sq);
+                sqrs2.addStaticSquare(sq);
+                sqrs2.setOnHit(()=>{
+                    if(sqrs2.getSize() < 10){
+                        sqrs2.kill();
+                    }
+                });
             }
         });
 
-        animation.setMouseUp((event, down)=>{
-            dp = orgPosition.sub(event.offset);
-            let point = new Point({
-                linearVelocity : dp.multiply(4),
-                position : tpositon.clone(),
-                force : new Vector2d(0, 100),
-                border : Math.random() * 10 + 8,
-                enableStrictBounce: false
-            });
-            point.setOnUpdate(()=>{
-                let p = new Point({
-                    linearVelocity : new Vector2d(Math.random() * 45 - 45/2, Math.random() * 45 - 45/2),
-                    position : point.position.clone(),
-                    enableStrictBounce : false,
-                    enableGroundBounce : false,
-                    enableStaticBounce : false,
-                    border : point.border
+        animation.setMouseUp((event)=>{
+            if(event.button == 0){
+                dp = orgPosition.sub(event.offset);
+                let point = new Point({
+                    linearVelocity : dp.multiply(4),
+                    livingZone: world.strict,
+                    position : event.offset,
+                    force : new Vector2d(0, 100),
+                    border : Math.random() * 10 + 8,
+                    enableStrictBounce: false
                 });
-                p.setOnUpdate(()=>{
-                    p.border -= 0.4;
-                    if(p.border < 0.4){
-                        p.kill();
-                    }
-                });
-                world.addBody(p);
-            });
-    
-            point.setOnGroundHit(($groundSeg)=>{
-                point.downBounce($groundSeg.angle);
-                $groundSeg.ground.addSegments(
-                    new GroundSegment({
-                        origionPosition:point.position.add(new Vector2d(0, 6)).clone()
-                    })
-                );
-                point.setPositionToGroundSegment($groundSeg.origionPosition, $groundSeg.angle);
-                point.border -= 3;
-                if(point.border < 3){
-                    point.kill();
-                }
-            });
-            point.setOnStaticHit(($which, $static)=>{
-                console.log($which);
-                point.staticBounce($which);
-                point.border -= 3;
-                if(point.border < 3){
-                   point.kill();
-                }
-                if(sqr != $static)$static.kill();
-                if($static.group){
-                    $static.group.calcCenter();
-                    if($static.group.size == 0){
-                       $static.group.kill();
-                    }
-                }
-                for(let f=0; f < point.border / 2; f++){
-                    let p0 = new Point({
-                        linearVelocity : new Vector2d(Math.random() * 245 - 245/2, Math.random() * 245 - 245/2),
-                        force: new Vector2d(0, 300),
+                point.setOnUpdate(()=>{
+                    let p = new Point({
+                        linearVelocity : new Vector2d(Math.random() * 45 - 45/2, Math.random() * 45 - 45/2),
                         position : point.position.clone(),
                         enableStrictBounce : false,
-                        border : 3
+                        enableGroundBounce : false,
+                        enableStaticBounce : false,
+                        border : point.border
                     });
-                    p0.setOnGroundHit(($ground)=>{
-                        p0.downBounce($ground.angle);
-                        setTimeout(()=>{
-                            p0.kill();
-                        }, 1000);
-                    });
-                    p0.setOnStaticHit(($which, $static)=>{
-                        p0.staticBounce($which);
-                       if(sqr != $static)$static.kill();
-                        if($static.group){
-                            $static.group.calcCenter();
-                            if($static.group.size == 0){
-                               $static.group.kill();
-                            }
+                    p.setOnUpdate(()=>{
+                        p.border -= 0.4;
+                        if(p.border < 0.4){
+                            p.kill();
                         }
-                        setTimeout(()=>{
-                            p0.kill();
-                        }, 500);
                     });
-                    world.addBody(p0);
-                }
-            });
-            world.addBody(point);
+                    world.addBody(p);
+                });
+        
+                point.setOnGroundHit(($groundSeg)=>{
+                    point.downBounce($groundSeg.angle);
+                    $groundSeg.ground.addSegments(
+                        new GroundSegment({
+                            origionPosition:point.position.add(new Vector2d(0, 6)).clone()
+                        })
+                    );
+                    point.setPositionToGroundSegment($groundSeg.origionPosition, $groundSeg.angle);
+                    point.border -= 3;
+                    if(point.border < 3){
+                        point.kill();
+                    }
+                });
+                point.setOnStaticHit(($which, $static)=>{
+                    // point.staticBounce($which);
+                    point.border -= 3;
+                    if(point.border < 3){
+                    point.kill();
+                    }
+                    if(sqr != $static)$static.kill();
+                    if($static.group){
+                        $static.group.calcCenter();
+                        if($static.group.size == 0){
+                        $static.group.kill();
+                        }
+                    }
+                    for(let f=0; f < point.border / 2; f++){
+                        let p0 = new Point({
+                            linearVelocity : new Vector2d(Math.random() * 245 - 245/2, Math.random() * 245 - 245/2),
+                            force: new Vector2d(0, 300),
+                            position : point.position.clone(),
+                            enableStrictBounce : false,
+                            border : 3
+                        });
+                        p0.setOnGroundHit(($ground)=>{
+                            p0.downBounce($ground.angle);
+                            setTimeout(()=>{
+                                p0.kill();
+                            }, 1000);
+                        });
+                        p0.setOnStaticHit(($which, $static)=>{
+                            p0.staticBounce($which);
+                        if(sqr != $static)$static.kill();
+                            if($static.group){
+                                $static.group.calcCenter();
+                                if($static.group.size == 0){
+                                $static.group.kill();
+                                }
+                            }
+                            setTimeout(()=>{
+                                p0.kill();
+                            }, 500);
+                        });
+                        world.addBody(p0);
+                    }
+                });
+                world.addBody(point);
+            }
         });
         
         // X
@@ -229,7 +237,17 @@ class Game{
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-
+            console.log(
+                new Zone({
+                    position : new Vector2d(-Infinity, -Infinity),
+                    width : Infinity, 
+                    height : Infinity
+                }), new Zone({
+                    position : new Vector2d(-Infinity, -Infinity),
+                    width : Infinity, 
+                    height : Infinity
+                }).check(new Vector2d(0, 0))
+            );
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{

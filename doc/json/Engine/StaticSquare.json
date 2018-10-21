@@ -24,13 +24,13 @@
 			},
 			{
 				"name": "setOnHit($func)",
-				"disc": ["设置对象撞击到自己时调用的方法",
+				"disc": ["设置Point对象对象撞击到自己时调用的方法",
 						"$func:设置的方法"]
 			},
 			{
 				"name": "onHit($point, $which, $isInside)",
-				"disc": ["对象撞击到自己时调用的方法",
-						"$point:撞击到自己的对象，Point类",
+				"disc": ["Point对象对象撞击到自己时调用的方法",
+						"$point:撞击到自己的Point对象",
 						"$which:撞击的边：top:上，right:右，bottom:下，left:左",
 						"$isInside:结果是否是在自己内部判断的"]
 			},

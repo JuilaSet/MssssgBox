@@ -15,7 +15,9 @@ class Point{
         this.angularVelocity = $option.angularVelocity || 0; // 角度
 
         this.border = $option.border || 1;
-        this.living = true; // 死亡时删除
+        this._living = true; // 死亡时删除
+
+        this._livingZone = $option.livingZone || Zone.INFINITY_ZONE;
 
         this.enableStrictBounce = ($option.enableStrictBounce != undefined)?$option.enableStrictBounce:true;
         this.enableGroundBounce = ($option.enableGroundBounce != undefined)?$option.enableGroundBounce:true;
@@ -24,6 +26,20 @@ class Point{
         this._check();
     }
     
+    get livingZone(){
+        return this._livingZone;
+    }
+
+    set livingZone($zone){
+        this._livingZone = $zone;
+    }
+
+    _checkIfInLivingZone(){
+        if(!this._livingZone.check(this.position)){
+            this.kill();
+        }
+    }
+
     _check(){
         if(isNaN(this.angularVelocity))console.error("angularVelocity", this.angularVelocity);
         if(isNaN(this.linearVelocity.x))console.error("linearVelocity.x", this.linearVelocity.x);
@@ -33,8 +49,12 @@ class Point{
     kill(){
         this.init();
         this.border = 0;
-        this.living = false;
+        this._living = false;
         this.onKilled();
+    }
+
+    get living(){
+        return this._living;
     }
 
     // []][
@@ -286,6 +306,7 @@ class Point{
     }
 
     update($timeStep=1/60){
+        this._checkIfInLivingZone();
         this.sleepCheck();
         if(this.linearVelocity.x != 0 || this.linearVelocity.y != 0){
             this.onmove();

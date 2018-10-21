@@ -25,12 +25,32 @@ class StaticSquareGroup{
         return this._size;
     }
 
+    getSize(){
+        return this._size;
+    }
+
     get living(){
         return this._living;
     }
 
     get outLineZone(){
         return this._outLineZone;
+    }
+
+    setOnHit($func){
+        this.onHit = $func;
+    }
+
+    onHit($point, $which, $staticSqr){
+
+    }
+
+    setOnThrough($func){
+        this.onThrough = $func;
+    }
+
+    onThrough($point){
+
     }
 
     addStaticSquare($staticSqr){

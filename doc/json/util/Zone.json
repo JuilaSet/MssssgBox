@@ -45,6 +45,12 @@
 				"name": "height",
 				"disc": "长度"
 			}
+		],
+		"static":[
+			{
+				"name": "INFINITY_ZONE",
+				"disc": "无限区域"
+			}
 		]
 	}
 }
