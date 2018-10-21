@@ -22,8 +22,10 @@
 				"disc": "每$wait帧执行一下$func这个函数。"
 			},
 			{
-				"name": "setTimeScale($size)",
-				"disc": "设置时间规模，计时器将每帧加$size。"
+				"name": "callLater($func, $howLong)",
+				"disc": ["设置多久以后调用$func。",
+						"$func : 延时调用的函数",
+						"$howLong : 延时多久"]
 			},
 			{
 				"name": "update()",

@@ -4,6 +4,7 @@ class Game{
         this.timer = new Timer();
         this.display = new Display($option.canvas, $option.container, this.timer);
         this.iotrigger = new IOTrigger({display: this.display}); // 单例对象
+        this.pause = false;
     }
 
     // 开始游戏
@@ -55,9 +56,9 @@ class Game{
 
         let world = new World({
             strict : new Zone({
-                position: new Vector2d(0, 0),
+                position: new Vector2d(0, -Infinity),
                 width: animation.width,
-                height: animation.height
+                height: Infinity
             }),
             ground: ground
         });
@@ -88,7 +89,7 @@ class Game{
         let sqrs;
         let orgPosition, dp;
         animation.setMouseDown((event=>{
-            orgPosition = event.offset;
+            dp = orgPosition = event.offset;
             sqrs = new StaticSquareGroup();
             world.addBody(sqrs);
         }));
@@ -115,11 +116,11 @@ class Game{
 
         animation.setMouseUp((event)=>{
             if(event.button == 0){
-                dp = orgPosition.sub(event.offset);
+                let ddp = dp.clone();
                 let point = new Point({
-                    linearVelocity : dp.multiply(4),
+                    linearVelocity : orgPosition.sub(event.offset).multiply(4),
                     livingZone: world.strict,
-                    position : event.offset,
+                    position : ddp,
                     force : new Vector2d(0, 100),
                     border : Math.random() * 10 + 8,
                     enableStrictBounce: false
@@ -146,7 +147,7 @@ class Game{
                     point.downBounce($groundSeg.angle);
                     $groundSeg.ground.addSegments(
                         new GroundSegment({
-                            origionPosition:point.position.add(new Vector2d(0, 6)).clone()
+                            origionPosition:point.position.add(new Vector2d(0, 3)).clone()
                         })
                     );
                     point.setPositionToGroundSegment($groundSeg.origionPosition, $groundSeg.angle);
@@ -165,7 +166,7 @@ class Game{
                     if($static.group){
                         $static.group.calcCenter();
                         if($static.group.size == 0){
-                        $static.group.kill();
+                            $static.group.kill();
                         }
                     }
                     for(let f=0; f < point.border / 2; f++){
@@ -178,9 +179,9 @@ class Game{
                         });
                         p0.setOnGroundHit(($ground)=>{
                             p0.downBounce($ground.angle);
-                            setTimeout(()=>{
+                            timer.callLater(()=>{
                                 p0.kill();
-                            }, 1000);
+                            },10);
                         });
                         p0.setOnStaticHit(($which, $static)=>{
                             p0.staticBounce($which);
@@ -191,9 +192,9 @@ class Game{
                                 $static.group.kill();
                                 }
                             }
-                            setTimeout(()=>{
+                            timer.callLater(()=>{
                                 p0.kill();
-                            }, 500);
+                            },10);
                         });
                         world.addBody(p0);
                     }
@@ -237,29 +238,20 @@ class Game{
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            console.log(
-                new Zone({
-                    position : new Vector2d(-Infinity, -Infinity),
-                    width : Infinity, 
-                    height : Infinity
-                }), new Zone({
-                    position : new Vector2d(-Infinity, -Infinity),
-                    width : Infinity, 
-                    height : Infinity
-                }).check(new Vector2d(0, 0))
-            );
+            this.pause = !this.pause;
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{
-
         }, 32);
 
         ///
         dis.render(()=>{
-            world.update();
-            moveController.update();
-            stats.update();
-            timer.update();
+            if(!this.pause){
+                world.update();
+                moveController.update();
+                stats.update();
+                timer.update();
+            }
         }, ()=>{
 
         });
