@@ -16,6 +16,10 @@
 			{
 				"name": "check($position)",
 				"disc": "检查点是否在此区域中。$position是Vector2d对象。"
+			},
+			{
+				"name": "getRandomPosition()",
+				"disc": "获取在自己内部随机的一个位置，返回Vector2d对象。"
 			}
 		],
 		"properties": [

@@ -14,7 +14,10 @@ class World{
                 })
             ]});
 
-        this._statics = $option.statics || [];  // + 静态碰撞物体
+        this._statics = $option.statics || [];  // 静态碰撞物体
+
+        this._maxBodiesCleanSize = $option.maxBodiesCleanSize || 1200;
+        this._maxStaticsCleanSize = $option.maxStaticsCleanSize || 60;
     }
 
     set ground($grd){
@@ -30,14 +33,40 @@ class World{
     }
 
     update(){
+        let flag = false;
         for (let k = 0; k < this._bodiesLen; k++) {
             let p = this.bodies[k];
             if(p && p.living){
                 p.update(this.timeStep);
+                if(!p.isMoving(0.01))flag = true;
                 if(p.enableStrictBounce)this.strictBounce(p);
                 if(p.enableGroundBounce)this.groundBounce(p);
                 if(p.enableStaticBounce)this.staticBounce(p);
             }
+        }
+        // statics
+        for(let x = 0; x < this._statics.length; x++){
+            let s = this._statics[x];
+            if(s){
+                if(s.living){
+                    if(s instanceof StaticSquareGroup){
+                        s.update();
+                    }
+                };
+            }
+        }
+        
+
+        // 最后清理死亡的物品
+        if(flag){
+            if(this.deadBodiesSize() > this._maxBodiesCleanSize){
+                this.cleanBodies()
+                console.info("WORLD:", "clean dead bodies");
+            };
+            if(this.deadStaticsSize() > this._maxStaticsCleanSize){
+                this.cleanStatics()
+                console.info("WORLD:", "clean dead static");
+            };
         }
     }
 
@@ -52,25 +81,62 @@ class World{
             }
         }
 
-        // statics []][
+        // statics
         for(let x = 0; x < this._statics.length; x++){
             let s = this._statics[x];
             if(s){
                 if(s.living){
                     s.render($animation.context);
-                    if(s instanceof StaticSquareGroup){
-                        s.cleanSqures();
-                    }
                 };
             }
         }
 
         // ground
         this._ground.render($animation.context);
+    }
 
-        // 最后清理死亡的物品
-        this.cleanBodies();
-        this.cleanStatics();
+    deadBodiesSize(){
+        // points
+        let res = 0;
+        for(let x = 0; x < this._bodiesLen; x++){
+            if(!this.bodies[x].living){
+                res++;
+            }
+        }
+        return res;
+    }
+
+    bodisSize(){
+        // points
+        let res = 0;
+        this.bodies.forEach(element => {
+            if(element.living){
+                res++;
+            }
+        });
+        return res;
+    }
+
+    deadStaticsSize(){
+        // points
+        let res = 0;
+        for(let x = 0; x < this._statics.length; x++){
+            if(!this._statics[x].living){
+                res++;
+            }
+        }
+        return res;
+    }
+
+    staticsSize(){
+        // points
+        let res = 0;
+        this._statics.forEach(element => {
+            if(element.living){
+                res++;
+            }
+        });
+        return res;
     }
 
     cleanBodies(){
@@ -167,11 +233,11 @@ class World{
         for(let x = 0; x < sqs.length; x++){
             let sq = this._statics[x];
             if(sq instanceof StaticSquare){
-                if(sq.zone.check(p)){
+                if(sq.living && sq.zone.check(p)){
                     collideList.push(sq);
                 }
             }else if(sq instanceof StaticSquareGroup){
-                if(sq.outLineZone.check(p)){
+                if(sq.living && sq.outLineZone.check(p)){
                     sq.onThrough($point);
                     collideList.push(sq);
                 }
@@ -179,55 +245,47 @@ class World{
                 console.warn("illegal obj in statics list");
             }
         }
-        
+        function collide($$sqs, $$side, $$sq, $$ifin){
+            $point.onStaticHit($$side, $$sq);
+            $$sqs.onHit($point, $$side, $$sq);
+            $$sq.onHit($point, $$side, $$ifin);
+        }
+        function collideSq($$side, $sq, $$ifin){
+            $point.onStaticHit($$side, $sq);
+            $sq.onHit($point, $$side, $$ifin);
+        }
         // 碰撞检测
         for(let x = 0; x < collideList.length; x++){
             if(collideList[x] instanceof StaticSquareGroup){
                 let sq = collideList[x].getSquareIn(p);
-                if(sq){
+                if(sq && sq.living){
                     let psq = sq.position;
                     if(pos.y > psq.y && pos.y < psq.y + sq.height){
                         if(pos.x <= psq.x){
-                            $point.onStaticHit('left', sq);
-                            collideList[x].onHit($point, 'left', sq);
-                            sq.onHit($point, 'left', false);
+                            collide(collideList[x], 'left', sq, false);
                         }else if(pos.x >= psq.x + sq.width){
-                            $point.onStaticHit('right', sq);
-                            collideList[x].onHit($point, 'right', sq);
-                            sq.onHit($point, 'right', false);
+                            collide(collideList[x], 'right', sq, false);
                         }else{
                             let centP = new Vector2d(psq.x + sq.width / 2, psq.y + sq.height / 2);
                             console.warn('point-position "left&right" on static judged inside');
                             if(pos.x < centP.x){
-                                $point.onStaticHit('left', sq);
-                                collideList[x].onHit($point, 'left', sq);
-                                sq.onHit($point, 'left', true);
+                                collide(collideList[x], 'left', sq, true);
                             }else{
-                                $point.onStaticHit('right', sq);
-                                collideList[x].onHit($point, 'right', sq);
-                                sq.onHit($point, 'right', true);
+                                collide(collideList[x], 'right', sq, true); 
                             }
                         }
                     }else{
                         if(pos.y <= psq.y){
-                            $point.onStaticHit('top', sq);
-                            sq.onHit($point, 'top', false);
-                            collideList[x].onHit($point, 'top', sq);
+                            collide(collideList[x], 'top', sq, false);
                         }else if(pos.y >= psq.y + sq.height){
-                            $point.onStaticHit('bottom', sq);
-                            collideList[x].onHit($point, 'bottom', sq);
-                            sq.onHit($point, 'bottom', false);
+                            collide(collideList[x], 'bottom', sq, false);
                         }else{
                             let centP = new Vector2d(psq.x + sq.width / 2, psq.y + sq.height / 2);
                             console.warn('point-position "top&bottom" on static judged inside');
                             if(pos.y < centP.y){
-                                $point.onStaticHit('top', sq);
-                                collideList[x].onHit($point, 'top', sq);
-                                sq.onHit($point, 'top', true);
+                                collide(collideList[x], 'top', sq, true);
                             }else{
-                                $point.onStaticHit('bottom', sq);
-                                collideList[x].onHit($point, 'bottom', sq);
-                                sq.onHit($point, 'bottom', true);
+                                collide(collideList[x], 'bottom', sq, true);
                             }
                         }
                     }
@@ -237,38 +295,30 @@ class World{
                     let psq = collideList[x].position;
                     if(pos.y > psq.y && pos.y < psq.y + collideList[x].height){
                         if(pos.x <= psq.x){
-                            $point.onStaticHit('left', collideList[x]);
-                            collideList[x].onHit($point, 'left', false);
+                            collideSq('left', collideList[x], false);
                         }else if(pos.x >= psq.x + collideList[x].width){
-                            $point.onStaticHit('right', collideList[x]);
-                            collideList[x].onHit($point, 'right', false);
+                            collideSq('right', collideList[x], false);
                         }else{
                             console.warn('point-position "left&right" on static judged inside');
                             let centP = new Vector2d(psq.x + collideList[x].width / 2, psq.y + collideList[x].height / 2);
                             if(pos.x < centP.x){
-                                $point.onStaticHit('left', collideList[x]);
-                                collideList[x].onHit($point, 'left', true);
+                                collideSq('left', collideList[x], true);
                             }else{
-                                $point.onStaticHit('right', collideList[x]);
-                                collideList[x].onHit($point, 'right', true);
+                                collideSq('right', collideList[x], true);
                             }
                         }
                     }else{
                         if(pos.y <= psq.y){
-                            $point.onStaticHit('top', collideList[x]);
-                            collideList[x].onHit($point, 'top', false);
+                            collideSq('top', collideList[x], false);
                         }else if(pos.y >= psq.y + collideList[x].height){
-                            $point.onStaticHit('bottom', collideList[x]);
-                            collideList[x].onHit($point, 'bottom', false);
+                            collideSq('bottom', collideList[x], false);
                         }else{
                             console.warn('point-position "top&bottom" on static judged inside');
                             let centP = new Vector2d(psq.x + collideList[x].width / 2, psq.y + collideList[x].height / 2);
                             if(pos.y < centP.y){
-                                $point.onStaticHit('top', collideList[x]);
-                                collideList[x].onHit($point, 'top', true);
+                                collideSq('top', collideList[x], true);
                             }else{
-                                $point.onStaticHit('bottom', collideList[x]);
-                                collideList[x].onHit($point, 'bottom', true);
+                                collideSq('bottom', collideList[x], true);
                             }
                         }
                     }

@@ -74,7 +74,7 @@
 			},
 			{
 				"name": "size",
-				"disc": "方块数量，只读"
+				"disc": "存活方块数量，只读"
 			},
 			{
 				"name": "living",
@@ -89,6 +89,10 @@
 			{
 				"name": "sqrts",
 				"disc": "加入的StaticSquare对象集"
+			},
+			{
+				"name": "maxCleanSize",
+				"disc": "存放的方块数量大于它时会触发清除工作"
 			}
 		]
 	}

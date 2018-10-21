@@ -11,6 +11,8 @@ class StaticSquareGroup{
 
         // 外边框区域
         this._outLineZone = new Zone();
+
+        this._maxCleanSize = $option.maxCleanSize || 50;
     }
     
     get position(){
@@ -21,12 +23,12 @@ class StaticSquareGroup{
         return this._sqrts;
     }
 
-    get size(){
-        return this._size;
-    }
-
-    getSize(){
-        return this._size;
+    get size(){ // 存活数量
+        let res = 0;
+        this.sqrts.forEach(ele=>{
+            if(ele.living)res++;
+        });
+        return res;
     }
 
     get living(){
@@ -56,7 +58,6 @@ class StaticSquareGroup{
     addStaticSquare($staticSqr){
         $staticSqr.group = this;
         this._sqrts.push($staticSqr);
-        this._size = this._sqrts.length;
         this.calcCenter();
         this.calcOutlineZone();
     }
@@ -101,10 +102,12 @@ class StaticSquareGroup{
             let minx = fep.x, maxx = fep.x, 
                 miny = fep.y, maxy = fep.y;
             this._sqrts.forEach(item => {
-                minx = item.position.x < minx ? item.position.x:minx;
-                maxx = item.position.x > maxx ? item.position.x:maxx;
-                miny = item.position.y < miny ? item.position.y:miny;
-                maxy = item.position.y > maxy ? item.position.y:maxy;
+                if(item.living){
+                    minx = item.position.x < minx ? item.position.x:minx;
+                    maxx = item.position.x > maxx ? item.position.x:maxx;
+                    miny = item.position.y < miny ? item.position.y:miny;
+                    maxy = item.position.y > maxy ? item.position.y:maxy;
+                }
             })
             this._position.set(minx + (maxx - minx)/2, miny + (maxy - miny)/2);
         }
@@ -134,9 +137,12 @@ class StaticSquareGroup{
                 this._sqrts.splice(x, 1);
             }
         }
-        this._size = this._sqrts.length;
         this.calcCenter();
         this.calcOutlineZone();
+    }
+
+    update(){
+        if(this._maxCleanSize > this._maxCleanSize)this.cleanSqures();
     }
 
     // 测试用

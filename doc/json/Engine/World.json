@@ -33,6 +33,30 @@
 						"$position:要判断的位置"]
 			},
 			{
+				"name": "deadBodiesSize()",
+				"disc": "死亡point对象数量"
+			},
+			{
+				"name": "bodisSize()",
+				"disc": "存活point对象数量"
+			},
+			{
+				"name": "deadStaticsSize()",
+				"disc": "死亡静态对象数量"
+			},
+			{
+				"name": "staticsSize()",
+				"disc": "存活静态对象数量"
+			},
+			{
+				"name": "cleanBodies()",
+				"disc": "清理死亡的Point对象"
+			},
+			{
+				"name": "cleanStatics()",
+				"disc": "清理死亡的静态对象"
+			},
+			{
 				"name": "update()",
 				"disc": "更新所有物体"
 			}

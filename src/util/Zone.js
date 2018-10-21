@@ -5,14 +5,19 @@ class Zone{
         this.height = $option.height || 0;
     }
 
+    getRandomPosition(){
+        return new Vector2d( Math.random() * this.width + this.position.x,
+                             Math.random() * this.height + this.position.y );
+    }
+
     check($position){
         let p = this.position;
         if(this.width == Infinity && p.x == -Infinity && $position.y > p.y && $position.y < this.height + p.y){
             return true;
         }else if(this.height == Infinity && p.y == -Infinity && $position.x > p.x && $position.x < this.width + p.x){
             return true;
-        }else if(isNaN(this.height + p.y) || isNaN(this.height + p.y)){
-            console.warn("zone calc meet NaN", this.width + p.x, this.height + p.y);
+        }else if(isNaN(this.width + p.x) || isNaN(this.height + p.y)){
+            console.warn("zone calc meet NaN:(", this.width + p.x, this.height + p.y, " )");
             return false;
         }else if(   $position.x > p.x && 
                     $position.y > p.y && 

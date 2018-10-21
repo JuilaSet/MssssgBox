@@ -187,6 +187,14 @@
 			{
 				"name": "rotation",
 				"disc": "旋转角度，弧度"
+			}, 
+			{
+				"name": "angularVelocityConsume",
+				"disc": "线性速度损耗%"
+			},
+			{
+				"name": "linearVelocityConsume",
+				"disc": "角速度损耗%"
 			},
 			{
 				"name": "linearVelocity",
@@ -245,6 +253,14 @@
 			{
 				"name": "angularVelocity",
 				"disc": "设置角速度，弧度"
+			},
+			{
+				"name": "angularVelocityConsume",
+				"disc": "设置线性速度损耗%"
+			},
+			{
+				"name": "linearVelocityConsume",
+				"disc": "设置角速度损耗%"
 			}
 			
 		]

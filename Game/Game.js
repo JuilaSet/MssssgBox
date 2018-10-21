@@ -107,7 +107,7 @@ class Game{
                 });
                 sqrs2.addStaticSquare(sq);
                 sqrs2.setOnHit(()=>{
-                    if(sqrs2.getSize() < 10){
+                    if(sqrs2.size < 10){
                         sqrs2.kill();
                     }
                 });
@@ -123,7 +123,8 @@ class Game{
                     position : ddp,
                     force : new Vector2d(0, 100),
                     border : Math.random() * 10 + 8,
-                    enableStrictBounce: false
+                    enableStrictBounce: false,
+                    linearVelocityConsume: 1
                 });
                 point.setOnUpdate(()=>{
                     let p = new Point({
@@ -157,12 +158,13 @@ class Game{
                     }
                 });
                 point.setOnStaticHit(($which, $static)=>{
-                    // point.staticBounce($which);
-                    point.border -= 3;
-                    if(point.border < 3){
-                    point.kill();
+                    point.staticBounce($which);
+                    if(sqr != $static){
+                        point.border -= 3;
+                        if(point.border < 3){
+                            point.kill();
+                        }
                     }
-                    if(sqr != $static)$static.kill();
                     if($static.group){
                         $static.group.calcCenter();
                         if($static.group.size == 0){
@@ -185,11 +187,11 @@ class Game{
                         });
                         p0.setOnStaticHit(($which, $static)=>{
                             p0.staticBounce($which);
-                        if(sqr != $static)$static.kill();
+                            if(sqr != $static)$static.kill();
                             if($static.group){
                                 $static.group.calcCenter();
                                 if($static.group.size == 0){
-                                $static.group.kill();
+                                    $static.group.kill();
                                 }
                             }
                             timer.callLater(()=>{

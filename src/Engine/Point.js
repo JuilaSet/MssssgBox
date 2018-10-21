@@ -13,6 +13,8 @@ class Point{
 
         this.linearVelocity = $option.linearVelocity || new Vector2d(0, 0);
         this.angularVelocity = $option.angularVelocity || 0; // 角度
+        this.angularVelocityConsume = $option.angularVelocityConsume || 0.9;
+        this.linearVelocityConsume = $option.linearVelocityConsume || 0.95;
 
         this.border = $option.border || 1;
         this._living = true; // 死亡时删除
@@ -34,7 +36,7 @@ class Point{
         this._livingZone = $zone;
     }
 
-    _checkIfInLivingZone(){
+    checkIfInLivingZone(){
         if(!this._livingZone.check(this.position)){
             this.kill();
         }
@@ -55,11 +57,6 @@ class Point{
 
     get living(){
         return this._living;
-    }
-
-    // []][
-    applyImpulse($impulse, $point) {
-
     }
 
     sleepCheck($minv=1){
@@ -226,11 +223,13 @@ class Point{
         let v = this.linearVelocity;
         let cos2 = Math.cos($angle) * Math.cos($angle), 
             sin2 = Math.sin($angle) * Math.sin($angle);
-        v.x = (v.x * cos2 - 2 * v.y * Math.sin($angle) * Math.cos($angle) - v.x * sin2) * 0.95;
-        v.y = v.y * -0.95;
+        v.x = (v.x * cos2 - 2 * v.y * Math.sin($angle) * Math.cos($angle) - v.x * sin2) * this.linearVelocityConsume;
+        v.y = v.y * -this.linearVelocityConsume;
+
+        this.angularVelocity *= this.angularVelocityConsume;
 
         if(isNaN(v.x) || isNaN(v.y)){
-            console.error("linearVelocity calc error");
+            console.error("linearVelocity calc error:(", v.x, ",", v.y, " )");
         }
     }
 
@@ -241,23 +240,23 @@ class Point{
 
         switch($which){
             case "top":
-                this.linearVelocity.y *= -0.95;
-                this.angularVelocity *= 0.9;
+                this.linearVelocity.y *= -this.linearVelocityConsume; // 
+                this.angularVelocity *= this.angularVelocityConsume;    // 
                 p.y = y + this.border;
                 break;
             case "bottom":
-                this.linearVelocity.y *= -0.95;
-                this.angularVelocity *= 0.9;
+                this.linearVelocity.y *= -this.linearVelocityConsume;
+                this.angularVelocity *= this.angularVelocityConsume;
                 p.y  = y + height - this.border;
                 break;
             case "right":
-                this.linearVelocity.x *= -0.95;
-                this.angularVelocity *= 0.9;
+                this.linearVelocity.x *= -this.linearVelocityConsume;
+                this.angularVelocity *= this.angularVelocityConsume;
                 p.x = x + width - this.border;
                 break;
             case "left":
-                this.linearVelocity.x *= -0.95;
-                this.angularVelocity *= 0.9;
+                this.linearVelocity.x *= -this.linearVelocityConsume;
+                this.angularVelocity *= this.angularVelocityConsume;
                 p.x = x + this.border;
                 break;
             default:
@@ -269,13 +268,13 @@ class Point{
         switch($which){
             case "top":
             case "bottom":
-                this.linearVelocity.y *= -0.95;
-                this.angularVelocity *= 0.9;
+                this.linearVelocity.y *= -this.linearVelocityConsume;
+                this.angularVelocity *= this.angularVelocityConsume;
                 break;
             case "right":
             case "left":
-                this.linearVelocity.x *= -0.95;
-                this.angularVelocity *= 0.9;
+                this.linearVelocity.x *= -this.linearVelocityConsume;
+                this.angularVelocity *= this.angularVelocityConsume;
                 break;
             default:
                 console.warn("static-judging problem");
@@ -306,8 +305,8 @@ class Point{
     }
 
     update($timeStep=1/60){
-        this._checkIfInLivingZone();
-        this.sleepCheck();
+        this.checkIfInLivingZone();
+        this.sleepCheck();  // 先将太小的速度置为0
         if(this.linearVelocity.x != 0 || this.linearVelocity.y != 0){
             this.onmove();
         }else{
