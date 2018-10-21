@@ -39,7 +39,7 @@ class Game{
         });
 
         // 物理模块
-        let segnum = 70, segs = [], last = 400;
+        let segnum = 50, segs = [], last = 400;
         for(let x = 0; x <= segnum; x++){
             last = (Math.random() * 50 - 25) + last;
             segs[x] = new GroundSegment({
@@ -71,11 +71,12 @@ class Game{
         moveController.bindObj = sqr;
 
         let a1 = Math.random() * 10 + 3, f1 = Math.random() * 20 - 10, h1 = Math.random() * 15 + 20;
-        let rn1 = Math.floor(Math.random() * (segnum - 1)+ 1);
+        let rn1 = Math.floor(Math.random() * (segnum - 1) + 1);
+        let tpositon = ground.segments[rn1].origionPosition.clone().sub(new Vector2d(0, h1));
         animation.setAction(($context, $this)=>{
             animation.drawFrame();
             animation.drawTree(
-                ground.segments[rn1].origionPosition.clone().sub(new Vector2d(0, h1)), 
+                tpositon,
                 moveController.speedX - f1, 
                 h1, 5, 
                 Math.PI / Math.abs(moveController.speedY - a1)
@@ -85,13 +86,15 @@ class Game{
         dis.addAnimation(animation);
         
         let sqrs;
+        let orgPosition, dp;
         animation.setMouseDown((event=>{
+            orgPosition = event.offset;
             sqrs = new StaticSquareGroup();
             world.addBody(sqrs);
         }));
 
         animation.setMouseStretch((event)=>{
-            if(event.downbutton == 0){
+            if(event.downbutton == 2){
                 let sq = new StaticSquare({
                     position: event.offset,
                     zone: new Zone({
@@ -104,15 +107,14 @@ class Game{
             }
         });
 
-        animation.setMouseUp(event=>{
-        })
-
-        animation.setDblClick((event, down)=>{
+        animation.setMouseUp((event, down)=>{
+            dp = orgPosition.sub(event.offset);
             let point = new Point({
-                linearVelocity : new Vector2d(Math.random() * 120 - 120/2, Math.random() * 120 - 120/2),
-                position : event.offset,
+                linearVelocity : dp.multiply(4),
+                position : tpositon.clone(),
                 force : new Vector2d(0, 100),
-                border : Math.random() * 10 + 8
+                border : Math.random() * 10 + 8,
+                enableStrictBounce: false
             });
             point.setOnUpdate(()=>{
                 let p = new Point({
@@ -132,10 +134,14 @@ class Game{
                 world.addBody(p);
             });
     
-            point.setOnGroundHit(($ground)=>{
-                point.downBounce($ground.angle);
-                $ground.angle = $ground.angle + Math.PI / 24;
-                point.setPositionToGroundSegment($ground.origionPosition, $ground.angle);
+            point.setOnGroundHit(($groundSeg)=>{
+                point.downBounce($groundSeg.angle);
+                $groundSeg.ground.addSegments(
+                    new GroundSegment({
+                        origionPosition:point.position.add(new Vector2d(0, 6)).clone()
+                    })
+                );
+                point.setPositionToGroundSegment($groundSeg.origionPosition, $groundSeg.angle);
                 point.border -= 3;
                 if(point.border < 3){
                     point.kill();

@@ -163,12 +163,12 @@ class Point{
         return this;
     }
 
-    onGroundHit($ground){
-        this.downBounce($ground.angle);
-        this.setPositionToGroundSegment($ground.origionPosition, $ground.angle);
+    onGroundHit($groundSeg){
+        this.downBounce($groundSeg.angle);
+        this.setPositionToGroundSegment($groundSeg.origionPosition, $groundSeg.angle);
     }
 
-    onGroundHover($ground){
+    onGroundHover($groundSeg){
 
     }
 

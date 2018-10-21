@@ -70,8 +70,8 @@
 				"disc": "设置撞击地面时回调的函数onGroundHit"
 			},
 			{
-				"name": "onGroundHit($ground)",
-				"disc": "撞击地面时调用，$ground:碰撞地面片段"
+				"name": "onGroundHit($groundSeg)",
+				"disc": "撞击地面时调用，$groundSeg:碰撞地面片段"
 			},
 			{
 				"name": "setOnStaticHit($callBackFunc)",
@@ -85,18 +85,18 @@
 						"$static:撞击到的静态方块"]
 			},
 			{
-				"name": "staticBounce($which)",
-				"disc": ["撞击到静态方块的反弹",
-						"$which:撞击到静态方块的哪个边：top:上，right:右，bottom:下，left:左",
-						"其中top和bottom的效果一致，right和left的效果一致"]
-			},
-			{
 				"name": "setOnGroundHover($callBackFunc)",
 				"disc": "设置在地面上方时回调的函数onGroundHit"
 			},
 			{
-				"name": "onGroundHover($ground)",
+				"name": "onGroundHover($groundSeg)",
 				"disc": "在地面上方时调用，$ground:下方地面片段"
+			},
+			{
+				"name": "staticBounce($which)",
+				"disc": ["撞击到静态方块的反弹",
+						"$which:撞击到静态方块的哪个边：top:上，right:右，bottom:下，left:左",
+						"其中top和bottom的效果一致，right和left的效果一致"]
 			},
 			{
 				"name": "addLinearSpeed($vec, $strength)",

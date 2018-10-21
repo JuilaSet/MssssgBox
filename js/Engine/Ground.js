@@ -49,10 +49,25 @@ class Ground {
 
     addSegments($seg){
         $seg.ground = this;
-        if(this._size != 0){
-            this._segments[this._size - 1].setNextSegment($seg);
+        if(this._size > 0){
+            if($seg.origionPosition.x >= this._segments[this._size - 1].origionPosition.x){
+                this._segments[this._size - 1].setNextSegment($seg);
+                this._segments.push($seg);
+            }else{
+                // 如果不是最右边的地面碎片
+                for(let i = this._size - 1; i >= 0; i--){
+                    // 找到最近的值，并插入
+                    if(this._segments[i].origionPosition.x < $seg.origionPosition.x){
+                        this._segments[i].setNextSegment($seg);
+                        $seg.setNextSegment(this._segments[i + 1]);
+                        this._segments.splice(i + 1, 0, $seg);
+                        break;
+                    }
+                }
+            }
+        }else{
+            this._segments.push($seg);
         }
-        this._segments.push($seg);
         this._size = this._segments.length;
     }
 }
