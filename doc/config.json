@@ -5,7 +5,7 @@
         "Engine/Point",
         "Engine/World",
         "Engine/Ground",
-        "Engine/StaticSquares",
+        "Engine/StaticSquareGroup",
         "Engine/StaticSquare",
         "Engine/GroundSegment", 
         "Layer/Game", 

@@ -34,14 +34,14 @@ class Game{
             iotrigger: iotrigger,
             position:p,
             timer: timer,
-            width:1350,
-            height:600
+            width: dis.canvas.width,
+            height: dis.canvas.height
         });
 
         // 物理模块
-        let segnum = 10, segs = [], last = 400;
+        let segnum = 100, segs = [], last = 400;
         for(let x = 0; x <= segnum; x++){
-            last = (Math.random() * 100 - 50) + last;
+            last = (Math.random() * 50 - 25) + last;
             segs[x] = new GroundSegment({
                 origionPosition:new Vector2d(
                     (animation.width / segnum) * x, last
@@ -61,40 +61,15 @@ class Game{
             }),
             ground: ground
         });
-        let sqrs = new StaticSquares({
-            sqrts: [
-                new StaticSquare({
-                    position: new Vector2d(150, 150),
-                    zone: new Zone({
-                        position: new Vector2d(150, 150),
-                        width: 45,
-                        height: 10
-                    })
-                }),
-                new StaticSquare({
-                    position: new Vector2d(150, 140),
-                    zone: new Zone({
-                        position: new Vector2d(150, 140),
-                        width: 45,
-                        height: 10
-                    })
-                }),
-                new StaticSquare({
-                    position: new Vector2d(150, 130),
-                    zone: new Zone({
-                        position: new Vector2d(150, 130),
-                        width: 45,
-                        height: 10
-                    })
-                })
-            ]
-        });
-        world.addBody(sqrs);
-
         
-        // moveController.bindObj = point;
+        let sqr = new StaticSquare({
+            position: new Vector2d(0, 0),
+            width: 140,
+            height: 25
+        });
+        world.addBody(sqr);
+        moveController.bindObj = sqr;
 
-        // moveController.bindObj = animation;
         let a1 = Math.random() * 10 + 3, f1 = Math.random() * 20 - 10, h1 = Math.random() * 15 + 20;
         let rn1 = Math.floor(Math.random() * (segnum - 1)+ 1);
         animation.setAction(($context, $this)=>{
@@ -108,28 +83,37 @@ class Game{
             world.render($this);
         });
         dis.addAnimation(animation);
+        
+        let sqrs;
+        animation.setMouseDown((event=>{
+            sqrs = new StaticSquareGroup();
+            world.addBody(sqrs);
+        }));
 
-        animation.setMouseUp((event)=>{
-            if(event.button == 2){
+        animation.setMouseStretch((event)=>{
+            if(event.downbutton == 0){
                 sqrs.addStaticSquare(
                     new StaticSquare({
                         position: event.offset,
                         zone: new Zone({
                             position: event.offset,
-                            width: 45,
-                            height: 10
+                            width: Math.random() * 20 + 10,
+                            height: Math.random() * 20 + 10
                         })
                     })
                 );
             }
         });
 
+        animation.setMouseUp(event=>{
+        })
+
         animation.setDblClick((event, down)=>{
             let point = new Point({
                 linearVelocity : new Vector2d(Math.random() * 120 - 120/2, Math.random() * 120 - 120/2),
                 position : event.offset,
                 force : new Vector2d(0, 100),
-                border : Math.random() * 10 + 3
+                border : Math.random() * 10 + 8
             });
             point.setOnUpdate(()=>{
                 let p = new Point({
@@ -154,11 +138,53 @@ class Game{
                 point.setPositionToGroundSegment($ground.origionPosition, $ground.argue);
                 point.border -= 3;
                 if(point.border < 3){
-                    point.setPositionToGroundSegment(ground.getGroundUndered(point.position));
                     point.kill();
                 }
             });
-    
+            point.setOnStaticHit(($which, $static)=>{
+                console.log($which);
+                point.staticBounce($which);
+                point.border -= 3;
+                if(point.border < 3){
+                   point.kill();
+                }
+                if(sqr != $static)$static.kill();
+                if($static.group){
+                    $static.group.calcCenter();
+                    if($static.group.size == 0){
+                        $static.group.kill();
+                    }
+                }
+                for(let f=0; f < point.border / 2; f++){
+                    let p0 = new Point({
+                        linearVelocity : new Vector2d(Math.random() * 245 - 245/2, Math.random() * 245 - 245/2),
+                        force: new Vector2d(0, 300),
+                        position : point.position.clone(),
+                        enableStrictBounce : false,
+                        border : 3
+                    });
+                    p0.setOnGroundHit(($ground)=>{
+                        p0.downBounce($ground.argue);
+                        setTimeout(()=>{
+                            p0.kill();
+                        }, 1000);
+                    });
+                    p0.setOnStaticHit(($which, $static)=>{
+                        p0.staticBounce($which);
+                        if(sqr != $static)$static.kill();
+                        if($static.group){
+                            $static.group.calcCenter();
+                            if($static.group.size == 0){
+                                $static.group.kill();
+                            }
+                        }
+                        setTimeout(()=>{
+                            p0.kill();
+                        }, 500);
+                    });
+                    world.addBody(p0);
+                }
+            });
             world.addBody(point);
         });
         
@@ -197,7 +223,7 @@ class Game{
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            console.log(world.bodies);
+            console.log(world.statics);
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{

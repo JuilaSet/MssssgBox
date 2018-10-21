@@ -11,12 +11,11 @@
 		"methods": [
 			{
 				"name": "constructor($option)",
-				"disc": ["$option:选项",
-						"describe2"]
+				"disc": "$option:选项"
 			},
 			{
 				"name": "kill()",
-				"disc": "使自己无效"
+				"disc": "杀死自己"
 			},
 			{
 				"name": "render($context)",
@@ -26,14 +25,50 @@
 		],
 		"properties": [
 			{
+				"name": "group",
+				"disc": "所在的组，是StaticSquareGroup对象"
+			},
+			{
+				"name": "position",
+				"disc": "位置坐标，Vector2d对象"
+			},
+			{
+				"name": "width",
+				"disc": "宽度"
+			},
+			{
+				"name": "height",
+				"disc": "高度"
+			},
+			{
 				"name": "zone",
-				"disc": "describe"
+				"disc": "碰撞区域，默认与自己的坐标和长宽度相同"
+			},
+			{
+				"name": "living",
+				"disc": "是否存活，死亡时会在一帧的最后被删除，默认存活，只读"
 			}
 		],
-		"<other>":[
+		"option":[
 			{
-				"name": "example-other",
-				"disc": "describe"
+				"name": "group",
+				"disc": "设置所在的组，是StaticSquareGroup对象"
+			},
+			{
+				"name": "position",
+				"disc": "设置位置坐标，Vector2d对象"
+			},
+			{
+				"name": "width",
+				"disc": "设置宽度"
+			},
+			{
+				"name": "height",
+				"disc": "设置高度"
+			},
+			{
+				"name": "zone",
+				"disc": "设置碰撞区域，默认与自己的坐标和长宽度相同"
 			}
 		]
 	}

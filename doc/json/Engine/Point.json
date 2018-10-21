@@ -18,17 +18,6 @@
 				"disc": "杀死这个点"
 			},
 			{
-				"name": "downBounce($argue)",
-				"disc": ["撞击到地面的反弹",
-						"$argue:反弹平面的角度"]
-			},
-			{
-				"name": "strictBounce($strict, $which)",
-				"disc": ["撞击到限制框的反弹",
-						"$which:撞击到限制框的哪个边：top:上，right:右，bottom:下，left:左",
-						"$strict:限制框"]
-			},
-			{
 				"name": "sleepCheck($minv=1)",
 				"disc": "休眠检测，$miv：速度小于这个时被设置为0"
 			},
@@ -56,6 +45,17 @@
 						"$groundSeg: 片段"]
 			},
 			{
+				"name": "downBounce($argue)",
+				"disc": ["撞击到地面的反弹",
+						"$argue:反弹平面的角度"]
+			},
+			{
+				"name": "strictBounce($strict, $which)",
+				"disc": ["撞击到限制框的反弹",
+						"$which:撞击到限制框的哪个边：top:上，right:右，bottom:下，left:左",
+						"$strict:限制框"]
+			},
+			{
 				"name": "setOnStrictHit($callBackFunc)",
 				"disc": "设置撞击限制框时回调的函数onStrictHit"
 			},
@@ -72,6 +72,23 @@
 			{
 				"name": "onGroundHit($ground)",
 				"disc": "撞击地面时调用，$ground:碰撞地面片段"
+			},
+			{
+				"name": "setOnStaticHit($callBackFunc)",
+				"disc": ["设置撞击静态方块时调用的函数",
+						"$callBackFunc:回调函数"]
+			},
+			{
+				"name": "onStaticHit($which, $static)",
+				"disc": ["撞击静态方块时调用的函数",
+						"$which:撞击到静态方块的哪个边：top:上，right:右，bottom:下，left:左",
+						"$static:撞击到的静态方块"]
+			},
+			{
+				"name": "staticBounce($which)",
+				"disc": ["撞击到静态方块的反弹",
+						"$which:撞击到静态方块的哪个边：top:上，right:右，bottom:下，left:左",
+						"其中top和bottom的效果一致，right和left的效果一致"]
 			},
 			{
 				"name": "setOnGroundHover($callBackFunc)",
@@ -116,6 +133,10 @@
 			{
 				"name": "onupdate()",
 				"disc": "更新时调用"
+			},
+			{
+				"name": "init()",
+				"disc": "清空速度和作用在自己上面的力"
 			},
 			{
 				"name": "update()",

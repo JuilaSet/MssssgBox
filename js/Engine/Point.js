@@ -89,7 +89,7 @@ class Point{
         );
     }
 
-    init(){ // +
+    init(){
         this.linearVelocity.x = 0;
         this.linearVelocity.y = 0;
         this.angularVelocity = 0;
@@ -171,14 +171,12 @@ class Point{
 
     }
 
-    onStaticHit($which, $static){   // +
+    setOnStaticHit($func){
+        this.onStaticHit = $func;
+    }
+
+    onStaticHit($which, $static){
         this.staticBounce($which);
-        this.init();
-        // $static.kill();
-        // $static.group.cleanSqures();
-        // if($static.group.size == 0){
-        //     $static.group.kill();
-        // }
     }
 
     // 设置位置到地面
@@ -234,7 +232,7 @@ class Point{
         }
     }
 
-    staticBounce($which){   // +
+    staticBounce($which){
         switch($which){
             case "top":
             case "bottom":

@@ -48,7 +48,7 @@ class IOTrigger extends Trigger {
         this.mouseDownEvents[`${$comp.layer}`] = { func:$func, comp:$comp };
     }
 
-    setMouseMove($comp, $func,){
+    setMouseMove($comp, $func){
         if(!$comp.layer)console.error('未指定层级的comp');
         this.mouseMoveEvents[`${$comp.layer}`] = { func:$func, comp:$comp };
     }
@@ -65,8 +65,10 @@ class IOTrigger extends Trigger {
 
     startMonitMouse(){
         // down
+        let downbutton;
         this.onmousedown = (event)=>{
             // 根据鼠标位置判断是否点击到组件
+            downbutton = event.button;
             let mmp = this.mouseMap(new Vector2d(event.clientX, event.clientY), this.display.canvas);
             event.mmp = mmp;
             this.mouseDownEvents.any.func(event);
@@ -124,6 +126,7 @@ class IOTrigger extends Trigger {
                     offset.x = mmp.x - offset.x;
                     offset.y = mmp.y - offset.y;
                     event.offset = offset;
+                    event.downbutton = downbutton;
                     this.mouseStretchEvents[x].func(event, this.downPosition);    
                 }
             }

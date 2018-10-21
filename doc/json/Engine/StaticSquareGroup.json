@@ -1,0 +1,73 @@
+{
+	"title": "StaticSquareGroup",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"可碰撞静态方形物体组"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option)",
+				"disc": "$option:选项"
+			},
+			{
+				"name": "addStaticSquare($staticSqr)",
+				"disc": ["添加一个方块",
+						"$staticSqr:StaticSquare方块对象"]
+			},
+			{
+				"name": "calcCenter()",
+				"disc": "根据所有子方块计算中心点"
+			},
+			{
+				"name": "calcOutlineZone()",
+				"disc": "计算外包围框"
+			},
+			{
+				"name": "cleanSqures()",
+				"disc": "清理死亡的方块"
+			},
+			{
+				"name": "render($ctx)",
+				"disc": ["绘制自己，用于调试",
+						"$ctx：绘图上下文"]
+			},
+			{
+				"name": "getSquareIn($position)",
+				"disc": ["根据位置$position检查在自己的哪个方块内，返回第一个检查到的方块",
+						"$position: Vector2d对象"]
+			},
+			{
+				"name": "kill()",
+				"disc": "杀死自己和自己的所有方块"
+			}
+		],
+		"properties": [
+			{
+				"name": "sqrts",
+				"disc": "存放所有的方块，只读"
+			},
+			{
+				"name": "size",
+				"disc": "方块数量，只读"
+			},
+			{
+				"name": "living",
+				"disc": "是否存活，如果死亡就在帧循环最后删除，默认存活，只读"
+			},
+			{
+				"name": "outLineZone",
+				"disc": "外边框区域，只读"
+			}
+		],
+		"option":[
+			{
+				"name": "sqrts",
+				"disc": "加入的StaticSquare对象集"
+			}
+		]
+	}
+}
