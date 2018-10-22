@@ -63,8 +63,12 @@
 				"disc": "地皮指向"
 			},
 			{
-				"name": "argue",
+				"name": "angle",
 				"disc": "地皮角度"
+			},
+			{
+				"name": "speed",
+				"disc": "速度,Vector2d对象"
 			}
 		],
 		"option":[
@@ -85,7 +89,7 @@
 				"disc": "设置地皮指向"
 			},
 			{
-				"name": "argue",
+				"name": "angle",
 				"disc": "设置地皮角度"
 			}
 		]

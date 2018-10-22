@@ -10,7 +10,7 @@ class Game{
     // 开始游戏
     run(){
         // 控制器模块
-        let moveController = new MoveController({
+        let moveController = new CrawlController({
             frictionX : 0.9,
             frictionY : 0.9,
             maxSpeedX : 8,
@@ -39,7 +39,7 @@ class Game{
         });
 
         // 物理模块
-        let segnum = 50, segs = [], last = 400;
+        let segnum = 20, segs = [], last = 400;
         for(let x = 0; x <= segnum; x++){
             last = (Math.random() * 50 - 25) + last;
             segs[x] = new GroundSegment({
@@ -65,18 +65,21 @@ class Game{
         let sssss = new StaticSquareGroup({
             sqrts: [
                 new StaticSquare({
-                    position: new Vector2d(100, 100)
+                    position: new Vector2d(100, 100),
+                    linearVelocityConsume : 0.001
                 }),
                 new StaticSquare({
-                    position: new Vector2d(200, 200)
-                }),
-                new StaticSquare({
-                    position: new Vector2d(300, 300)
+                    position: new Vector2d(200, 200),
+                    linearVelocityConsume : 0.001
                 })
             ]
         });
-        let handler = new Point();
+        let handler = new Point({
+            position: new Vector2d(200, 200)
+        });
         moveController.bindObj = handler;
+        handler.setPositionToGround(ground);
+        moveController.ground = ground;
         world.addBody(sssss);
 
 
@@ -94,9 +97,9 @@ class Game{
             animation.drawFrame();
             animation.drawTree(
                 tpositon,
-                moveController.speedX - f1, 
+                moveController._speedX - f1, 
                 h1, 5, 
-                Math.PI / Math.abs(moveController.speedY - a1)
+                Math.PI / Math.abs(moveController._speedY - a1)
             );
             world.render($this);
         });
@@ -111,7 +114,7 @@ class Game{
         });
 
         animation.setMouseStretch(event=>{
-            let sqrs2 = sssss;   // 闭包陷阱
+            let sqrs2 = sqrs;   // 闭包陷阱
             if(event.downbutton == 2){
                 let sq = new StaticSquare({
                     position: event.offset,
@@ -122,7 +125,8 @@ class Game{
                     })
                 });
                 sqrs2.addStaticSquare(sq);
-                sqrs2.setOnHit(()=>{
+                sqrs2.setOnHit(($point, $which, $staticSqr)=>{
+                    $staticSqr.kill();
                     if(sqrs2.size < 10){
                         sqrs2.kill();
                     }
@@ -142,6 +146,83 @@ class Game{
                     enableStrictBounce: false,
                     linearVelocityConsume: 1
                 });
+                point.setOnUpdate(()=>{
+                    let p = new Point({
+                        linearVelocity : new Vector2d(Math.random() * 45 - 45/2, Math.random() * 45 - 45/2),
+                        position : point.position.clone(),
+                        enableStrictBounce : false,
+                        enableGroundBounce : false,
+                        enableStaticBounce : false,
+                        border : point.border
+                    });
+                    p.setOnUpdate(()=>{
+                        p.border -= 0.4;
+                        if(p.border < 0.4){
+                            p.kill();
+                        }
+                    });
+                    world.addBody(p);
+                });
+        
+                point.setOnGroundHit(($groundSeg)=>{
+                    point.downBounce($groundSeg);
+                    $groundSeg.ground.addSegments(
+                        new GroundSegment({
+                            origionPosition:point.position.add(new Vector2d(0, 3)).clone()
+                        })
+                    );
+                    point.setPositionToGroundSegment($groundSeg.origionPosition, $groundSeg.angle);
+                    point.border -= 3;
+                    if(point.border < 3){
+                        point.kill();
+                    }
+                });
+                point.setOnStaticHit(($which, $static)=>{
+                    if(!$static)alert();
+                    point.staticBounce($which, $static);
+                    point.setPointToStaticSquare($static);
+                    if(sqr != $static){
+                        point.border -= 3;
+                        if(point.border < 3){
+                            point.kill();
+                        }
+                    }
+                    if($static.group){
+                        $static.group.calcCenter();
+                        if($static.group.size == 0){
+                            $static.group.kill();
+                        }
+                    }
+                    for(let f=0; f < 1/*point.border / 2*/; f++){
+                        let p0 = new Point({
+                            linearVelocity : new Vector2d(Math.random() * 245 - 245/2, Math.random() * 245 - 245/2),
+                            force: new Vector2d(0, 300),
+                            position : point.position.clone(),
+                            enableStrictBounce : false,
+                            border : 3
+                        });
+                        p0.setOnGroundHit(($ground)=>{
+                            p0.downBounce($ground);
+                            timer.callLater(()=>{
+                                p0.kill();
+                            },10);
+                        });
+                        p0.setOnStaticHit(($which, $static)=>{
+                            p0.staticBounce($which, $static);
+                            if(sqr != $static)$static.kill();
+                            if($static.group){
+                                $static.group.calcCenter();
+                                if($static.group.size == 0){
+                                    $static.group.kill();
+                                }
+                            }
+                            timer.callLater(()=>{
+                                p0.kill();
+                            },10);
+                        });
+                        world.addBody(p0);
+                    }
+                });
                 world.addBody(point);
             }
         });
@@ -152,7 +233,7 @@ class Game{
         }, 68);
 
         iotrigger.setKeyDownEvent(()=>{
-           moveController.accRight(8);
+           moveController.accRight(6);
         }, 68);
 
         iotrigger.setKeyUpEvent(()=>{
@@ -160,28 +241,29 @@ class Game{
         }, 65);
 
         iotrigger.setKeyDownEvent(()=>{
-            moveController.accLeft(8);
+            moveController.accLeft(6);
          }, 65);
         
         // Y
         iotrigger.setKeyUpEvent(()=>{
-           moveController.accUp(0);
+        //    moveController.accUp(0);
         }, 87);
 
         iotrigger.setKeyDownEvent(()=>{
-           moveController.accUp(8);
+        //    moveController.accUp(8);
+           moveController.jump();
         }, 87);
 
         iotrigger.setKeyUpEvent(()=>{
-           moveController.accDown(0);
+        //    moveController.accDown(0);
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-           moveController.accDown(8);
+        //    moveController.accDown(8);
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            
+            moveController.jump();
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{
@@ -195,7 +277,7 @@ class Game{
                 moveController.update();
                 stats.update();
                 timer.update();
-                sssss.moveTo(handler.position);
+                sssss.moveTo(handler.position.clone().sub(new Vector2d(50, 50)));
             }
         }, ()=>{
 

@@ -193,13 +193,11 @@ class StaticSquareGroup{
         let z = this._outLineZone;
         $context.save();
         $context.strokeStyle = '#FFF';
-        $context.lineWidth = 1;
+        $context.setLineDash([5]);
+        $context.lineWidth = 2;
         $context.strokeRect(z.position.x, 
                             z.position.y,
                             z.width, z.height);
-        $context.strokeRect(z.position.x + 1, 
-                            z.position.y + 1,
-                            z.width - 2, z.height - 2);
         $context.restore();
     }
 }

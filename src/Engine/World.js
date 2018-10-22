@@ -158,11 +158,6 @@ class World{
         }
     }
 
-    isUnderGround($groundSeg, $position){
-        let p = $position.clone().sub($groundSeg.origionPosition);
-        return $groundSeg.direction.cross(p) > 0? true : false;
-    }
-
     addBody($body){
         if($body instanceof Array){
             for(let i = 0; i < $body.length; i++){
@@ -189,7 +184,7 @@ class World{
         
         // 碰撞检测
         if(g){
-            if(this.isUnderGround(g, p)){
+            if(g.isUnderGround(p)){
                 $point.onGroundHit(g);
                 g.onHit($point);
             }else{

@@ -34,20 +34,9 @@
 				"disc": "不断在帧循环中调用。"
 			},
 			{
-				"name": "setPositionToGroundSegment($orgPosition, $argue)",
-				"disc": ["将点位置移动到对应的地面片段处",
-						"$orgPosition: 片段的起点", 
-						"$argue: 片段角度"]
-			},
-			{
-				"name": "setPositionToGroundSegment($groundSeg)",
-				"disc": ["将点位置移动到对应的地面片段处",
-						"$groundSeg: 片段"]
-			},
-			{
-				"name": "downBounce($argue)",
+				"name": "downBounce($angle)",
 				"disc": ["撞击到地面的反弹",
-						"$argue:反弹平面的角度"]
+						"$angle:反弹平面的角度"]
 			},
 			{
 				"name": "strictBounce($strict, $which)",
@@ -97,6 +86,22 @@
 				"disc": ["撞击到静态方块的反弹",
 						"$which:撞击到静态方块的哪个边：top:上，right:右，bottom:下，left:左",
 						"其中top和bottom的效果一致，right和left的效果一致"]
+			},
+			{
+				"name": "setPositionToGroundSegment($orgPosition, $angle)",
+				"disc": ["将点位置移动到对应的地面片段处，返回地面片段",
+						"$orgPosition: 片段的起点", 
+						"$angle: 片段角度"]
+			},
+			{
+				"name": "setPositionToGroundSegment($groundSeg)",
+				"disc": ["将点位置移动到对应的地面片段处",
+						"$groundSeg: 片段"]
+			},
+			{
+				"name": "setPositionToGround($ground)",
+				"disc": ["将点位置移动到对应的地面片段处",
+						"$ground: 地面"]
 			},
 			{
 				"name": "setPointToStaticSquare($static)",
@@ -204,7 +209,7 @@
 			{
 				"name": "angularVelocityConsume",
 				"disc": "角速度损耗后所占%"
-			}
+			},
 			{
 				"name": "linearVelocity",
 				"disc": "线性速度,Vector2d对象"

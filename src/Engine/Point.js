@@ -224,6 +224,18 @@ class Point{
     }
 
     // 设置位置到地面
+    setPositionToGround($ground){
+        if(!$ground instanceof Ground){
+            console.error("Point", "para must be ground");
+            return;
+        }
+        let gs = $ground.getGroundUndered(this.position);
+        if(gs){
+            this.setPositionToGroundSegment(gs);
+        }
+        return gs;
+    }
+
     setPositionToGroundSegment($orgPosition, $angle){
         let p = this.position;
         if(!$orgPosition)return;
@@ -268,7 +280,7 @@ class Point{
         v.x = (v.x * cos2 - 2 * v.y * Math.sin(angle) * Math.cos(angle) - v.x * sin2) * this.linearVelocityConsume * $groundSeg.linearVelocityConsume;
         v.y = v.y * -this.linearVelocityConsume * $groundSeg.linearVelocityConsume;
         this.angularVelocity *= this.angularVelocityConsume * $groundSeg.angularVelocityConsume;
-        this._check(267);
+        this._check(283, $groundSeg, $groundSeg.angle, $groundSeg.linearVelocityConsume, $groundSeg.angularVelocityConsume);
     }
 
     strictBounce($strict, $which){
@@ -304,7 +316,7 @@ class Point{
             default:
                 console.warn("strict-judging problem");
         }
-        this._check(308 + " side:" + $which);
+        this._check(319 + " side:" + $which);
     }
 
     staticBounce($which, $static){
@@ -322,7 +334,7 @@ class Point{
             default:
                 console.warn("static-judging problem");
         }
-        this._check(326);
+        this._check(337);
     }
     
     stop(){
