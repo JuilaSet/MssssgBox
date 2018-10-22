@@ -207,23 +207,23 @@ class World{
         // 碰撞检测
         let p = $point.position;
         if (p.y - $point.border < y) {
-            $point.onStrictHit(this.strict, "top");
+            $point.onStrictHit(this.strict, Zone.TOP);
         }
 
         if (p.y + $point.border > y + height ) {
-            $point.onStrictHit(this.strict, "bottom");
+            $point.onStrictHit(this.strict, Zone.BOTTOM);
         }
 
         if (p.x + $point.border > x + width) {
-            $point.onStrictHit(this.strict, "right");
+            $point.onStrictHit(this.strict, Zone.RIGHT);
         }
 
         if (p.x - $point.border < x) {
-            $point.onStrictHit(this.strict, "left");
+            $point.onStrictHit(this.strict, Zone.LEFT);
         }
     }
 
-    // 静态物体碰撞判断
+    // 静态物体碰撞判断 []][
     staticBounce($point){
         let p = $point.getNextFramePosition(this.timeStep);
         let sqs = this._statics;
@@ -245,14 +245,15 @@ class World{
                 console.warn("illegal obj in statics list");
             }
         }
+
         function collide($$sqs, $$side, $$sq, $$ifin){
             $point.onStaticHit($$side, $$sq);
             $$sqs.onHit($point, $$side, $$sq);
             $$sq.onHit($point, $$side, $$ifin);
         }
-        function collideSq($$side, $sq, $$ifin){
-            $point.onStaticHit($$side, $sq);
-            $sq.onHit($point, $$side, $$ifin);
+        function collideSq($$side, $$sq, $$ifin){
+            $point.onStaticHit($$side, $$sq);
+            $$sq.onHit($point, $$side, $$ifin);
         }
         // 碰撞检测
         for(let x = 0; x < collideList.length; x++){
@@ -262,30 +263,30 @@ class World{
                     let psq = sq.position;
                     if(pos.y > psq.y && pos.y < psq.y + sq.height){
                         if(pos.x <= psq.x){
-                            collide(collideList[x], 'left', sq, false);
+                            collide(collideList[x], Zone.LEFT, sq, false);
                         }else if(pos.x >= psq.x + sq.width){
-                            collide(collideList[x], 'right', sq, false);
+                            collide(collideList[x], Zone.RIGHT, sq, false);
                         }else{
                             let centP = new Vector2d(psq.x + sq.width / 2, psq.y + sq.height / 2);
                             console.warn('point-position "left&right" on static judged inside');
                             if(pos.x < centP.x){
-                                collide(collideList[x], 'left', sq, true);
+                                collide(collideList[x], Zone.LEFT, sq, true);
                             }else{
-                                collide(collideList[x], 'right', sq, true); 
+                                collide(collideList[x], Zone.RIGHT, sq, true); 
                             }
                         }
                     }else{
                         if(pos.y <= psq.y){
-                            collide(collideList[x], 'top', sq, false);
+                            collide(collideList[x], Zone.TOP, sq, false);
                         }else if(pos.y >= psq.y + sq.height){
-                            collide(collideList[x], 'bottom', sq, false);
+                            collide(collideList[x], Zone.BOTTOM, sq, false);
                         }else{
                             let centP = new Vector2d(psq.x + sq.width / 2, psq.y + sq.height / 2);
                             console.warn('point-position "top&bottom" on static judged inside');
                             if(pos.y < centP.y){
-                                collide(collideList[x], 'top', sq, true);
+                                collide(collideList[x], Zone.TOP, sq, true);
                             }else{
-                                collide(collideList[x], 'bottom', sq, true);
+                                collide(collideList[x], Zone.BOTTOM, sq, true);
                             }
                         }
                     }
@@ -295,30 +296,30 @@ class World{
                     let psq = collideList[x].position;
                     if(pos.y > psq.y && pos.y < psq.y + collideList[x].height){
                         if(pos.x <= psq.x){
-                            collideSq('left', collideList[x], false);
+                            collideSq(Zone.LEFT, collideList[x], false);
                         }else if(pos.x >= psq.x + collideList[x].width){
-                            collideSq('right', collideList[x], false);
+                            collideSq(Zone.RIGHT, collideList[x], false);
                         }else{
                             console.warn('point-position "left&right" on static judged inside');
                             let centP = new Vector2d(psq.x + collideList[x].width / 2, psq.y + collideList[x].height / 2);
                             if(pos.x < centP.x){
-                                collideSq('left', collideList[x], true);
+                                collideSq(Zone.LEFT, collideList[x], true);
                             }else{
-                                collideSq('right', collideList[x], true);
+                                collideSq(Zone.RIGHT, collideList[x], true);
                             }
                         }
                     }else{
                         if(pos.y <= psq.y){
-                            collideSq('top', collideList[x], false);
+                            collideSq(Zone.TOP, collideList[x], false);
                         }else if(pos.y >= psq.y + collideList[x].height){
-                            collideSq('bottom', collideList[x], false);
+                            collideSq(Zone.BOTTOM, collideList[x], false);
                         }else{
                             console.warn('point-position "top&bottom" on static judged inside');
                             let centP = new Vector2d(psq.x + collideList[x].width / 2, psq.y + collideList[x].height / 2);
                             if(pos.y < centP.y){
-                                collideSq('top', collideList[x], true);
+                                collideSq(Zone.TOP, collideList[x], true);
                             }else{
-                                collideSq('bottom', collideList[x], true);
+                                collideSq(Zone.BOTTOM, collideList[x], true);
                             }
                         }
                     }

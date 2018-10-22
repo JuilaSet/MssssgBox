@@ -195,6 +195,7 @@ class Point{
 
     onStaticHit($which, $static){
         this.staticBounce($which);
+        this.setPointToStaticSquare($static);
     }
 
     setOnKilled($func){
@@ -239,22 +240,22 @@ class Point{
         let p = this.position;
 
         switch($which){
-            case "top":
+            case Zone.TOP:
                 this.linearVelocity.y *= -this.linearVelocityConsume; // 
                 this.angularVelocity *= this.angularVelocityConsume;    // 
                 p.y = y + this.border;
                 break;
-            case "bottom":
+            case Zone.BOTTOM:
                 this.linearVelocity.y *= -this.linearVelocityConsume;
                 this.angularVelocity *= this.angularVelocityConsume;
                 p.y  = y + height - this.border;
                 break;
-            case "right":
+            case Zone.RIGHT:
                 this.linearVelocity.x *= -this.linearVelocityConsume;
                 this.angularVelocity *= this.angularVelocityConsume;
                 p.x = x + width - this.border;
                 break;
-            case "left":
+            case Zone.LEFT:
                 this.linearVelocity.x *= -this.linearVelocityConsume;
                 this.angularVelocity *= this.angularVelocityConsume;
                 p.x = x + this.border;
@@ -264,15 +265,20 @@ class Point{
         }
     }
 
+    // + 
+    setPointToStaticSquare($static){
+        console.log("Static", $static);
+    }
+
     staticBounce($which){
         switch($which){
-            case "top":
-            case "bottom":
+            case Zone.TOP:
+            case Zone.BOTTOM:
                 this.linearVelocity.y *= -this.linearVelocityConsume;
                 this.angularVelocity *= this.angularVelocityConsume;
                 break;
-            case "right":
-            case "left":
+            case Zone.RIGHT:
+            case Zone.LEFT:
                 this.linearVelocity.x *= -this.linearVelocityConsume;
                 this.angularVelocity *= this.angularVelocityConsume;
                 break;

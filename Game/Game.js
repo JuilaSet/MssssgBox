@@ -88,13 +88,13 @@ class Game{
         
         let sqrs;
         let orgPosition, dp;
-        animation.setMouseDown((event=>{
+        animation.setMouseDown(event=>{
             dp = orgPosition = event.offset;
             sqrs = new StaticSquareGroup();
             world.addBody(sqrs);
-        }));
+        });
 
-        animation.setMouseStretch((event)=>{
+        animation.setMouseStretch(event=>{
             let sqrs2 = sqrs;   // 闭包陷阱
             if(event.downbutton == 2){
                 let sq = new StaticSquare({
@@ -114,7 +114,7 @@ class Game{
             }
         });
 
-        animation.setMouseUp((event)=>{
+        animation.setMouseUp(event=>{
             if(event.button == 0){
                 let ddp = dp.clone();
                 let point = new Point({

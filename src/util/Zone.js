@@ -29,6 +29,10 @@ class Zone{
             return false;
         }
     }
+
+    getSideCloset($position){ // +
+        
+    }
 }
 Zone.INFINITY_ZONE = new Zone({
     position: {x: -Infinity, y: -Infinity},
@@ -38,3 +42,7 @@ Zone.INFINITY_ZONE = new Zone({
 Zone.INFINITY_ZONE.check = ()=>{
     return true;
 }
+Zone.TOP = 'top';
+Zone.BOTTOM = 'bottom';
+Zone.LEFT = 'left';
+Zone.RIGHT = 'right';
