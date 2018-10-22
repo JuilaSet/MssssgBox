@@ -76,6 +76,10 @@ class GroundSegment{
     constructor($option){
         this._origionPosition = $option.origionPosition || new Vector2d(0, 0);  // 起点
         this._direction = $option.direction || new Vector2d(1, 0);   // 方向
+
+        this.angularVelocityConsume = $option.angularVelocityConsume || 1;
+        this.linearVelocityConsume = $option.linearVelocityConsume || 1;
+
         this._ground = $option.ground;    // 所属地面
         // 无option的属性
         this.next = $option.next || {}; // 下一个片段

@@ -25,7 +25,7 @@ class Point{
         this.enableGroundBounce = ($option.enableGroundBounce != undefined)?$option.enableGroundBounce:true;
         this.enableStaticBounce = ($option.enableStaticBounce != undefined)?$option.enableStaticBounce:true;
         
-        this._check();
+        this._check(28);
     }
     
     get livingZone(){
@@ -42,10 +42,27 @@ class Point{
         }
     }
 
-    _check(){
-        if(isNaN(this.angularVelocity))console.error("angularVelocity", this.angularVelocity);
-        if(isNaN(this.linearVelocity.x))console.error("linearVelocity.x", this.linearVelocity.x);
-        if(isNaN(this.linearVelocity.y))console.error("linearVelocity.y", this.linearVelocity.y);
+    _check(...args){
+        let b = false;
+        if(isNaN(this.angularVelocity)){
+            console.error("angularVelocity", this.angularVelocity);
+            b = true;
+        };
+        if(isNaN(this.linearVelocity.x)){
+            console.error("linearVelocity.x", this.linearVelocity.x);
+            b = true;
+        };
+        if(isNaN(this.linearVelocity.y)){
+            console.error("linearVelocity.y", this.linearVelocity.y);
+            b = true;
+        };
+        if(b){
+            let msg = "line:";
+            args.forEach((m)=>{
+                msg += " " + m;
+            });
+            console.error(msg);
+        }
     }
 
     kill(){
@@ -181,7 +198,7 @@ class Point{
     }
 
     onGroundHit($groundSeg){
-        this.downBounce($groundSeg.angle);
+        this.downBounce($groundSeg);
         this.setPositionToGroundSegment($groundSeg.origionPosition, $groundSeg.angle);
     }
 
@@ -194,7 +211,7 @@ class Point{
     }
 
     onStaticHit($which, $static){
-        this.staticBounce($which);
+        this.staticBounce($which, $static);
         this.setPointToStaticSquare($static);
     }
 
@@ -244,21 +261,21 @@ class Point{
         return this;
     }
 
-    downBounce($angle){
+    downBounce($groundSeg){
+        let angle = $groundSeg.angle;
+        let cos2 = Math.cos(angle) * Math.cos(angle), sin2 = Math.sin(angle) * Math.sin(angle);
         let v = this.linearVelocity;
-        let cos2 = Math.cos($angle) * Math.cos($angle), 
-            sin2 = Math.sin($angle) * Math.sin($angle);
-        v.x = (v.x * cos2 - 2 * v.y * Math.sin($angle) * Math.cos($angle) - v.x * sin2) * this.linearVelocityConsume;
-        v.y = v.y * -this.linearVelocityConsume;
-
-        this.angularVelocity *= this.angularVelocityConsume;
-
-        if(isNaN(v.x) || isNaN(v.y)){
-            console.error("linearVelocity calc error:(", v.x, ",", v.y, " )");
-        }
+        v.x = (v.x * cos2 - 2 * v.y * Math.sin(angle) * Math.cos(angle) - v.x * sin2) * this.linearVelocityConsume * $groundSeg.linearVelocityConsume;
+        v.y = v.y * -this.linearVelocityConsume * $groundSeg.linearVelocityConsume;
+        this.angularVelocity *= this.angularVelocityConsume * $groundSeg.angularVelocityConsume;
+        this._check(267);
     }
 
     strictBounce($strict, $which){
+        if($strict == Zone.INFINITY_ZONE){
+            return;
+        }
+        // 非无穷大区域的情况
         let width = $strict.width, height = $strict.height;
         let x = $strict.position.x, y = $strict.position.y;
         let p = this.position;
@@ -287,23 +304,25 @@ class Point{
             default:
                 console.warn("strict-judging problem");
         }
+        this._check(308 + " side:" + $which);
     }
 
-    staticBounce($which){
+    staticBounce($which, $static){
         switch($which){
             case Zone.TOP:
             case Zone.BOTTOM:
-                this.linearVelocity.y *= -this.linearVelocityConsume;
-                this.angularVelocity *= this.angularVelocityConsume;
+                this.linearVelocity.y *= -this.linearVelocityConsume * $static.linearVelocityConsume;
+                this.angularVelocity *= this.angularVelocityConsume * $static.angularVelocityConsume;
                 break;
             case Zone.RIGHT:
             case Zone.LEFT:
-                this.linearVelocity.x *= -this.linearVelocityConsume;
-                this.angularVelocity *= this.angularVelocityConsume;
+                this.linearVelocity.x *= -this.linearVelocityConsume * $static.linearVelocityConsume;
+                this.angularVelocity *= this.angularVelocityConsume * $static.angularVelocityConsume;
                 break;
             default:
                 console.warn("static-judging problem");
         }
+        this._check(326);
     }
     
     stop(){

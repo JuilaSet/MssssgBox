@@ -1,8 +1,9 @@
 class StaticSquareGroup{
     constructor($option={}){
-        this._position = $option.position || new Vector2d(0, 0);  // 加入物体时决定
+        this._center = new Vector2d(0, 0);  // 加入物体时决定
         this._sqrts = [];
         this._living = true;
+
         // 外边框区域
         this._outLineZone = new Zone();
         this._maxCleanSize = $option.maxCleanSize || 50;
@@ -13,8 +14,26 @@ class StaticSquareGroup{
         }
     }
     
+    moveTo($position){
+        let vec = $position.clone().sub(this._center);
+        // 遍历位置
+        this._sqrts.forEach(ele=>{
+            ele.position.add(vec);
+        });
+        this.calcCenter();
+        this.calcOutlineZone();
+    }
+
     get position(){
         return this._position;
+    }
+
+    set position($p){
+        this._position = $p;
+    }
+
+    get center(){
+        return this._center;
     }
 
     get sqrts(){
@@ -107,7 +126,7 @@ class StaticSquareGroup{
                     maxy = item.position.y > maxy ? item.position.y:maxy;
                 }
             })
-            this._position.set(minx + (maxx - minx)/2, miny + (maxy - miny)/2);
+            this._center.set(minx + (maxx - minx)/2, miny + (maxy - miny)/2);
         }
     }
 
@@ -145,7 +164,7 @@ class StaticSquareGroup{
 
     // 测试用
     render($ctx){
-        if(this._position){
+        if(this._center){
             this.drawCenter($ctx);
             this.drawOutLine($ctx);
         }
@@ -166,7 +185,7 @@ class StaticSquareGroup{
             $context.arc(x, y, 3, 0, 2 * Math.PI, false);
             $context.stroke();
             $context.restore();
-        })(this._position.x, this._position.y, 2);
+        })(this._center.x, this._center.y, 2);
     }
 
     // 测试用
@@ -188,6 +207,8 @@ class StaticSquareGroup{
 class StaticSquare{
     constructor($option={}){
         this._group = $option.group;
+        this.angularVelocityConsume = $option.angularVelocityConsume || 1;
+        this.linearVelocityConsume = $option.linearVelocityConsume || 1;
         // 碰撞区域
         this.zone = $option.zone || new Zone({
             position: ($option.position || new Vector2d(0, 0)),

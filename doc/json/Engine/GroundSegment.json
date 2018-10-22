@@ -47,6 +47,14 @@
 		],
 		"properties": [
 			{
+				"name": "linearVelocityConsume",
+				"disc": "线性速度损耗后所占%"
+			},
+			{
+				"name": "angularVelocityConsume",
+				"disc": "角速度损耗后所占%"
+			},
+			{
 				"name": "origionPosition",
 				"disc": "地皮初始坐标"
 			},
@@ -60,6 +68,14 @@
 			}
 		],
 		"option":[
+			{
+				"name": "linearVelocityConsume",
+				"disc": "设置线性速度损耗后所占%"
+			},
+			{
+				"name": "angularVelocityConsume",
+				"disc": "设置角速度损耗后所占%"
+			},
 			{
 				"name": "origionPosition",
 				"disc": "设置地皮初始坐标"

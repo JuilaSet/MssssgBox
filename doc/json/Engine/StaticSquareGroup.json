@@ -14,6 +14,11 @@
 				"disc": "$option:选项"
 			},
 			{
+				"name": "moveTo($position)",
+				"disc": ["移动到指定位置处",
+						"$position：到达位置"]
+			},
+			{
 				"name": "addStaticSquare($staticSqr)",
 				"disc": ["添加一个方块",
 						"$staticSqr:StaticSquare方块对象"]
@@ -68,6 +73,10 @@
 			}
 		],
 		"properties": [
+			{
+				"name": "center",
+				"disc": "中心坐标，Vector2d对象"
+			},
 			{
 				"name": "sqrts",
 				"disc": "存放所有的方块，只读"

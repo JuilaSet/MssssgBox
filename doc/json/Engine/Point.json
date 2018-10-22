@@ -196,15 +196,15 @@
 			{
 				"name": "rotation",
 				"disc": "旋转角度，弧度"
-			}, 
-			{
-				"name": "angularVelocityConsume",
-				"disc": "线性速度损耗%"
 			},
 			{
 				"name": "linearVelocityConsume",
-				"disc": "角速度损耗%"
+				"disc": "线性速度损耗后所占%"
 			},
+			{
+				"name": "angularVelocityConsume",
+				"disc": "角速度损耗后所占%"
+			}
 			{
 				"name": "linearVelocity",
 				"disc": "线性速度,Vector2d对象"
@@ -264,12 +264,12 @@
 				"disc": "设置角速度，弧度"
 			},
 			{
-				"name": "angularVelocityConsume",
-				"disc": "设置线性速度损耗%"
+				"name": "linearVelocityConsume",
+				"disc": "设置线性速度损耗后所占%"
 			},
 			{
-				"name": "linearVelocityConsume",
-				"disc": "设置角速度损耗%"
+				"name": "angularVelocityConsume",
+				"disc": "设置角速度损耗后所占%"
 			}
 			
 		]

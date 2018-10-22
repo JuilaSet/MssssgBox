@@ -45,6 +45,14 @@
 		],
 		"properties": [
 			{
+				"name": "linearVelocityConsume",
+				"disc": "线性速度损耗后所占%"
+			},
+			{
+				"name": "angularVelocityConsume",
+				"disc": "角速度损耗后所占%"
+			},
+			{
 				"name": "group",
 				"disc": "所在的组，是StaticSquareGroup对象"
 			},
@@ -70,6 +78,14 @@
 			}
 		],
 		"option":[
+			{
+				"name": "linearVelocityConsume",
+				"disc": "设置线性速度损耗后所占%"
+			},
+			{
+				"name": "angularVelocityConsume",
+				"disc": "设置角速度损耗后所占%"
+			},
 			{
 				"name": "group",
 				"disc": "设置所在的组，是StaticSquareGroup对象"
