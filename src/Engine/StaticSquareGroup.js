@@ -2,17 +2,15 @@ class StaticSquareGroup{
     constructor($option={}){
         this._position = $option.position || new Vector2d(0, 0);  // 加入物体时决定
         this._sqrts = [];
+        this._living = true;
+        // 外边框区域
+        this._outLineZone = new Zone();
+        this._maxCleanSize = $option.maxCleanSize || 50;
         if($option.sqrts){
             for(let s of $option.sqrts){ //chain @Array
                 this.addStaticSquare(s);
             }
         }
-        this._living = true;
-
-        // 外边框区域
-        this._outLineZone = new Zone();
-
-        this._maxCleanSize = $option.maxCleanSize || 50;
     }
     
     get position(){
@@ -192,9 +190,9 @@ class StaticSquare{
         this._group = $option.group;
         // 碰撞区域
         this.zone = $option.zone || new Zone({
-            position: $option.position,
-            width: $option.width,
-            height: $option.height
+            position: ($option.position || new Vector2d(0, 0)),
+            width: ($option.width || 100),
+            height: ($option.height || 100)
         });
         this._living = true;
     }

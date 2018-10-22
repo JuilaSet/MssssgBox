@@ -30,18 +30,44 @@ class Zone{
         }
     }
 
-    getSideCloset($position){ // +
-        
+    getClosetSide($position){
+        let tp = this.position;
+        let dxRight = Math.abs(tp.x + this.width - $position.x),
+            dxLeft = Math.abs($position.x - tp.x),
+            dyTop = Math.abs($position.y - tp.y),
+            dyBottom = Math.abs(tp.y + this.height - $position.y),
+            x, y;
+        if(dxRight == dxLeft){
+            dxRight += Math.random() - 0.5;
+        }
+        if(dyTop == dyBottom){
+            dyTop += Math.random() - 0.5;
+        }
+        switch(Math.min(dxRight, dxLeft, dyBottom, dyTop)){
+            case dxRight:
+                return Zone.RIGHT;
+            case dxLeft:
+                return Zone.LEFT;
+            case dyTop:
+                return Zone.TOP;
+            case dyBottom:
+                return Zone.BOTTOM;
+            default:
+                console.error("Zone", "close side judging error");
+        }
     }
 }
-Zone.INFINITY_ZONE = new Zone({
-    position: {x: -Infinity, y: -Infinity},
-    width: Infinity,
-    height: Infinity
-});
-Zone.INFINITY_ZONE.check = ()=>{
-    return true;
-}
+Zone.INFINITY_ZONE = new (function(){
+    let obj = {
+        position: { x: -Infinity, y: -Infinity },
+        width: Infinity,
+        height: Infinity
+    }
+    obj.check = ()=>{
+        return true;
+    }
+    return obj;
+})();
 Zone.TOP = 'top';
 Zone.BOTTOM = 'bottom';
 Zone.LEFT = 'left';

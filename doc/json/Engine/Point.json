@@ -99,6 +99,15 @@
 						"其中top和bottom的效果一致，right和left的效果一致"]
 			},
 			{
+				"name": "setPointToStaticSquare($static)",
+				"disc": "将位置设置到静态方块上"
+			},
+			{
+				"name": "setPositionToZone($zone)",
+				"disc": ["设置位置到区域",
+						"$zone:要到设置的区域"]
+			},
+			{
 				"name": "addLinearSpeed($vec, $strength)",
 				"disc": "叠加线速度, $vec是新向量，$strength是大小。"
 			},

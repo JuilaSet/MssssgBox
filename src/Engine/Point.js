@@ -220,6 +220,30 @@ class Point{
         return this;
     }
 
+    setPointToStaticSquare($static){
+        this.setPositionToZone($static.zone);
+    }
+
+    // 设置位置到区域
+    setPositionToZone($zone){
+        let p = $zone.getClosetSide(this.position);
+        switch(p){
+            case Zone.TOP:
+                this.position.y = $zone.position.y;
+                break;
+            case Zone.BOTTOM:
+                this.position.y = $zone.position.y + $zone.height;
+                break;
+            case Zone.RIGHT:
+                this.position.x = $zone.position.x + $zone.width;
+                break;
+            case Zone.LEFT:
+                this.position.x = $zone.position.x;
+                break;
+        }
+        return this;
+    }
+
     downBounce($angle){
         let v = this.linearVelocity;
         let cos2 = Math.cos($angle) * Math.cos($angle), 
@@ -241,8 +265,8 @@ class Point{
 
         switch($which){
             case Zone.TOP:
-                this.linearVelocity.y *= -this.linearVelocityConsume; // 
-                this.angularVelocity *= this.angularVelocityConsume;    // 
+                this.linearVelocity.y *= -this.linearVelocityConsume;
+                this.angularVelocity *= this.angularVelocityConsume;
                 p.y = y + this.border;
                 break;
             case Zone.BOTTOM:
@@ -263,11 +287,6 @@ class Point{
             default:
                 console.warn("strict-judging problem");
         }
-    }
-
-    // + 
-    setPointToStaticSquare($static){
-        console.log("Static", $static);
     }
 
     staticBounce($which){

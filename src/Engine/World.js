@@ -223,7 +223,7 @@ class World{
         }
     }
 
-    // 静态物体碰撞判断 []][
+    // 静态物体碰撞判断
     staticBounce($point){
         let p = $point.getNextFramePosition(this.timeStep);
         let sqs = this._statics;
