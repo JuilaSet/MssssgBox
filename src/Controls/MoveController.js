@@ -80,7 +80,7 @@ class MoveController{
         if(this._bindObj){
             // x:摩擦力
             if(Math.abs(this._speedX) > this.frictionX){
-                this._fX = this.frictionX * this._speedX>0?1:-1;
+                this._fX = this.frictionX * (this._speedX>0?1:-1);
             }else{
                 this._fX = 0;
                 this._speedX = 0;
@@ -88,21 +88,21 @@ class MoveController{
 
             // x:速度上限
             if(Math.abs(this._speedX) > this.maxSpeedX){
-                this._speedX = this.maxSpeedX * this._speedX>0?1:-1;
+                this._speedX = this.maxSpeedX * (this._speedX>0?1:-1);
             }
             this._speedX += (this.aX1 + this.aX2) - this._fX;
             this._bindObj.position.x += this._speedX;
             
             // y:摩擦力
             if(Math.abs(this._speedY) > this.frictionY){
-                this._fY = this.frictionY * this._speedY>0?1:-1;
+                this._fY = this.frictionY * (this._speedY>0?1:-1);
             }else{
                 this._fY = 0;
                 this._speedY = 0;
             }
             // y:速度上限
             if(Math.abs(this._speedY) > this.maxSpeedY){
-                this._speedY = this.maxSpeedY * this._speedY>0?1:-1;
+                this._speedY = this.maxSpeedY * (this._speedY>0?1:-1);
             }
             this._speedY += (this.aY1 + this.aY2) - this._fY;
             this._bindObj.position.y += this._speedY;

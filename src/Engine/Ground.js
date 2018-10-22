@@ -132,11 +132,6 @@ class GroundSegment{
         return this.direction.cross(p) > 0? true : false; // 包括0，以点为准往顺时针下方为正
     }
 
-    isUnderGroundSim($position, $offset){
-        let p = $position.clone().sub(this.origionPosition);
-        return this.direction.cross(p) > $offset? true : false;
-    }
-
     setNextSegment($seg){
         if(this._origionPosition.x > $seg._origionPosition.x)console.error("必须将片段从左向右连接");
         else{

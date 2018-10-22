@@ -11,10 +11,10 @@ class Game{
     run(){
         // 控制器模块
         let moveController = new CrawlController({
-            frictionX : 0.9,
-            frictionY : 0.9,
-            maxSpeedX : 8,
-            maxSpeedY : 8
+            // frictionX : 0.9,
+            // frictionY : 0.9,
+            // maxSpeedX : 8,
+            // maxSpeedY : 8
         });
 
         let dis = this.display;
@@ -45,8 +45,7 @@ class Game{
             segs[x] = new GroundSegment({
                 origionPosition:new Vector2d(
                     (animation.width / segnum) * x, last
-                ),
-                linearVelocityConsume : 0.001
+                )
             });
         }
 
@@ -97,9 +96,9 @@ class Game{
             animation.drawFrame();
             animation.drawTree(
                 tpositon,
-                moveController._speedX - f1, 
+                f1, 
                 h1, 5, 
-                Math.PI / Math.abs(moveController._speedY - a1)
+                Math.PI / Math.abs(a1)
             );
             world.render($this);
         });
@@ -142,7 +141,7 @@ class Game{
                     livingZone: world.strict,
                     position : ddp,
                     force : new Vector2d(0, 100),
-                    border : Math.random() * 10 + 8,
+                    border : 10,//Math.random() * 10 + 8,
                     enableStrictBounce: false,
                     linearVelocityConsume: 1
                 });
@@ -166,12 +165,12 @@ class Game{
         
                 point.setOnGroundHit(($groundSeg)=>{
                     point.downBounce($groundSeg);
+                    point.setPositionToGroundSegment($groundSeg.origionPosition, $groundSeg.angle);
                     $groundSeg.ground.addSegments(
                         new GroundSegment({
                             origionPosition:point.position.add(new Vector2d(0, 3)).clone()
                         })
                     );
-                    point.setPositionToGroundSegment($groundSeg.origionPosition, $groundSeg.angle);
                     point.border -= 3;
                     if(point.border < 3){
                         point.kill();
@@ -233,7 +232,7 @@ class Game{
         }, 68);
 
         iotrigger.setKeyDownEvent(()=>{
-           moveController.accRight(6);
+           moveController.accRight(9);
         }, 68);
 
         iotrigger.setKeyUpEvent(()=>{
@@ -241,7 +240,7 @@ class Game{
         }, 65);
 
         iotrigger.setKeyDownEvent(()=>{
-            moveController.accLeft(6);
+            moveController.accLeft(9);
          }, 65);
         
         // Y
@@ -263,7 +262,37 @@ class Game{
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            moveController.jump();
+            let px = new Point({
+                position: moveController.bindObj.position.clone(),
+                linearVelocity: new Vector2d(100, 0),
+                force: new Vector2d(100, 0),
+                enableStaticBounce: false
+            })
+            px.setOnStrictHit(()=>{
+                world.addBody(new Point({
+                    position: px.position,
+                    linearVelocity: new Vector2d(Math.random() * 100, Math.random() * 100),
+                    border: 5,
+                    enableStrictBounce :false,
+                    livingZone: world.livingZone
+                }));
+                world.addBody(new Point({
+                    position: px.position,
+                    linearVelocity: new Vector2d(Math.random() * 100, Math.random() * 100),
+                    border: 5,
+                    enableStrictBounce :false,
+                    livingZone: world.livingZone
+                }));
+                world.addBody(new Point({
+                    position: px.position,
+                    linearVelocity: new Vector2d(Math.random() * 100, Math.random() * 100),
+                    border: 5,
+                    enableStrictBounce :false,
+                    livingZone: world.livingZone
+                }));
+                px.kill();
+            });
+            world.addBody(px);
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{

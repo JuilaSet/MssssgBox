@@ -2,6 +2,12 @@ class CrawlController{
     constructor($option){
         this._bindObj = $option.bindObj;
         this.jumpTimes = $option.jumpTimes || 3; // 几段跳
+        this.maxSpeed = $option.maxSpeed || 160;
+        this._ground = $option.ground;
+        this._gravityacc = $option.gravityAcc || 0.9;
+        this._friction = $option.friction || new Vector2d(7, 0);
+
+        // private
         this._jpt = 0;
         this._point = new Point({
             force: new Vector2d(0, 0)
@@ -13,11 +19,8 @@ class CrawlController{
             this._jpt = 0;
         });
         this._world = new World();
-        this._ground = $option.ground;
-        this._gravityacc = $option.gravityAcc || 0.9;
 
         this._acc = new Vector2d(0, 0);
-        this._friction = new Vector2d($option.frictionX || 4, 0);
         this._lock = true;
         this._fX = 0;
 
@@ -82,6 +85,10 @@ class CrawlController{
             speed.x = 0;
         }
         speed.x += this._acc.x - this._fX;
+        if(Math.abs(speed.x) > this.maxSpeed){
+            speed.x = this.maxSpeed * (speed.x>0?1:-1);
+            console.log(this.maxSpeed, speed.x);
+        }
         if(this._lock)this._point.setPositionToGround(this._ground);
         else{
             this._accy -= -this._gravityacc;
