@@ -24,6 +24,14 @@
 						"$position：位置"]
 			},
 			{
+				"name": "getFirstSeg()",
+				"disc": "获取第一块地皮片段"
+			},
+			{
+				"name": "getLastSeg()",
+				"disc": "获取最后一块地皮片段"
+			},
+			{
 				"name": "addSegments($seg)",
 				"disc": ["加入地皮片段",
 						"$seg：地皮片段"]

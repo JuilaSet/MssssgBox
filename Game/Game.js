@@ -39,9 +39,9 @@ class Game{
         });
 
         // 物理模块
-        let segnum = 20, segs = [], last = 400;
+        let segnum = 50, segs = [], last = 400;
         for(let x = 0; x <= segnum; x++){
-            last = (Math.random() * 50 - 25) + last;
+            last = (-10 * Math.sin(x / 2)) + last;
             segs[x] = new GroundSegment({
                 origionPosition:new Vector2d(
                     (animation.width / segnum) * x, last
@@ -113,7 +113,7 @@ class Game{
         });
 
         animation.setMouseStretch(event=>{
-            let sqrs2 = sqrs;   // 闭包陷阱
+            let sqrs2 = sssss;   // 闭包陷阱
             if(event.downbutton == 2){
                 let sq = new StaticSquare({
                     position: event.offset,
@@ -232,7 +232,7 @@ class Game{
         }, 68);
 
         iotrigger.setKeyDownEvent(()=>{
-           moveController.accRight(9);
+           moveController.accRight(13);
         }, 68);
 
         iotrigger.setKeyUpEvent(()=>{
@@ -240,7 +240,7 @@ class Game{
         }, 65);
 
         iotrigger.setKeyDownEvent(()=>{
-            moveController.accLeft(9);
+            moveController.accLeft(13);
          }, 65);
         
         // Y

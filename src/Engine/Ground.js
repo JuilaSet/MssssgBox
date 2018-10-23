@@ -46,6 +46,14 @@ class Ground {
         }
         return;
     }
+    
+    getFirstSeg(){
+        return this._segments[0];
+    }
+
+    getLastSeg(){
+        return this._segments[this._size - 1];
+    }
 
     addSegments($seg){
         $seg.ground = this;
@@ -125,7 +133,6 @@ class GroundSegment{
     onHover($point){
 
     }
-    
 
     isUnderGround($position){
         let p = $position.clone().sub(this.origionPosition);

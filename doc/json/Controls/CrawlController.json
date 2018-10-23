@@ -1,0 +1,97 @@
+{
+	"title": "CrawlController",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"控制对象在地面上爬行和跳跃"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option)",
+				"disc": "$option: 选项"
+			},
+			{
+				"name": "init()",
+				"disc": "初始化"
+			},
+			{
+				"name": "accLeft($a)",
+				"disc": ["沿着地面向左加速",
+						"$a：加速度"]
+			},
+			{
+				"name": "accRight($a)",
+				"disc": ["沿着地面向右加速",
+						"$a：加速度"]
+			},
+			{
+				"name": "jump($upVec=300)",
+				"disc": ["向上跳跃",
+						"$upVec：向上跳跃的速度"]
+			},
+			{
+				"name": "isJumping()",
+				"disc": "是否在跳跃"
+			},
+			{
+				"name": "update()",
+				"disc": "更新"
+			}
+		],
+		"properties": [
+			{
+				"name": "bindObj",
+				"disc": "控制的对象，必须要有position属性"
+			},
+			{
+				"name": "jumpTimes",
+				"disc": "连续跳跃的次数"
+			},
+			{
+				"name": "maxSpeed",
+				"disc": "沿着地面移动的最大速度"
+			},
+			{
+				"name": "ground",
+				"disc": "在这个地面上移动"
+			},
+			{
+				"name": "gravity",
+				"disc": "跳跃时受到的引力"
+			},
+			{
+				"name": "friction",
+				"disc": "沿着地面受到的加速度"
+			}
+		],
+		"option":[
+			{
+				"name": "bindObj",
+				"disc": "设置控制的对象，必须要有position属性"
+			},
+			{
+				"name": "jumpTimes",
+				"disc": "设置连续跳跃的次数"
+			},
+			{
+				"name": "maxSpeed",
+				"disc": "设置沿着地面移动的最大速度"
+			},
+			{
+				"name": "ground",
+				"disc": "设置在这个地面上移动"
+			},
+			{
+				"name": "gravity",
+				"disc": "设置跳跃时受到的引力"
+			},
+			{
+				"name": "friction",
+				"disc": "设置沿着地面受到的加速度"
+			}
+		]
+	}
+}

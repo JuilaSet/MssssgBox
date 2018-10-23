@@ -2,15 +2,17 @@ class CrawlController{
     constructor($option){
         this._bindObj = $option.bindObj;
         this.jumpTimes = $option.jumpTimes || 3; // 几段跳
-        this.maxSpeed = $option.maxSpeed || 160;
+        this.maxSpeed = $option.maxSpeed || 120;
         this._ground = $option.ground;
-        this._gravityacc = $option.gravityAcc || 0.9;
-        this._friction = $option.friction || new Vector2d(7, 0);
+        this._gravityacc = $option.gravity || 0.9;
+        this._friction = $option.friction || 7;
 
         // private
         this._jpt = 0;
         this._point = new Point({
-            force: new Vector2d(0, 0)
+            force: new Vector2d(0, 0),
+            enableStrictBounce: false,
+            enableStaticBounce: false
         });
         this._point.setOnGroundHit(()=>{
             this._point.setPositionToGround(this._ground);
@@ -20,13 +22,23 @@ class CrawlController{
         });
         this._world = new World();
 
-        this._acc = new Vector2d(0, 0);
+        this._absAcc1 = 0;
+        this._absAcc2 = 0;
         this._lock = true;
         this._fX = 0;
 
         if(this._bindObj)this._bindObj.position = this._point.position;
         this._world.addBody(this._point);
         this._world.ground = this._ground;
+    }
+
+    init(){
+        this._point.init();
+        this._jpt = 0;
+        this._absAcc1 = 0;
+        this._absAcc2 = 0;
+        this._lock = true;
+        this._fX = 0;
     }
 
     set bindObj($obj){
@@ -38,12 +50,16 @@ class CrawlController{
         return this._bindObj;
     }
 
-    get isJumping(){
-        return this._isJumping;
+    get ground(){
+        return this._ground;
     }
 
-    get ground(){
-        return this.ground;
+    set gravity($gacc){
+        this._gravityacc = $gacc;
+    }
+
+    get gravity(){
+        return this._gravityacc;
     }
 
     set ground($ground){
@@ -57,12 +73,16 @@ class CrawlController{
         this._world.ground = this._ground;
     }
 
+    isJumping(){
+        return this._lock;
+    }
+
     accLeft($a){
-        this._acc.x = -$a;
+        this._absAcc1 = -$a;
     }
 
     accRight($a){
-        this._acc.x = $a;
+        this._absAcc2 = $a;
     }
 
     jump($upVec=300){
@@ -77,20 +97,30 @@ class CrawlController{
     }
 
     update(){
+        let _grdSeg = this._ground.getGroundUndered(this._point.position);
+        let theta = 0;
+        if(_grdSeg){
+            theta = Math.abs(_grdSeg.angle);
+        }else{
+            console.warn('找不到所在地面，忽视地面限制');
+        }
         let speed = this._point.linearVelocity;
-        if(Math.abs(speed.x) > this._friction.x){
-            this._fX = this._friction.x * speed.x>0?1:-1;
+        if(Math.abs(speed.x) > this._friction){
+            this._fX = this._friction * speed.x>0?1:-1;
         }else{
             this._fX = 0;
             speed.x = 0;
         }
-        speed.x += this._acc.x - this._fX;
+        let acx = this._absAcc1 + this._absAcc2;
+        speed.x += (acx - this._fX);
         if(Math.abs(speed.x) > this.maxSpeed){
             speed.x = this.maxSpeed * (speed.x>0?1:-1);
-            console.log(this.maxSpeed, speed.x);
         }
-        if(this._lock)this._point.setPositionToGround(this._ground);
-        else{
+        speed.x = speed.x * Math.cos(theta);    // 实时校正
+        console.log(speed.x, theta, acx - this._fX);
+        if(this._lock){
+            this._point.setPositionToGround(this._ground);
+        }else{
             this._accy -= -this._gravityacc;
             if(this._accy < 0.1){
                 this._accy = 0;

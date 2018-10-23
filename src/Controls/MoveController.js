@@ -3,7 +3,7 @@ class MoveController{
         this._bindObj = $option.bindObj;
 
         if($option.maxSpeedX < 0 || $option.maxSpeedY < 0){
-            console.warn("最大速度自动调整为正数");
+            console.warn("'最大速度'将自动调整为正数");
         }
         this.maxSpeedX = Math.abs($option.maxSpeedX) || 2;
         this.maxSpeedY = Math.abs($option.maxSpeedY) || 2;

@@ -22,6 +22,7 @@
         "Comps/Animation",
         "Controls/IOTrigger",
         "Controls/Trigger",
+        "Controls/CrawlController",
         "Controls/MoveController",
         ""
     ]
