@@ -87,4 +87,79 @@ class Tree extends RenderObject{
             drawTree(px + x, py - y, ang + _this._arg + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//right
         })(this._disZone.width / 2, this._disZone.height / 2, this._rotation, this._scale, this._size, 0);
     }
+    
+    drawTree3($tick){
+        var _this = this;
+        (function drawTree(px, py, ang, scale, len, times) {
+            let _len = (times == 0)?_this._treeHeight:len;
+
+            //引入偏移随机角度，改变一下形状
+            var x = Math.floor(scale*_len*Math.cos(ang));
+            var y = Math.floor(scale*_len*Math.sin(ang));
+
+            //设置线条颜色
+            _this.context.strokeStyle = _this.color;
+            // 设置线条的宽度
+            _this.context.lineWidth = 0.02 * _len;
+            // 绘制直线
+            _this.context.beginPath();
+            // 起点
+            _this.context.moveTo(px, py);
+            // 终点
+            _this.context.lineTo(px + x, py - y);
+            _this.context.closePath();
+            _this.context.stroke();
+
+            // 终止递归
+            if (times != 0 && scale*_len < _this._minLen)return;
+
+            var rn = (_this._force + Math.sin($tick / 3) + 
+                        Math.sin($tick / 5) + 
+                        Math.sin($tick / 7)
+                    ) * (Math.PI / 180);
+
+            //递归画出左右分枝
+            drawTree(px + x, py - y, ang - _this._arg + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//left
+            drawTree(px + x, py - y, ang + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//left
+            drawTree(px + x, py - y, ang + _this._arg + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//right
+        })(this._disZone.width / 2, this._disZone.height / 2, this._rotation, this._scale, this._size, 0);
+    }
+
+    drawTree4($tick){
+        var _this = this;
+        (function drawTree(px, py, ang, scale, len, times) {
+            let _len = (times == 0)?_this._treeHeight:len;
+
+            //引入偏移随机角度，改变一下形状
+            var x = Math.floor(scale*_len*Math.cos(ang));
+            var y = Math.floor(scale*_len*Math.sin(ang));
+
+            //设置线条颜色
+            _this.context.strokeStyle = _this.color;
+            // 设置线条的宽度
+            _this.context.lineWidth = 0.02 * _len;
+            // 绘制直线
+            _this.context.beginPath();
+            // 起点
+            _this.context.moveTo(px, py);
+            // 终点
+            _this.context.lineTo(px + x, py - y);
+            _this.context.closePath();
+            _this.context.stroke();
+
+            // 终止递归
+            if (times != 0 && scale*_len < _this._minLen)return;
+
+            var rn = (_this._force + Math.sin($tick / 3) + 
+                        Math.sin($tick / 5) + 
+                        Math.sin($tick / 7)
+                    ) * (Math.PI / 180);
+
+            //递归画出左右分枝
+            drawTree(px + x, py - y, ang - _this._arg + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//left
+            drawTree(px + x, py - y, ang + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//left
+            drawTree(px + x, py - y, ang + _this._arg + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//right
+            drawTree(px + x, py - y, -ang + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//left
+        })(this._disZone.width / 2, this._disZone.height / 2, this._rotation, this._scale, this._size, 0);
+    }
 }

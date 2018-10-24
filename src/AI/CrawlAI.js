@@ -8,7 +8,7 @@ class CrawlAI{
         this._speed = $option.speed || 30;
 
         this._distance = $option.distance || 20;
-        this._jumpT = $option.jumpRate || 20;
+        this._jumpT = $option.jumpRate || 6;
         this._jump = $option.jump || 100;
     }
 
