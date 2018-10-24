@@ -1,5 +1,5 @@
 class Ground {
-    constructor($option){
+    constructor($option={}){
         this._segments = []; // 地面片段
         this._size = 0;
 
@@ -51,8 +51,18 @@ class Ground {
         return this._segments[0];
     }
 
-    getLastSeg(){
+    getLastestSeg(){
         return this._segments[this._size - 1];
+    }
+
+    getLastSeg($seg){
+        let res = this._segments[this._segments.indexOf($seg) - 1];
+        if(res){
+            return res;
+        }else{
+            console.warn('Ground', 'nothing seg last');
+            return;
+        }
     }
 
     addSegments($seg){
@@ -90,7 +100,11 @@ class GroundSegment{
 
         this._ground = $option.ground;    // 所属地面
         // 无option的属性
-        this.next = $option.next || {}; // 下一个片段
+        this._next = $option.next || {}; // 下一个片段
+    }
+
+    get next(){ // +
+        return this._next;
     }
 
     set ground($g){
@@ -143,7 +157,7 @@ class GroundSegment{
         if(this._origionPosition.x > $seg._origionPosition.x)console.error("必须将片段从左向右连接");
         else{
             this.calcDirectionBasedOnNextSeg($seg);
-            this.next = $seg
+            this._next = $seg
             return $seg; // 链式调用
         }
     }

@@ -32,6 +32,10 @@ class World{
         return this._statics;
     }
 
+    clearStatic(){
+        this._statics = [];
+    }
+
     update(){
         let flag = false;
         for (let k = 0; k < this._bodiesLen; k++) {

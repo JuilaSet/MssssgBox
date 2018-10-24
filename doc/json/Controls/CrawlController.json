@@ -18,12 +18,12 @@
 				"disc": "初始化"
 			},
 			{
-				"name": "accLeft($a)",
+				"name": "accLeft($a=12)",
 				"disc": ["沿着地面向左加速",
 						"$a：加速度"]
 			},
 			{
-				"name": "accRight($a)",
+				"name": "accRight($a=12)",
 				"disc": ["沿着地面向右加速",
 						"$a：加速度"]
 			},
@@ -47,6 +47,18 @@
 				"disc": "控制的对象，必须要有position属性"
 			},
 			{
+				"name": "handler",
+				"disc": "获取控制器"
+			},
+			{
+				"name": "offset",
+				"disc": "偏移矢量"
+			},
+			{
+				"name": "strict",
+				"disc": "限制移动区域"
+			},
+			{
 				"name": "jumpTimes",
 				"disc": "连续跳跃的次数"
 			},
@@ -65,9 +77,25 @@
 			{
 				"name": "friction",
 				"disc": "沿着地面受到的加速度"
+			},
+			{
+				"name": "maxMoveHeight",
+				"disc": "可跨越的最大高度"
 			}
 		],
 		"option":[
+			{
+				"name": "maxMoveHeight",
+				"disc": "设置可跨越的最大高度"
+			},
+			{
+				"name": "offset",
+				"disc": "设置偏移矢量"
+			},
+			{
+				"name": "strict",
+				"disc": "设置限制移动区域"
+			},
 			{
 				"name": "bindObj",
 				"disc": "设置控制的对象，必须要有position属性"

@@ -33,12 +33,6 @@ class Zone{
             dyTop = Math.abs($position.y - tp.y),
             dyBottom = Math.abs(tp.y + this.height - $position.y),
             x, y;
-        if(dxRight == dxLeft){
-            dxRight += Math.random() - 0.5;
-        }
-        if(dyTop == dyBottom){
-            dyTop += Math.random() - 0.5;
-        }
         switch(Math.min(dxRight, dxLeft, dyBottom, dyTop)){
             case dxRight:
                 return Zone.RIGHT;

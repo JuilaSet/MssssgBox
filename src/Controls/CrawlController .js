@@ -1,33 +1,46 @@
 class CrawlController{
     constructor($option){
         this._bindObj = $option.bindObj;
-        this.jumpTimes = $option.jumpTimes || 3; // 几段跳
+        this.jumpTimes = $option.jumpTimes || 2; // 几段跳
         this.maxSpeed = $option.maxSpeed || 120;
         this._ground = $option.ground;
         this._gravityacc = $option.gravity || 0.9;
         this._friction = $option.friction || 7;
+        this._offset = $option.offset || new Vector2d(0, 0);    // + 偏离值
+        this._maxMoveHeight = $option.maxMoveHeight!=undefined?$option.maxMoveHeight:30;
+
 
         // private
+        this._enableRight = true;
+        this._enableLeft = true; 
         this._jpt = 0;
         this._point = new Point({
-            force: new Vector2d(0, 0),
-            enableStrictBounce: false,
-            enableStaticBounce: false
+            position: $option.position,
+            force: new Vector2d(0, 0)
         });
-        this._point.setOnGroundHit(()=>{
+        this._point.setOnStaticHit(($which, $static)=>{
+            this._point.force.y = 0;
+            if($static != this.bindObj){
+                this._point.staticBounce($which, $static);
+                this._point.setPointToStaticSquare($static);
+            }
+        });
+        this._point.setOnGroundHit(($which)=>{
             this._point.setPositionToGround(this._ground);
             this._point.linearVelocity.y = 0;
             this._lock  = true;
             this._jpt = 0;
         });
-        this._world = new World();
+        this._world = new World({
+            strict: $option.strict,
+            statics: $option.statics || []
+        });
 
         this._absAcc1 = 0;
         this._absAcc2 = 0;
         this._lock = true;
         this._fX = 0;
 
-        if(this._bindObj)this._bindObj.position = this._point.position;
         this._world.addBody(this._point);
         this._world.ground = this._ground;
     }
@@ -41,9 +54,37 @@ class CrawlController{
         this._fX = 0;
     }
 
+    set position($position){
+        this._point.position = $position;
+    }
+
+    get position(){
+        return this._point.position;
+    }
+
+    get handler(){
+        return this._point;
+    }
+
+    set statics($s){
+        this._world._statics = $s;
+    }
+
+    get statics(){
+        return this._world.statics;
+    }
+
+    set offset($offset){
+        this._offset = $offset;
+    }
+
+    get offset(){
+        return this._offset;
+    }
+
     set bindObj($obj){
         this._bindObj = $obj;
-        this._bindObj.position = this._point.position;
+        this._point.position.set(this._bindObj.position.x, this._bindObj.position.y);
     }
 
     get bindObj(){
@@ -62,6 +103,14 @@ class CrawlController{
         return this._gravityacc;
     }
 
+    get velocityX(){
+        return this._point.linearVelocity.x;
+    }
+
+    get velocityY(){
+        return this._point.linearVelocity.y;
+    }
+
     set ground($ground){
         if(!$ground instanceof Ground){
             console.error('CrawController', 'para must be ground');
@@ -77,11 +126,11 @@ class CrawlController{
         return this._lock;
     }
 
-    accLeft($a){
+    accLeft($a=12){
         this._absAcc1 = -$a;
     }
 
-    accRight($a){
+    accRight($a=12){
         this._absAcc2 = $a;
     }
 
@@ -96,37 +145,82 @@ class CrawlController{
         }
     }
 
-    update(){
-        let _grdSeg = this._ground.getGroundUndered(this._point.position);
-        let theta = 0;
-        if(_grdSeg){
-            theta = Math.abs(_grdSeg.angle);
-        }else{
-            console.warn('找不到所在地面，忽视地面限制');
-        }
+    _calcEnableMove(h){
         let speed = this._point.linearVelocity;
-        if(Math.abs(speed.x) > this._friction){
-            this._fX = this._friction * speed.x>0?1:-1;
-        }else{
-            this._fX = 0;
-            speed.x = 0;
-        }
-        let acx = this._absAcc1 + this._absAcc2;
-        speed.x += (acx - this._fX);
-        if(Math.abs(speed.x) > this.maxSpeed){
-            speed.x = this.maxSpeed * (speed.x>0?1:-1);
-        }
-        speed.x = speed.x * Math.cos(theta);    // 实时校正
-        console.log(speed.x, theta, acx - this._fX);
-        if(this._lock){
-            this._point.setPositionToGround(this._ground);
-        }else{
-            this._accy -= -this._gravityacc;
-            if(this._accy < 0.1){
-                this._accy = 0;
+        if( h > 0 ){
+            this._enableRight = true;
+            if(Math.abs(h) > this._maxMoveHeight){
+                this._enableLeft = false;
+            }else{
+                this._enableLeft = true;
             }
-            speed.y += this._accy;
+        }else{
+            this._enableLeft = true;
+            if(Math.abs(h) > this._maxMoveHeight){
+                this._enableRight = false;
+            }else{ 
+                this._enableRight = true;
+            }
         }
-        this._world.update();
+    }
+
+    render($context, $this){
+        $context.save();
+        $context.beginPath();
+        $context.strokeStyle = '#FFF';
+        let x = [-5, -5, 5, 5], y = [-5, 5, -5, 5];
+        for(let i=0; i<4; i++){
+            $context.moveTo(this._point.position.x, this._point.position.y);
+            $context.lineTo(this._point.position.x + x[i], this._point.position.y + y[i]);
+        }
+        $context.stroke();
+        $context.restore();
+    }
+
+    update(){
+        if(this._bindObj){
+            let speed = this._point.linearVelocity;
+            let _grdSeg = this._ground.getGroundUndered(this._point.position);
+            let theta = 0;
+            if(_grdSeg){
+                theta = Math.abs(_grdSeg.angle);
+            }else{
+                console.warn('找不到所在地面，忽视地面限制');
+            }
+            // 速度累加
+            if(Math.abs(speed.x) > this._friction){
+                this._fX = this._friction * speed.x>0?1:-1;
+            }else{
+                this._fX = 0;
+                speed.x = 0;
+            }
+            let acx = this._absAcc1 + this._absAcc2;
+            speed.x += (acx - this._fX);
+            if(Math.abs(speed.x) > this.maxSpeed){
+                speed.x = this.maxSpeed * (speed.x>0?1:-1);
+            }
+            if(this._lock){
+                // 实时校正
+                if(_grdSeg){
+                    // 是否能够移动
+                    let beta = _grdSeg.angle;
+                    let h = _grdSeg.length * Math.sin(beta);
+                    this._calcEnableMove(h);
+                    if(this._enableRight && speed.x >= 0 || this._enableLeft && speed.x <= 0){
+                        speed.x = speed.x * Math.cos(theta);
+                    }else{
+                        speed.x = 0;
+                    }
+                    this._point.setPositionToGround(this._ground);
+                }
+                this._point.force.y = 0;
+            }else{
+                // 跳跃
+                this._point.force.y = 500;
+            }
+            this._bindObj.position.x = this._offset.x + this._point.position.x;
+            this._bindObj.position.y = this._offset.y + this._point.position.y;
+            this._world.update();
+        }
     }
 }

@@ -1,5 +1,5 @@
 class Component{
-    constructor($option){
+    constructor($option={}){
         this.position = $option.position || {x:0, y:0};
         this.width = $option.width || 100;
         this.height = $option.height || 100;
@@ -14,6 +14,7 @@ class Component{
             width: this.width,
             position:this.position
         });
+        Component.LAYER++;
     }
     
     kill(){
@@ -54,3 +55,4 @@ class Component{
         this.action();
     }
 }
+Component.LAYER = 0;

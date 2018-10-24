@@ -22,11 +22,6 @@
 				"disc": "渲染所有物体, $animation:渲染到的动画组件"
 			},
 			{
-				"name": "bounce($point)",
-				"disc": ["判断点是否碰撞,并产生边界碰撞效果",
-						"$point:Point对象"]
-			},
-			{
 				"name": "isUnderGround($groundseg, $position) ",
 				"disc": ["是否在地表以下，返回bool类型",
 						"$groundSeg:地面片段",
@@ -55,6 +50,10 @@
 			{
 				"name": "cleanStatics()",
 				"disc": "清理死亡的静态对象"
+			},
+			{
+				"name": "clearStatic()",
+				"disc": "清空静态对象列表，不会杀死他们"
 			},
 			{
 				"name": "update()",

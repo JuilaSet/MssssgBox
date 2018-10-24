@@ -82,7 +82,7 @@
 				"disc": "在地面上方时调用，$ground:下方地面片段"
 			},
 			{
-				"name": "staticBounce($which)",
+				"name": "staticBounce($which, $static)",
 				"disc": ["撞击到静态方块的反弹",
 						"$which:撞击到静态方块的哪个边：top:上，right:右，bottom:下，left:左",
 						"其中top和bottom的效果一致，right和left的效果一致"]

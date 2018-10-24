@@ -59,6 +59,10 @@
 				"disc": "地皮初始坐标"
 			},
 			{
+				"name": "next",
+				"disc": "得到下一个地皮片段，如果没有就算undefined"
+			},
+			{
 				"name": "direction",
 				"disc": "地皮指向"
 			},
