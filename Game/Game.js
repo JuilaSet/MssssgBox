@@ -34,14 +34,13 @@ class Game{
         // 物理模块
         let segnum = 200;
         let gen = new GroundMapGenerator({
-            width: animation.width,
+            width: animation.width + 1,
             height: animation.height,
             segnum: segnum,
             beginHeight : 400
         });
         let segs = gen.generateSegs();
-        // gen.adjustToWaveSegs(segs, 10, 4);
-        gen.adjustToValleySegs(segs, 200);
+        gen.adjustSegsToValley(segs, 200);
         let ground = gen.generateMap(segs).ground;
 
         // 控制器模块
@@ -51,7 +50,14 @@ class Game{
                 width: animation.width,
                 height: 2000
             })
+        }),moveController2 = new CrawlController({
+            strict : new Zone({
+                position: new Vector2d(0, -1000),
+                width: animation.width,
+                height: 2000
+            })
         });
+        
         let world = new World({
             strict : new Zone({
                 position: new Vector2d(0, -1000),
@@ -60,143 +66,160 @@ class Game{
             }),
             ground: ground
         });
-        let sssss = new StaticSquareGroup({
-            sqrts: [
-                new StaticSquare({
-                    position: new Vector2d(100, 100)
-                }),
-                new StaticSquare({
-                    position: new Vector2d(200, 200)
-                })
-            ]
-        });
-        moveController.statics = world.statics;
-        let handler = new Point({
-            position: new Vector2d(200, 200)
-        });
-        handler.setPositionToGround(ground);
         moveController.ground = ground;
-        world.addBody(sssss);
-
-
-        let sqr = new StaticSquare({
-            position: new Vector2d(0, 0),
-            width: 20,
-            height: 20
+        moveController2.ground = ground;
+        function newWorld(){
+            let gen = new GroundMapGenerator({
+                width: animation.width,
+                height: animation.height,
+                segnum: segnum,
+                beginHeight : 400
+            });
+            let segs = gen.generateSegs();
+            // gen.adjustSegsToGivenFunc(segs, x => -Math.pow((x - 100) / 3, 2));
+            gen.adjustSegsToValley(segs, 200);
+            gen.adjustSegsToSpine(segs, 0.5, -400);
+            gen.adjustSegsToCutRange(segs, 100, 200)
+            gen.adjustSegsToValley(segs, 200);
+            gen.adjustSegsToCutRange(segs, 300, 200)
+            let ground = gen.generateMap(segs).ground;
+            world.ground = ground;
+            moveController.ground = ground;
+            moveController2.ground = ground;
+        }
+        moveController2.handler.setOnStrictHit(($strict, $which)=>{
+            if($which == Zone.LEFT){
+                moveController2.handler.strictBounce($strict, $which);
+            }else if($which == Zone.RIGHT){
+                moveController2.handler.position.x -= animation.width - 2;
+                newWorld();
+            }
         });
-        world.addBody(sqr);
 
-        let a1 = Math.random() * 10 + 2, f1 = Math.random() * 20 - 10, h1 = Math.random() * 15 + 45;
+        let a1 = 2, f1 = Math.random() * 20 - 10, h1 = Math.random() * 15 + 45;
         let rn1 = Math.floor(Math.random() * (segnum - 1) + 1);
         let tpositon = ground.segments[rn1].origionPosition.clone().sub(new Vector2d(0, h1));
 
-        // let unit = new Unit();
-        // moveController.offset.set(-unit.displayZone.width / 2, -unit.displayZone.height / 2);
         let tree = new Tree({
             force : f1,
             size : h1,
-            minLength : 1,
-            intersectionAngle : Math.PI / Math.abs(a1),
+            minLength : 5,
+            intersectionAngle : Math.PI / a1,
             treeHeight: 0
+        }),
+        tree2 = new Tree({
+            intersectionAngle : Math.PI / 10,
+            treeHeight : 9
         });
+        tree2.j = 300;
         moveController.bindObj = tree;
+        moveController2.bindObj = tree2;
         moveController.offset.set(-tree.width / 2, -tree.height / 2);
-        tree.position = tpositon.sub(new Vector2d(tree.width/2, tree.height/2 - h1));
+        moveController2.offset.set(-tree2.width / 2, -tree2.height / 2);
+        tree.position = new Vector2d(1000, tpositon.y + tree.height/2 - h1);
+        tree2.position = new Vector2d(100, tpositon.y + tree2.height/2 - h1);
         moveController.position = tree.position.clone();
+        moveController2.position = tree2.position.clone();
         tree.addRenderFrame(($ctx, $tick)=>{
+            tree.color = "#F00";
             tree.drawTree($tick);
-            // tree.drawFrame();
+        });
+
+        tree2.addRenderFrame(($ctx, $tick)=>{
+            tree2.drawTree($tick);
         });
         animation.setAction(($context, $this)=>{
             moveController.render($context, $this);
             animation.drawFrame();
             tree.force = moveController.velocityX / 5;
-            tree.intersectionAngle = Math.PI / Math.abs(a1) - Math.min(
+            tree.intersectionAngle = Math.PI / a1 - Math.min(
                 moveController.velocityY / 1200,
                 500 / 1200);
             tree.render($context, timer.tick);
+            moveController2.render($context, $this);
+            tree2.force = moveController2.velocityX / 5;
+            tree2.intersectionAngle = Math.PI / 10 - Math.min(
+                moveController2.velocityY / 1200,
+                500 / 1200);
+            tree2.render($context, timer.tick);
             world.render($this);
-            sssss.moveTo(handler.position.clone().sub(new Vector2d(50, 50)));
         });
         dis.addAnimation(animation);
         
+
+        let ai = new CrawlAI({
+            crawlController : moveController,
+            aim : moveController2.handler,
+            timer: timer
+        });
+        let ddd = true;
+        ai.setOnNear(()=>{
+            ai.defaultOnNear();
+            if(ddd){
+                ddd = false;
+                tree2.size -= 2;
+                tree2.j -= 10;
+                timer.callLater(()=>{
+                    ddd = true;
+                }, 5);
+            }
+            if(tree2.size < tree2.minLength){
+                this.stop();
+            }
+        });
+
         // X
         iotrigger.setKeyUpEvent(()=>{
-           moveController.accRight(0);
+           moveController2.accRight(0);
         }, 68);
 
         iotrigger.setKeyDownEvent(()=>{
-           moveController.accRight(13);
+           moveController2.accRight(13);
         }, 68);
 
         iotrigger.setKeyUpEvent(()=>{
-           moveController.accLeft(0);
+           moveController2.accLeft(0);
         }, 65);
 
         iotrigger.setKeyDownEvent(()=>{
-            moveController.accLeft(13);
+            moveController2.accLeft(13);
          }, 65);
         
         // Y
         iotrigger.setKeyUpEvent(()=>{
-        //    moveController.accUp(0);
+        //    moveController2.accUp(0);
         }, 87);
 
         iotrigger.setKeyDownEvent(()=>{
-        //    moveController.accUp(8);
-           moveController.jump(400);
+        //    moveController2.accUp(8);
+           moveController2.jump(tree2.j);
         }, 87);
 
         iotrigger.setKeyUpEvent(()=>{
-        //    moveController.accDown(0);
+        //    moveController2.accDown(0);
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-        //    moveController.accDown(8);
+        //    moveController2.accDown(8);
         }, 83);
 
         iotrigger.setKeyDownEvent(()=>{
-            let px = new Point({
-                position: moveController.bindObj.position.clone().add(new Vector2d(10, 10)),
-                linearVelocity: new Vector2d(100, 0),
-                force: new Vector2d(100, 0),
-                enableStaticBounce: false
-            })
-            px.setOnGroundHit(()=>{
-                world.addBody(new Point({
-                    position: px.position,
-                    linearVelocity: new Vector2d(Math.random() * 100, Math.random() * 100),
-                    enableStrictBounce :false,
-                    livingZone: world.livingZone
-                }));
-                world.addBody(new Point({
-                    position: px.position,
-                    linearVelocity: new Vector2d(Math.random() * 100, Math.random() * 100),
-                    enableStrictBounce :false,
-                    livingZone: world.livingZone
-                }));
-                world.addBody(new Point({
-                    position: px.position,
-                    linearVelocity: new Vector2d(Math.random() * 100, Math.random() * 100),
-                    enableStrictBounce :false,
-                    livingZone: world.livingZone
-                }));
-                px.kill();
-            });
-            world.addBody(px);
+            newWorld();
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{
-            this.switch();
+            // this.switch();
         }, 32);
 
         ///
         dis.render(()=>{
             if(!this.pause){
-                world.update();
-                moveController.update();
                 stats.update();
                 timer.update();
+                ai.update();
+                moveController.update();
+                moveController2.update();
+                world.update();
             }
         }, ()=>{
 

@@ -7,12 +7,12 @@ class GroundMapGenerator extends MapGenerator{
     }
 
     generateSegs(){
-        let segnum = this._segnum, last = this._beginHeight, segs = [];
+        let segnum = this._segnum, segs = [];
         let dh = 0;
         for(let x = 0; x <= segnum; x++){
             segs[x] = new GroundSegment({
                 origionPosition:new Vector2d(
-                    (this.width / segnum) * x, last
+                    (this.width / segnum) * x, this._beginHeight
                 )
             });
         }
@@ -29,7 +29,7 @@ class GroundMapGenerator extends MapGenerator{
     }
 
     // 生成峡谷地形($range: 山最高高度)
-    adjustToValleySegs($segs, $range=100, $periodicity=10){
+    adjustSegsToValley($segs, $range=100, $periodicity=10){
         let segnum = this._segnum, last = this._beginHeight;
         let dh = 0;
         for(let x = 0; x <= segnum; x++){
@@ -39,19 +39,54 @@ class GroundMapGenerator extends MapGenerator{
             }
             last = last + dh;
             $segs[x].origionPosition.x = (this.width / segnum) * x;
-            $segs[x].origionPosition.y = last;
+            $segs[x].origionPosition.y += last - this._beginHeight;
         }
         return $segs;
     }
 
     // 生成波浪地形
-    adjustToWaveSegs($segs, $range=50, $periodicity=10){
+    adjustSegsToWave($segs, $range=50, $periodicity=10){
+        let segnum = this._segnum;
+        let dh = 0;
+        let px = Math.PI / 3 * Math.random();
+        for(let x = 0; x <= segnum; x++){
+            dh = $range * Math.sin(x / $periodicity * Math.PI / 2 + px);
+            $segs[x].origionPosition.x = (this.width / segnum) * x;
+            $segs[x].origionPosition.y += dh;
+        }
+        return $segs;
+    }
+
+    // 生成带尖刺的地图
+    adjustSegsToSpine($segs, $rate=50, $range=50){
         let segnum = this._segnum;
         let dh = 0;
         for(let x = 0; x <= segnum; x++){
-            dh = $range * Math.sin(x / $periodicity);
+            dh = Math.random()*100 < $rate?Math.random() * $range:0;
             $segs[x].origionPosition.x = (this.width / segnum) * x;
             $segs[x].origionPosition.y += dh;
+        }
+        return $segs;
+    }
+    
+    // 根据函数生成地图
+    adjustSegsToCutRange($segs, $maxH=100, $maxD=100){
+        let segnum = this._segnum;
+        for(let x = 0; x <= segnum; x++){
+            $segs[x].origionPosition.x = (this.width / segnum) * x;
+            let p = $segs[x].origionPosition;
+            if(p.y <= this._beginHeight - $maxH)p.y = this._beginHeight - $maxH;
+            if(p.y >= $maxD + this._beginHeight)p.y = $maxD + this._beginHeight;
+        }
+        return $segs;
+    }
+
+    // 根据函数生成地图
+    adjustSegsToGivenFunc($segs, $func){
+        let segnum = this._segnum;
+        for(let x = 0; x <= segnum; x++){
+            $segs[x].origionPosition.x = (this.width / segnum) * x;
+            $segs[x].origionPosition.y += $func(x);
         }
         return $segs;
     }

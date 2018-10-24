@@ -19,17 +19,10 @@ class CrawlController{
             force: new Vector2d(0, 0)
         });
         this._point.setOnStaticHit(($which, $static)=>{
-            this._point.force.y = 0;
-            if($static != this.bindObj){
-                this._point.staticBounce($which, $static);
-                this._point.setPointToStaticSquare($static);
-            }
+            this.defaultOnStaticHit($which, $static);
         });
-        this._point.setOnGroundHit(($which)=>{
-            this._point.setPositionToGround(this._ground);
-            this._point.linearVelocity.y = 0;
-            this._lock  = true;
-            this._jpt = 0;
+        this._point.setOnGroundHit(()=>{
+            this.defaultOnGroundHit();
         });
         this._world = new World({
             strict: $option.strict,
@@ -43,6 +36,21 @@ class CrawlController{
 
         this._world.addBody(this._point);
         this._world.ground = this._ground;
+    }
+
+    defaultOnStaticHit($which, $static){
+        this._point.force.y = 0;
+        if($static != this.bindObj){
+            this._point.staticBounce($which, $static);
+            this._point.setPointToStaticSquare($static);
+        }
+    }
+
+    defaultOnGroundHit(){
+        this._point.setPositionToGround(this._ground);
+        this._point.linearVelocity.y = 0;
+        this._lock  = true;
+        this._jpt = 0;
     }
 
     init(){

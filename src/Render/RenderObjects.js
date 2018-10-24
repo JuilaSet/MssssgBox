@@ -28,6 +28,14 @@ class Tree extends RenderObject{
         return this._force;
     }
 
+    set size($s){
+        this._size = $s;
+    }
+
+    get size(){
+        return this._size;
+    }
+
     set intersectionAngle($arg){
         this._arg = $arg;
     }
