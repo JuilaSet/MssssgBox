@@ -12,6 +12,7 @@ class Game{
 
         let dis = this.display;
         dis.setFullScreen(false);
+        let c = 10101;
 
         let timer = this.timer;
 
@@ -97,6 +98,11 @@ class Game{
             if($which == Zone.LEFT){
                 moveController2.handler.strictBounce($strict, $which);
             }else if($which == Zone.RIGHT){
+                dis.setBackGroundColor(c+=60606);
+                if(c > 60606 * 8){
+                    alert('胜利');
+                    this.stop();
+                }
                 moveController2.handler.position.x -= animation.width - 2;
                 newWorld();
                 enc = true;
@@ -166,13 +172,14 @@ class Game{
         });
         let ddd = true;
         ai.setOnNear(()=>{
-            // ai.defaultOnNear();
+            ai.defaultOnNear();
             if(ddd){
                 ddd = false;
                 tree2.size -= 2;
                 tree2.j -= 3;
-                
+
                 moveController.maxSpeed += 5;
+                ai.jumpRate = Math.max(ai.jumpRate - 0.1, 1);
                 tree.size += 2;
                 tree.j += 5;
                 timer.callLater(()=>{
@@ -184,7 +191,7 @@ class Game{
                 alert('zq把你变成了秃头，你也要戴假发了！')
             }
         });
-        ai.setOnFar(()=>{});
+        // ai.setOnFar(()=>{});
 
         // X
         //   38
@@ -244,6 +251,7 @@ class Game{
 
         iotrigger.setKeyDownEvent(()=>{
             if(enc)newWorld();
+            dis.setBackGroundColor(c+=10101);
         }, 32);
         
         iotrigger.setKeyUpEvent(()=>{
@@ -255,7 +263,7 @@ class Game{
             if(!this.pause){
                 stats.update();
                 timer.update();
-                ai.update();
+                // ai.update();
                 moveController.update();
                 moveController2.update();
                 world.update();

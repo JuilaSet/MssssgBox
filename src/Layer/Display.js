@@ -28,6 +28,10 @@ class Display{
         this.components = []; // []][
     }
 
+    setBackGroundColor($c=111){
+        this.canvas.style.background  = '#' + $c;
+    }
+
     addAnimation($animation){
         if($animation.layer == undefined){
             $animation.layer = this.components.length;

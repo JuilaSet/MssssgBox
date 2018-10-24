@@ -12,6 +12,14 @@ class CrawlAI{
         this._jump = $option.jump || 100;
     }
 
+    set jumpRate($jr){
+        this._jumpT = $jr;
+    }
+
+    get jumpRate(){
+        return this._jumpT;
+    }
+
     setOnNear($func, $dis){
         if($dis){
             this._distance = $dis;
@@ -50,7 +58,7 @@ class CrawlAI{
                 this._enableJump = false;
                 this._timer.callLater(()=>{
                     this._enableJump = true;
-                }, this._jumpT);
+                }, Math.floor(this._jumpT));
             }
         }
     }
