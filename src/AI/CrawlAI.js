@@ -4,17 +4,22 @@
 class CrawlAI extends AI{
     constructor($option={}){
         super($option);
+        this._crawlController = $option.crawlController || console.error('未指定控制器'); // crawlController对象
+        this._aimUnit = $option.aimUnit;    // 一般是position属性
+        this._timer = $option.timer || console.error('未指定计时对象');
+        this._speed = $option.speed || 130;
+        this._jumpActionMinSpeed = $option.jumpActionMinSpeed || 120;
+        this._distance = $option.distance || 20;
+        this._jumpT = $option.jumpRate || 125;
+        this._jumpHeight = $option.jumpHeight || 90;
+        this._wandering = $option.wandering==undefined?$option.wandering:true;// []][
+        
+        // private
         this._enableJump = true;
         this._enableDL = true;
-        this._crawlController = $option.crawlController || console.error('未指定控制器'); // crawlController对象
-        this._aimUnit = $option.aim;    // 一般是position属性
-        this._timer = $option.timer;
-        this._speed = $option.speed || 30;
-        this._jumpActionMinSpeed = $option.jumpActionMinSpeed || 20;
-        this._distance = $option.distance || 20;
-        this._jumpT = $option.jumpRate || 25;
-        this._jumpHeight = $option.jumpHeight || 50;
-        this._wandering = $option.wandering==undefined?$option.wandering:true;// []][
+    }
+    get controller(){
+        return this._crawlController;
     }
 
     set aimUnit($aimUnit){
@@ -93,6 +98,8 @@ class CrawlAI extends AI{
             }else{
                 this. onFar();
             }
+        }else{
+            console.warn('无目的ai');
         }
     }
 

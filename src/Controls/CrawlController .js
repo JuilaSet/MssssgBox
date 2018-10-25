@@ -2,14 +2,14 @@ class CrawlController extends Controller {
     constructor($option={}){
         super($option);
         this.jumpTimes = $option.jumpTimes || 2; // 几段跳
-        this.maxSpeed = $option.maxSpeed || 40;
+        this.maxSpeed = $option.maxSpeed || 150;
         this._world = $option.world || console.error('没有指定world对象');
         this._gravityacc = $option.gravity || 0.9;
-        this._friction = $option.friction || 7;
-        this._offset = $option.offset || new Vector2d(0, 0);    // + 偏离值
+        this._friction = $option.friction || 5;
+        this._offset = $option.offset || new Vector2d(0, 0);    // 偏离值
         this._maxMoveHeight = $option.maxMoveHeight!=undefined?$option.maxMoveHeight:30;
 
-        this._gravityForce = $option.gravityForce || 70;
+        this._gravityForce = $option.gravityForce || 170;
 
         // private
         this._enableRight = true;
@@ -222,7 +222,8 @@ class CrawlController extends Controller {
             }
             this._bindObj.position.x = this._offset.x + this._point.position.x;
             this._bindObj.position.y = this._offset.y + this._point.position.y;
-            this._world.update();
+        }else{
+            console.warn('未绑定对象');
         }
     }
 }

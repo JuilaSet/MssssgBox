@@ -8,12 +8,10 @@ class ControlableUnitFactory extends UnitFactory{
         $renderObj.addRenderFrame(($ctx, $tick, $zone)=>{
             $renderObj.defaultRender($ctx, $tick, $zone);
         });
+        
         // controller
         $contrOption.world = $world;
         let crawlContr = new CrawlController($contrOption);
-        if(!$contrOption.offset){
-            crawlContr.offset = new Vector2d(-$renderObj.width/2, -$renderObj.height/2);
-        }
 
         let unit = new ControlableUnit({
             position: $position,

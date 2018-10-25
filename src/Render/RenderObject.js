@@ -56,7 +56,9 @@ class RenderObject{
     }
 
     render($ctx, $tick){
-        $ctx.drawImage(this.buffer, this._disZone.position.x, this._disZone.position.y);
+        $ctx.drawImage(this.buffer,
+            this._disZone.position.x - this._disZone.width / 2, 
+            this._disZone.position.y - this._disZone.height / 2);
         this.clearBuffer();
         this._renderList.forEach(rndFunc => {
             this.context.save();
@@ -66,7 +68,7 @@ class RenderObject{
     }
 
     defaultRender($ctx, $tick, $zone){
-
+        
     }
 
     clearBuffer(){

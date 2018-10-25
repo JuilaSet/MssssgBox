@@ -7,6 +7,13 @@ class ControlableUnit extends Unit{
 
     // @Override
     defaultOnUpdate(){
-        this._controller.update();
+
+    }
+
+    update(){
+        // super.update();
+        if(this._living){
+            this._controller.update();
+        }
     }
 }

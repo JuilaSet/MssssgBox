@@ -54,13 +54,26 @@ class Game{
             game: this,
             iotrigger : iotrigger
         });
-        
+
+        let fac2 = new AIUnitFactory({
+            game: this,
+            world: world
+        });
+
         let unitm = new UnitManager();
-        let tu = fac.createCrawlUnit(new Tree({treeHeight:0}), new Vector2d(40, 100), world, {}, [37, 39, 38]);
+        let tu = fac.createCrawlUnit(new Tree({treeHeight:0}), new Vector2d(40, 100), world, {});
         unitm.add(tu);
-        let tu2 = fac.createCrawlUnit(new Cube(), new Vector2d(40, 100), world);
+
+        let tu2 = fac2.createCrawlAiUnit(new Cube(), new Vector2d(400, 100), {}, {
+            aimUnit: tu,
+            timer: timer
+        });
         unitm.add(tu2);
-        
+
+        iotrigger.setKeyPressEvent(()=>{
+
+        },32);
+
         animation.setAction(($ctx, $this)=>{
             animation.drawFrame();
             unitm.render($ctx, timer.tick);
