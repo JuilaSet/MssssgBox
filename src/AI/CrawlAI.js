@@ -1,5 +1,9 @@
-class CrawlAI{
+/* 
+ *  rule-based expert system -ai
+ **/
+class CrawlAI extends RuleBasedAiSystem{
     constructor($option={}){
+        super($option);
         this._enableJump = true;
         this._enableDL = true;
         this._crawlController = $option.crawlController || console.error('未指定控制器'); // crawlController对象

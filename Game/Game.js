@@ -10,6 +10,22 @@ class Game{
     // 开始游戏
     run(){
 
+        // AI 模块测试
+        let rulebai = new RuleBasedAiSystem();
+        let rule1 = new Rule({
+            result:"die",
+            factList:["is die", Fact.OR, "can be killed"]
+        });
+        let rule2 = new Rule({
+            result:"alive",
+            factList: ["kill",Fact.AND,"can not be killed"]
+        });
+        rulebai.addRules([rule1, rule2]);
+        rulebai.mssageRules = ['kill', 'can not be killed', 'is die'];
+        console.log( rulebai.infer() );
+
+
+        // dis 模块
         let dis = this.display;
         dis.setFullScreen(false);
         let c = 10101;
@@ -263,7 +279,7 @@ class Game{
             if(!this.pause){
                 stats.update();
                 timer.update();
-                // ai.update();
+                ai.update();
                 moveController.update();
                 moveController2.update();
                 world.update();
