@@ -3,6 +3,41 @@
  * 所有的可绘制动画
  * 
  * */
+class Cube extends RenderObject{
+    constructor($option={}){
+        super($option);
+        $option.width = $option.width || 5;
+        $option.height = $option.height || 5;
+        this._zone = new Zone({
+            position: new Vector2d( this._disZone.width / 2 - $option.width,
+                                    this._disZone.height / 2 - $option.height),
+            width: $option.width,
+            height: $option.height
+        });
+        // 颜色
+        this.color = $option.color || "#FFF";
+        this.shiningRate = $option.shiningRate || 20;
+    }
+
+    // @Override
+    defaultRender($ctx, $tick, $zone){
+        this.drawRect($tick);
+    }
+
+    drawRect($tick){
+        this.context.strokeStyle = this.color;
+        let p = this._zone.position;
+        let w = this._zone.width, h = this._zone.height;
+        if($tick % this.shiningRate < this.shiningRate / 2){
+            w = this._zone.width * 2;
+            h = this._zone.height * 2;
+            this.context.strokeRect(p.x - w / 4, p.y - h / 4, w, h);
+        }else{
+            this.context.strokeRect(p.x, p.y, w, h);
+        }
+    }
+
+}
 
 class Tree extends RenderObject{
     
@@ -18,6 +53,11 @@ class Tree extends RenderObject{
 
         // 颜色
         this.color = $option.color || "#FFF";
+    }
+
+    // @Override
+    defaultRender($ctx, $tick, $zone){
+        this.drawTree($tick);
     }
 
     set force($f){

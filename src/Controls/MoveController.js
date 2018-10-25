@@ -1,7 +1,6 @@
-class MoveController{
-    constructor($option){
-        this._bindObj = $option.bindObj;
-
+class MoveController extends Controller {
+    constructor($option={}){
+        super($option);
         if($option.maxSpeedX < 0 || $option.maxSpeedY < 0){
             console.warn("'最大速度'将自动调整为正数");
         }
@@ -25,6 +24,10 @@ class MoveController{
 
         this._fX = this.frictionX;
         this._fY = this.frictionY;
+    }
+
+    get position(){
+        return this._bindObj.position;
     }
 
     get speed(){

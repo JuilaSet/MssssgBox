@@ -1,14 +1,15 @@
-class CrawlController{
-    constructor($option){
-        this._bindObj = $option.bindObj;
+class CrawlController extends Controller {
+    constructor($option={}){
+        super($option);
         this.jumpTimes = $option.jumpTimes || 2; // 几段跳
-        this.maxSpeed = $option.maxSpeed || 120;
-        this._ground = $option.ground;
+        this.maxSpeed = $option.maxSpeed || 40;
+        this._world = $option.world || console.error('没有指定world对象');
         this._gravityacc = $option.gravity || 0.9;
         this._friction = $option.friction || 7;
         this._offset = $option.offset || new Vector2d(0, 0);    // + 偏离值
         this._maxMoveHeight = $option.maxMoveHeight!=undefined?$option.maxMoveHeight:30;
 
+        this._gravityForce = $option.gravityForce || 70;
 
         // private
         this._enableRight = true;
@@ -24,18 +25,12 @@ class CrawlController{
         this._point.setOnGroundHit(()=>{
             this.defaultOnGroundHit();
         });
-        this._world = new World({
-            strict: $option.strict,
-            statics: $option.statics || []
-        });
+        this._world.addBody(this._point);
 
         this._absAcc1 = 0;
         this._absAcc2 = 0;
         this._lock = true;
         this._fX = 0;
-
-        this._world.addBody(this._point);
-        this._world.ground = this._ground;
     }
 
     defaultOnStaticHit($which, $static){
@@ -47,7 +42,7 @@ class CrawlController{
     }
 
     defaultOnGroundHit(){
-        this._point.setPositionToGround(this._ground);
+        this._point.setPositionToGround(this._world.ground);
         this._point.linearVelocity.y = 0;
         this._lock  = true;
         this._jpt = 0;
@@ -100,7 +95,7 @@ class CrawlController{
     }
 
     get ground(){
-        return this._ground;
+        return this._world.ground;
     }
 
     set gravity($gacc){
@@ -123,11 +118,10 @@ class CrawlController{
         if(!$ground instanceof Ground){
             console.error('CrawController', 'para must be ground');
         }
-        if(this._ground && this._ground != $ground){
+        if(this._world.ground && this._world.ground != $ground){
             console.warn('CrawController', 'ground changed incorrectly');
         }
-        this._ground = $ground;
-        this._world.ground = this._ground;
+        this._world.ground = $ground;
     }
 
     isJumping(){
@@ -172,7 +166,7 @@ class CrawlController{
         }
     }
 
-    render($context, $this){
+    render($context){
         $context.save();
         $context.beginPath();
         $context.strokeStyle = '#FFF';
@@ -188,7 +182,7 @@ class CrawlController{
     update(){
         if(this._bindObj){
             let speed = this._point.linearVelocity;
-            let _grdSeg = this._ground.getGroundUndered(this._point.position);
+            let _grdSeg = this._world.ground.getGroundUndered(this._point.position);
             let theta = 0;
             if(_grdSeg){
                 theta = Math.abs(_grdSeg.angle);
@@ -219,12 +213,12 @@ class CrawlController{
                     }else{
                         speed.x = 0;
                     }
-                    this._point.setPositionToGround(this._ground);
+                    this._point.setPositionToGround(this._world.ground);
                 }
                 this._point.force.y = 0;
             }else{
                 // 跳跃
-                this._point.force.y = 500;
+                this._point.force.y = this._gravityForce;
             }
             this._bindObj.position.x = this._offset.x + this._point.position.x;
             this._bindObj.position.y = this._offset.y + this._point.position.y;

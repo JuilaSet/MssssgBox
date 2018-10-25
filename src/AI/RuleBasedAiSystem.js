@@ -83,10 +83,10 @@ class Rule{
         this._lines = [];        // operator => fact
         this.active = true;
 
-        if($option.factList instanceof Array){
-            this.addFact($option.factList);
+        if($option.expression instanceof Array){
+            this.addFact($option.expression);
         }else{
-            console.error('factList 必须是数组类型，元素之间用逻辑运算分割');
+            console.error('expression 必须是数组类型，元素之间用逻辑运算分割');
         }
     }
 
@@ -192,4 +192,4 @@ Fact.AND = '&';
 Fact.OR = '|';
 Fact.ANDNOT = '&-';
 Fact.ORNOT = '|-';
-Fact.NOTHING = 'nothing';
+Fact.NOTHING = 0;

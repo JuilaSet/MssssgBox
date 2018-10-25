@@ -26,12 +26,12 @@ class Trigger{
         let _this = this;
         document.onmousedown = (event)=>{
             this.mousedown = true;
-            this.downPosition = new Vector2d(event.clientX, event.clientY);
+            this.downPosition.set(event.clientX, event.clientY);
             _this.onmousedown(event);
         }
 
         document.onmousemove = (event)=>{
-            this.movePosition = new Vector2d(event.clientX, event.clientY);
+            this.movePosition.set(event.clientX, event.clientY);
             if(this.mousedown){
                 this.stretch = true;
                 this.onmousestretch(event);
@@ -43,7 +43,7 @@ class Trigger{
 
         document.onmouseup = (event)=>{
             this.mousedown = false;
-            this.upPosition = new Vector2d(event.clientX, event.clientY);
+            this.upPosition.set(event.clientX, event.clientY);
             _this.onmouseup(event);
         }
 

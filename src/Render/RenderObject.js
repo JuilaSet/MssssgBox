@@ -48,11 +48,11 @@ class RenderObject{
     }
 
     get width(){
-        return this.zone.width;
+        return this._disZone.width;
     }
 
     get height(){
-        return this.zone.height;
+        return this._disZone.height;
     }
 
     render($ctx, $tick){
@@ -63,6 +63,10 @@ class RenderObject{
             rndFunc(this.context, $tick, this._disZone);
             this.context.restore();
         });
+    }
+
+    defaultRender($ctx, $tick, $zone){
+
     }
 
     clearBuffer(){
