@@ -5,6 +5,14 @@ class ControlableUnit extends Unit{
         this._controller.bindObj = this._renderObj;
     }
 
+    set controller($contor){
+        this._controller = $contor;
+    }
+
+    get controller(){
+        return this._controller;
+    }
+
     kill(){
         super.kill();
         this._controller.kill();

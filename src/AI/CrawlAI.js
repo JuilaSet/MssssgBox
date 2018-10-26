@@ -13,7 +13,7 @@ class CrawlAI extends AI{
         this._catchDistance = $option.catchDistance || 50;
         this._jumpT = $option.jumpRate || 25;
         this._jumpHeight = $option.jumpHeight || 90;
-        this._wandering = $option.wandering!=undefined?$option.wandering:true;// []][
+        this._wandering = $option.wandering!=undefined?$option.wandering:true; // []][
         this._wanderingSwitchRate = $option.wanderingSwitchRate || 1; // %
         this._escape = $option.escape!=undefined?$option.escape:false;
 
@@ -45,10 +45,7 @@ class CrawlAI extends AI{
         return this._jumpT;
     }
 
-    setOnNear($func, $dis){
-        if($dis){
-            this._distance = $dis;
-        }
+    setOnNear($func){
         this.onNear = $func;
     }
 
@@ -134,10 +131,11 @@ class CrawlAI extends AI{
                 this.onNear();
             }else if(len < this._catchDistance){ // 在追踪范围内
                 this. onFar();
+                this.defaultOnSlow();
             }else{
                 this.defaultOnWandering();
+                this.defaultOnSlow();
             }
-            this.defaultOnSlow();
         }else{
             if(this._wandering){
                 this.defaultOnWandering();

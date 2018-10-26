@@ -79,20 +79,10 @@ class Game{
 
         let unitm = new UnitManager();
 
-        let tu = fac.createCrawlUnit(new Tree({treeHeight:0}), new Vector2d(40, 100));
-        unitm.add(tu);
+        let hero = fac.createTreeHeroUnit(new Vector2d(40, 100), {angle: Math.PI / 4});
+        unitm.add(hero);
 
         // animation 事件
-        animation.setMouseDown((e)=>{
-            unitm.add(
-                fac2.createCrawlAiUnit(new Cube(), new Vector2d(e.offset.x, e.offset.y), {}, {
-                    speed : 40,
-                    aimUnit: tu,
-                    timer: timer
-                })
-            );
-        });
-
         animation.setAction(($ctx, $this)=>{
             animation.drawFrame();
             unitm.render($ctx, timer.tick);
@@ -101,11 +91,60 @@ class Game{
         });
         dis.addAnimation(animation);
         
+        // survival game logic
+        let genZone = new Zone({
+            position: new Vector2d(0, 0),
+            width: animation.width,
+            height: animation.height
+        });
         ///
         dis.render(()=>{
             if(!this.pause){
                 stats.update();
                 timer.update();
+                timer.interval(()=>{
+                    hero.renderObject.size -= 1;
+                    hero.controller.maxSpeed = Math.max(hero.controller.maxSpeed - 5, 50);
+                    if(hero.renderObject.size < 15){
+                        alert('你饿死了');
+                    }
+                }, 80);
+                timer.interval(()=>{
+                    unitm.add(
+                        fac2.createEdibleCrawAIUnit(
+                            new Cube({color: '#0F0'}), 
+                            genZone.getRandomPosition(),
+                            ()=>{
+                                hero.renderObject.size += 5;
+                                hero.controller.maxSpeed = Math.min(hero.controller.maxSpeed + 25, 150);
+                            }, {}, {
+                                speed : 40,
+                                aimUnit: hero,
+                                timer: timer,
+                                escape: false
+                            })
+                    );
+                }, 100);
+                timer.interval(()=>{
+                    unitm.add(
+                        fac2.createHostileCrawAIUnit(
+                            // new Cube({color: '#0F0'}), 
+                            genZone.getRandomPosition(), 
+                            {color: '#F00'},
+                            ()=>{
+                                hero.renderObject.size -= 1;
+                                hero.controller.maxSpeed = Math.max(hero.controller.maxSpeed - 1, 50);
+                                if(hero.renderObject.size < 15){
+                                    alert('你饿死了');
+                                }
+                            }, {}, {
+                                speed : 40,
+                                aimUnit: hero,
+                                timer: timer,
+                                escape: false
+                            })
+                    );
+                }, 500);
                 world.update();
                 unitm.update();
             }

@@ -41,7 +41,6 @@ class ControlableUnitFactory extends UnitFactory{
         
         return unit;
     }
-
     
     createCrawlUnitWithBody($renderObj, $position, $contrOption={}, $unitOption={}, $bodyOption={}, $keys=[65,68,87]){   // 左,右,上
         $renderObj.addRenderFrame(($ctx, $tick, $zone)=>{
@@ -91,6 +90,39 @@ class ControlableUnitFactory extends UnitFactory{
         }, $keys[2]);
         this.iotrigger.setKeyUpEvent(()=>{}, $keys[2]);
         
+        return unit;
+    }
+
+    createTreeHeroUnit( $position, 
+                        $treeOption={}, 
+                        $contrOption={}, 
+                        $unitOption={}, 
+                        $bodyOption={}, 
+                        $keys=[65,68,87]){
+        // renderObj
+        Object.assign($treeOption, {
+            treeHeight:0, minLength:7
+        });
+        let tree = new Tree($treeOption);
+
+        // unit
+        let unit = this.createCrawlUnitWithBody(
+            tree, 
+            $position,
+            $contrOption, 
+            $unitOption, 
+            $bodyOption, 
+            $keys);
+
+        // renderobj
+        let contr = unit.controller;
+        tree.addRenderFrame(($ctx, $tick)=>{
+            tree.force = contr.velocityX / 5;
+            tree.intersectionAngle = ($treeOption.angle || Math.PI / 7) - Math.min(
+                contr.velocityY, 200) / 1200;
+            tree.drawTree($tick);
+        });
+
         return unit;
     }
 }

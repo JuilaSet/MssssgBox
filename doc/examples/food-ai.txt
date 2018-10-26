@@ -1,0 +1,17 @@
+
+                // timer.interval(()=>{
+                //     unitm.add(
+                //         fac2.createHostileCrawAIUnit(
+                //             new Cube({color: '#0F0'}), 
+                //             genZone.getRandomPosition(),
+                //             ()=>{
+                //                 hero.renderObject.size += 5;
+                //                 hero.controller.maxSpeed = Math.min(hero.controller.maxSpeed + 25, 150);
+                //             }, {}, {
+                //                 speed : 40,
+                //                 aimUnit: hero,
+                //                 timer: timer,
+                //                 escape: false
+                //             })
+                //     );
+                // }, 100);
