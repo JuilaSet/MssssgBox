@@ -16,7 +16,7 @@ class Cube extends RenderObject{
         });
         // 颜色
         this.color = $option.color || "#FFF";
-        this.shiningRate = $option.shiningRate || 20;
+        this.shiningRate = $option.shiningRate!=undefined?$option.shiningRate : 20;
     }
 
     // @Override
@@ -31,12 +31,65 @@ class Cube extends RenderObject{
         let w = this._zone.width, h = this._zone.height;
         let dx = w * 2/5, dy = h * 2/5;
         if(this.timer.tick % this.shiningRate < this.shiningRate / 2){
-            this.context.strokeRect(p.x + h/2 - dx, p.y - h / 2 + w/2 - dy, w + dx * 2, h + dy * 2);
+            this.context.strokeRect(p.x + h/2 - dx, p.y + w/2 - dy, w + dx * 2, h + dy * 2);
         }else{
-            this.context.strokeRect(p.x + h/2, p.y - h / 2 + w/2, w, h);
+            this.context.strokeRect(p.x + h/2, p.y + w/2, w, h);
         }
     }
 
+}
+
+class Ring extends RenderObject{
+    constructor($option={}){
+        super($option);
+        
+        this.r = $option.r || 10;
+
+        // 颜色
+        this.color = $option.color || "#FFF";
+
+        // private
+        this._p = new Vector2d(this._disZone.width / 2, this._disZone.height / 2);
+    }
+
+    // @Override
+    defaultRender($ctx, $tick, $zone){
+        this.drawCircle();
+    }
+
+    drawCircle(){
+        this.context.beginPath();
+        this.context.strokeStyle = this.color;
+        this.context.arc(this._p.x, this._p.y, this.r, 0, 2 * Math.PI, false);
+        this.context.stroke();
+    }
+}
+
+
+class Circle extends RenderObject{
+    constructor($option={}){
+        super($option);
+        
+        this.r = $option.r || 10;
+
+        // 颜色
+        this.color = $option.color || "#FFF";
+
+        // private
+        this._p = new Vector2d(this._disZone.width / 2, this._disZone.height / 2);
+    }
+
+    // @Override
+    defaultRender($ctx, $tick, $zone){
+        this.drawCircle();
+    }
+
+    drawCircle(){
+        this.context.beginPath();
+        this.context.fillStyle = this.color;
+        this.context.arc(this._p.x, this._p.y, this.r, 0, 2 * Math.PI, false);
+        this.context.fill();
+    }
 }
 
 class Tree extends RenderObject{

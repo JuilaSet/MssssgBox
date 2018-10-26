@@ -15,7 +15,18 @@ class UnitManager{
 
     update(){
         this._units.forEach(unit => {
-            unit.update();
+            if(unit.living){
+                unit.update();
+            }
         });
+        this.cleanUnits();
+    }
+
+    cleanUnits(){
+        for(let x = 0; x < this._units; x++){
+            if(!this._units[x].living){
+                this._units.splice(x, 1);
+            }
+        }
     }
 }

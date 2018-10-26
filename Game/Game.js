@@ -9,25 +9,9 @@ class Game{
 
     // 开始游戏
     run(){
-        // AI 模块测试
-        let rulebai = new RuleBasedAiSystem();
-        let ISDIE = 0x1, CANBEKILLED=0x2, CONNBEKILLED=0x3, KILL=0x4, DIE=0x5, ALIVE=0x6;
-        rulebai.addRules([
-            new Rule({
-                result:DIE,
-                expression:[ISDIE, Fact.OR, CANBEKILLED]
-            }), new Rule({
-                result:ALIVE,
-                expression: [KILL, Fact.AND, CONNBEKILLED]
-            })
-        ]);
-        rulebai.mssageRules = [KILL, CONNBEKILLED];
-        console.log( rulebai.infer() );
-
         // dis 模块
         let dis = this.display;
         dis.setFullScreen(false);
-        let c = 10101;
 
         let timer = this.timer;
 
@@ -72,9 +56,16 @@ class Game{
             world: world
         });
 
-        let fac2 = new AIUnitFactory({
+        let aif = new AIUnitFactory({
             game: this,
-            world: world
+            world: world,
+            timer: timer
+        });
+
+        let fac2 = new ShootPointFactory({
+            game: this,
+            world: world,
+            timer: timer
         });
 
         let unitm = new UnitManager();
@@ -89,62 +80,108 @@ class Game{
             world.render($this);
             // ground.render($ctx);
         });
+        animation.setMouseDown((e)=>{
+            world.addBody(
+                new Point({
+                    position: e.offset,
+                    force: new Vector2d(0, 100)
+                })
+            );
+        });
         dis.addAnimation(animation);
         
-        // survival game logic
+
+        let enableShoot = true, shootSize = 8;
+        function shootSkill($hero){
+            if(enableShoot){
+                world.addBody(fac2.createFireBallPoint(
+                    $hero.position.clone(),
+                    new Vector2d($hero.controller.handler.linearVelocity.x * 2, 
+                                    $hero.controller.handler.linearVelocity.y * 2),
+                    $hero,
+                    {
+                        size : shootSize
+                    }
+                ));
+                enableShoot = false;
+                timer.callLater(()=>{
+                    enableShoot = true;
+                }, 10);
+            }
+        }
+        iotrigger.setKeyPressEvent((e)=>{
+            // let segs = gen.generateSegs();
+            // gen.adjustSegsToValley(segs, 200);
+            // let ground = gen.generateMap(segs).ground;
+            // world.ground = ground;
+        }, 32);
+        
+        let shoottime = 50;
+        iotrigger.setKeyDownEvent(()=>{
+            if(shoottime > 0){
+                shootSkill(hero);
+                shoottime--;
+            }
+        }, 83);
+
+        iotrigger.setKeyUpEvent(()=>{}, 83);
+
+        // game logic
         let genZone = new Zone({
             position: new Vector2d(0, 0),
             width: animation.width,
-            height: animation.height
+            height: 100
         });
+        
+        let num = 0;
+        let eeee = true;
         ///
         dis.render(()=>{
             if(!this.pause){
                 stats.update();
                 timer.update();
                 timer.interval(()=>{
-                    hero.renderObject.size -= 1;
-                    hero.controller.maxSpeed = Math.max(hero.controller.maxSpeed - 5, 50);
-                    if(hero.renderObject.size < 15){
-                        alert('你饿死了');
-                    }
-                }, 80);
-                timer.interval(()=>{
-                    unitm.add(
-                        fac2.createEdibleCrawAIUnit(
-                            new Cube({color: '#0F0'}), 
-                            genZone.getRandomPosition(),
-                            ()=>{
-                                hero.renderObject.size += 5;
-                                hero.controller.maxSpeed = Math.min(hero.controller.maxSpeed + 25, 150);
-                            }, {}, {
-                                speed : 40,
-                                aimUnit: hero,
-                                timer: timer,
-                                escape: false
-                            })
-                    );
-                }, 100);
-                timer.interval(()=>{
-                    unitm.add(
-                        fac2.createHostileCrawAIUnit(
-                            // new Cube({color: '#0F0'}), 
-                            genZone.getRandomPosition(), 
-                            {color: '#F00'},
-                            ()=>{
-                                hero.renderObject.size -= 1;
-                                hero.controller.maxSpeed = Math.max(hero.controller.maxSpeed - 1, 50);
-                                if(hero.renderObject.size < 15){
-                                    alert('你饿死了');
+                    if(num < 3){
+                        num++;
+                        let zq = aif.createHostileCrawlAIUnit(genZone.getRandomPosition(), {
+                            aimUnit : hero
+                        }, ()=>{
+                            if(eeee){
+                                hero.renderObject.size -= 5;
+                                if(hero.renderObject.size < 30){
+                                    hero.kill();
+                                    alert('you lose');
                                 }
-                            }, {}, {
-                                speed : 40,
-                                aimUnit: hero,
-                                timer: timer,
-                                escape: false
-                            })
-                    );
+                                eeee = false;
+                                timer.callLater(()=>{
+                                    eeee = true;
+                                }, 100);
+                            }
+                        }, 50, 50);
+                        zq.setOnKill(()=>{
+                            num--;
+                        });
+                        unitm.add(zq);
+                    }
+                }, 100)
+                timer.interval(()=>{
+                    let box = aif.createEdibleCrawlAIUnit(
+                        new Cube({
+                            color : '#0F0'
+                        }),
+                        genZone.getRandomPosition(), {
+                        aimUnit:hero
+                    }, ()=>{
+                        shoottime+=5;
+                    });
+                    unitm.add(box);
                 }, 500);
+                // timer.interval(()=>{
+                //     let segs = gen.generateSegs();
+                //     gen.adjustSegsToValley(segs, 200);
+                //     let ground = gen.generateMap(segs).ground;
+                //     world.ground = ground;
+                // }, 1000)
                 world.update();
                 unitm.update();
             }

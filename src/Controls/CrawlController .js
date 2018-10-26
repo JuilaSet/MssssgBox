@@ -2,12 +2,12 @@ class CrawlController extends Controller {
     constructor($option={}){
         super($option);
         this.jumpTimes = $option.jumpTimes || 2; // 几段跳
-        this.maxSpeed = $option.maxSpeed || 150;
+        this.maxSpeed = $option.maxSpeed || 120;
         this._world = $option.world || console.error('没有指定world对象');
         this._gravityacc = $option.gravity || 0.9;
         this._friction = $option.friction!=undefined?$option.friction:5; // 摩擦力
         this._offset = $option.offset || new Vector2d(0, 0);    // 偏离值
-        this._maxMoveHeight = $option.maxMoveHeight!=undefined?$option.maxMoveHeight:30;
+        this._maxMoveHeight = $option.maxMoveHeight!=undefined?$option.maxMoveHeight:45;
 
         this._gravityForce = $option.gravityForce || 170;
 
@@ -17,14 +17,14 @@ class CrawlController extends Controller {
         this._jpt = 0;
         this._point = new Point({
             position: $option.position,
-            force: new Vector2d(0, 0)
+            force: new Vector2d(0, 0),
+            enableStaticBounce: false
         });
         this._point.setOnStaticHit(($which, $static)=>{
             this.defaultOnStaticHit($which, $static);
         });
         this._point.setOnGroundHit(()=>{
             this.defaultOnGroundHit();
-            // this._point.setPositionToGround(this._world.ground);
         });
         this._world.addBody(this._point);
 
@@ -188,6 +188,7 @@ class CrawlController extends Controller {
 
     update(){
         if(this._bindObj && this._point.living){
+            this._point.force.y = this._gravityForce;
             let speed = this._point.linearVelocity;
             let _grdSeg = this._world.ground.getGroundUndered(this._point.position);
             // let theta = 0;
@@ -226,7 +227,6 @@ class CrawlController extends Controller {
                 // 跳跃
                 // this._point.force.y = this._gravityForce;
             }
-            this._point.force.y = this._gravityForce;
             this._bindObj.position.x = this._offset.x + this._point.position.x;
             this._bindObj.position.y = this._offset.y + this._point.position.y;
         }else{

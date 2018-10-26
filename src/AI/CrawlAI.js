@@ -17,8 +17,6 @@ class CrawlAI extends AI{
         this._wanderingSwitchRate = $option.wanderingSwitchRate || 1; // %
         this._escape = $option.escape!=undefined?$option.escape:false;
 
-
-
         // private
         this._enableJump = true;
         this._enableDL = true;
@@ -137,11 +135,11 @@ class CrawlAI extends AI{
                 this.defaultOnSlow();
             }
         }else{
+            console.warn('无目的ai');
             if(this._wandering){
                 this.defaultOnWandering();
                 this.defaultOnSlow();
             }else{
-                console.warn('无目的ai');
             }
         }
     }

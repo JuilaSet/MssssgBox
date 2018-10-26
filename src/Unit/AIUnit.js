@@ -3,7 +3,7 @@
  * 带有AI的Unit
  *
 */
-class AIUnit extends ControlableUnit{
+class AIUnit extends Unit{
     constructor($option){
         super($option);
         this._AI = $option.AI || new AI();
@@ -17,18 +17,27 @@ class AIUnit extends ControlableUnit{
         this._AI = $ai;
     }
 
-    defaultOnUpdate(){
-        super.defaultOnUpdate();
+    // @Override
+    kill(){
+        super.kill();
+        this._AI.controller.kill();
     }
 
+    // @Override
+    defaultOnUpdate(){
+
+    }
+
+    // @Override
     onUpdate(){
-        this.defaultOnUpdate();
+        
     }
 
     update(){
-        super.update();
         if(this._living){
+            this.synStatic();
             this._AI.update();
+            this._AI.controller.update();
         }
     }
 }

@@ -13,6 +13,7 @@ class ControlableUnit extends Unit{
         return this._controller;
     }
 
+    // @Override
     kill(){
         super.kill();
         this._controller.kill();
@@ -24,8 +25,8 @@ class ControlableUnit extends Unit{
     }
 
     update(){
-        // super.update();
         if(this._living){
+            this.synStatic();
             this._controller.update();
         }
     }

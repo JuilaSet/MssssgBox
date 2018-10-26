@@ -35,14 +35,21 @@ class ControlableUnitFactory extends UnitFactory{
             crawlContr.accRight(0);
         }, $keys[1]);
         this.iotrigger.setKeyDownEvent(()=>{
-            crawlContr.jump($contrOption.jumpHeight || 100);
+            crawlContr.jump($contrOption.jumpHeight || 120);
         }, $keys[2]);
         this.iotrigger.setKeyUpEvent(()=>{}, $keys[2]);
         
         return unit;
     }
     
-    createCrawlUnitWithBody($renderObj, $position, $contrOption={}, $unitOption={}, $bodyOption={}, $keys=[65,68,87]){   // 左,右,上
+    createCrawlUnitWithBody($renderObj, $position, $contrOption={}, $unitOption={}, $bodyOption={
+            border: 5,
+            position: new Vector2d(0, 0),
+            force : new Vector2d(0, 100)
+        }, $staticOption={
+            width : 100,
+            height : 100
+        }, $keys=[65,68,87]){   // 左,右,上
         $renderObj.addRenderFrame(($ctx, $tick, $zone)=>{
             $renderObj.defaultRender($ctx, $tick, $zone);
         });
@@ -59,16 +66,22 @@ class ControlableUnitFactory extends UnitFactory{
                 force : new Vector2d(0, 100)
             }
         }
+        $bodyOption.enableStaticBounce = false;
         let point = new Point($bodyOption);
         this._world.addBody(point);
 
+        // static
+        let staticsqrt = new StaticSquare($staticOption);
+        staticsqrt.render = ()=>{};
+        this._world.addBody(staticsqrt);
         // unit
         Object.assign($unitOption,{
             position: $position,
             game: this._game,
             renderObject: $renderObj,
             controller: crawlContr,
-            point: point
+            point: point,
+            static : staticsqrt
         });
         let unit = new ControlableUnit($unitOption);
 
@@ -86,7 +99,7 @@ class ControlableUnitFactory extends UnitFactory{
             crawlContr.accRight(0);
         }, $keys[1]);
         this.iotrigger.setKeyDownEvent(()=>{
-            crawlContr.jump($contrOption.jumpHeight || 100);
+            crawlContr.jump($contrOption.jumpHeight || 120);
         }, $keys[2]);
         this.iotrigger.setKeyUpEvent(()=>{}, $keys[2]);
         
@@ -98,6 +111,7 @@ class ControlableUnitFactory extends UnitFactory{
                         $contrOption={}, 
                         $unitOption={}, 
                         $bodyOption={}, 
+                        $staticOption={},
                         $keys=[65,68,87]){
         // renderObj
         Object.assign($treeOption, {
@@ -109,9 +123,16 @@ class ControlableUnitFactory extends UnitFactory{
         let unit = this.createCrawlUnitWithBody(
             tree, 
             $position,
-            $contrOption, 
+            {
+                jumpHeight : 150,
+                speed:120
+            }, 
             $unitOption, 
             $bodyOption, 
+            {
+                width : 25,
+                height: 25
+            },
             $keys);
 
         // renderobj

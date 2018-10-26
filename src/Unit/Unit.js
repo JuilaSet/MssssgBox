@@ -6,7 +6,7 @@ class Unit{
         this._renderObj.position = $option.position || this._renderObj.position;
 
         this._point = $option.point;    // 物理对象
-        this._staticGroup = $option.staticGroup;
+        this._static = $option.static;
         
         // 自我描述属性
         this._living = true;
@@ -14,6 +14,13 @@ class Unit{
         if(this._point){
             this._point.position = $option.position || this._renderObj.position;
         }
+        if(this._static){
+            this._static.position = new Vector2d(0, 0);
+        }
+    }
+    
+    get static(){
+        return this._static;
     }
 
     get point(){
@@ -55,6 +62,8 @@ class Unit{
 
     kill(){
         this._living = false;
+        this._point.kill();
+        this._static.kill();
         this.onKill();
     }
 
@@ -85,7 +94,7 @@ class Unit{
     }
 
     onUpdate(){
-        this.defaultOnUpdate();
+
     }
 
     setOnUpdate($func){
@@ -93,11 +102,22 @@ class Unit{
     }
 
     defaultOnUpdate(){
-        
+
+    }
+
+    synStatic(){
+        if(this._static){
+            let p = this._renderObj.position;
+            let sp = this._static.position;
+            let z = this._static.zone;
+            sp.x = p.x - z.width / 2;
+            sp.y = p.y - z.height / 2;
+        }
     }
 
     update(){
         if(this._living){
+            this.synStatic();
             this.onUpdate();
         }
     }
