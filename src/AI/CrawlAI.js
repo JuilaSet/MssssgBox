@@ -7,17 +7,24 @@ class CrawlAI extends AI{
         this._crawlController = $option.crawlController || console.error('未指定控制器'); // crawlController对象
         this._aimUnit = $option.aimUnit;    // 一般是position属性
         this._timer = $option.timer || console.error('未指定计时对象');
-        this._speed = $option.speed || 130;
+        this._speed = $option.speed || 90;
         this._jumpActionMinSpeed = $option.jumpActionMinSpeed || 120;
         this._distance = $option.distance || 20;
-        this._jumpT = $option.jumpRate || 125;
+        this._catchDistance = $option.catchDistance || 50;
+        this._jumpT = $option.jumpRate || 25;
         this._jumpHeight = $option.jumpHeight || 90;
-        this._wandering = $option.wandering==undefined?$option.wandering:true;// []][
-        
+        this._wandering = $option.wandering!=undefined?$option.wandering:true;// []][
+        this._wanderingSwitchRate = $option.wanderingSwitchRate || 1; // %
+        this._escape = $option.escape!=undefined?$option.escape:false;
+
+
+
         // private
         this._enableJump = true;
         this._enableDL = true;
+        this._dir = false;
     }
+
     get controller(){
         return this._crawlController;
     }
@@ -64,11 +71,23 @@ class CrawlAI extends AI{
 
     defaultOnFar(){
         if(this._aimUnit.position.x < this._crawlController.position.x){
-            this._crawlController.accLeft(this._speed);
-            this._crawlController.accRight(0);
+            if(this._escape){
+                this._crawlController.accLeft(0);
+                this._crawlController.accRight(this._speed);
+                this._dir =! this._dir;
+            }else{
+                this._crawlController.accLeft(this._speed);
+                this._crawlController.accRight(0);
+            }
         }else{
-            this._crawlController.accLeft(0);
-            this._crawlController.accRight(this._speed);
+            if(this._escape){
+                this._crawlController.accLeft(this._speed);
+                this._crawlController.accRight(0);
+                this._dir =! this._dir;
+            }else{
+                this._crawlController.accLeft(0);
+                this._crawlController.accRight(this._speed);
+            }
         }
         if( Math.abs(this._aimUnit.position.x - this._crawlController.position.x) < this._distance &&
             this._aimUnit.position.y < this._crawlController.position.y - this._jumpHeight){
@@ -79,7 +98,11 @@ class CrawlAI extends AI{
                     this._enableDL = true;
                 }, Math.floor(this._jumpT));
             }
-        }else if(Math.abs(this._crawlController.velocityX) < this._jumpActionMinSpeed){
+        }
+    }
+
+    defaultOnSlow(){
+        if(Math.abs(this._crawlController.velocityX) < this._jumpActionMinSpeed){
             if(this._enableJump){
                 this._crawlController.jump(this._jumpHeight);
                 this._enableJump = false;
@@ -90,16 +113,38 @@ class CrawlAI extends AI{
         }
     }
 
+    defaultOnWandering(){
+        if(Math.random() * 100 < this._wanderingSwitchRate){
+            this._dir =! this._dir;
+        }
+        if(this._dir){
+            this._crawlController.accLeft(0);
+            this._crawlController.accRight(this._speed);
+        }else{
+            this._crawlController.accLeft(this._speed);
+            this._crawlController.accRight(0);
+        }
+    }
+
     // 行动 @Override
     action(){
         if(this._aimUnit){
-            if(this._aimUnit.position.clone().sub(this._crawlController.position).length() < this._distance){
+            let len = this._aimUnit.position.clone().sub(this._crawlController.position).length();
+            if(len < this._distance){
                 this.onNear();
-            }else{
+            }else if(len < this._catchDistance){ // 在追踪范围内
                 this. onFar();
+            }else{
+                this.defaultOnWandering();
             }
+            this.defaultOnSlow();
         }else{
-            console.warn('无目的ai');
+            if(this._wandering){
+                this.defaultOnWandering();
+                this.defaultOnSlow();
+            }else{
+                console.warn('无目的ai');
+            }
         }
     }
 

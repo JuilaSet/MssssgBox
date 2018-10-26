@@ -6,8 +6,8 @@
 class Cube extends RenderObject{
     constructor($option={}){
         super($option);
-        $option.width = $option.width || 5;
-        $option.height = $option.height || 5;
+        $option.width = $option.width || $option.size || 8;
+        $option.height = $option.height || $option.size || 8;
         this._zone = new Zone({
             position: new Vector2d( this._disZone.width / 2 - $option.width,
                                     this._disZone.height / 2 - $option.height),
@@ -21,19 +21,19 @@ class Cube extends RenderObject{
 
     // @Override
     defaultRender($ctx, $tick, $zone){
-        this.drawRect($tick);
+        this.drawRect();
+        this.timer.update();
     }
 
-    drawRect($tick){
+    drawRect(){
         this.context.strokeStyle = this.color;
         let p = this._zone.position;
         let w = this._zone.width, h = this._zone.height;
-        if($tick % this.shiningRate < this.shiningRate / 2){
-            w = this._zone.width * 2;
-            h = this._zone.height * 2;
-            this.context.strokeRect(p.x - w / 4, p.y - h / 4, w, h);
+        let dx = w * 2/5, dy = h * 2/5;
+        if(this.timer.tick % this.shiningRate < this.shiningRate / 2){
+            this.context.strokeRect(p.x + h/2 - dx, p.y - h / 2 + w/2 - dy, w + dx * 2, h + dy * 2);
         }else{
-            this.context.strokeRect(p.x, p.y, w, h);
+            this.context.strokeRect(p.x + h/2, p.y - h / 2 + w/2, w, h);
         }
     }
 
@@ -49,7 +49,7 @@ class Tree extends RenderObject{
         this._scale = $option.scale || 0.6;   // 每次缩小比例
         this._arg = $option.intersectionAngle || Math.PI / 10; //主干与枝干的夹角
         this._rotation = $option.rotation || Math.PI/2;
-        this._treeHeight = $option.treeHeight!=undefined?$option.treeHeight:this._size;// 树高度
+        this._treeHeight = $option.treeHeight!=undefined?$option.treeHeight:this._size; // 树高度
 
         // 颜色
         this.color = $option.color || "#FFF";
@@ -58,6 +58,7 @@ class Tree extends RenderObject{
     // @Override
     defaultRender($ctx, $tick, $zone){
         this.drawTree($tick);
+        this.timer.update();
     }
 
     set force($f){

@@ -10,6 +10,7 @@ class RenderObject{
         });
         this.buffer.width = this._disZone.width;
         this.buffer.height = this._disZone.height;
+        this.timer = $option.timer || new Timer();
 
         // 设置默认项
         this.context.strokeStyle = $option.defaultStrokeStyle || '#FFF';
@@ -67,8 +68,9 @@ class RenderObject{
         });
     }
 
+    // @enableOverride
     defaultRender($ctx, $tick, $zone){
-        
+        this.timer.update();
     }
 
     clearBuffer(){

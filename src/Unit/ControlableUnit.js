@@ -5,6 +5,11 @@ class ControlableUnit extends Unit{
         this._controller.bindObj = this._renderObj;
     }
 
+    kill(){
+        super.kill();
+        this._controller.kill();
+    }
+
     // @Override
     defaultOnUpdate(){
 

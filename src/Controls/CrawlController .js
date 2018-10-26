@@ -5,7 +5,7 @@ class CrawlController extends Controller {
         this.maxSpeed = $option.maxSpeed || 150;
         this._world = $option.world || console.error('没有指定world对象');
         this._gravityacc = $option.gravity || 0.9;
-        this._friction = $option.friction || 5;
+        this._friction = $option.friction!=undefined?$option.friction:5; // 摩擦力
         this._offset = $option.offset || new Vector2d(0, 0);    // 偏离值
         this._maxMoveHeight = $option.maxMoveHeight!=undefined?$option.maxMoveHeight:30;
 
@@ -24,6 +24,7 @@ class CrawlController extends Controller {
         });
         this._point.setOnGroundHit(()=>{
             this.defaultOnGroundHit();
+            // this._point.setPositionToGround(this._world.ground);
         });
         this._world.addBody(this._point);
 
@@ -42,7 +43,9 @@ class CrawlController extends Controller {
     }
 
     defaultOnGroundHit(){
-        this._point.setPositionToGround(this._world.ground);
+        let _grdSeg = this._world.ground.getGroundUndered(this._point.position);
+        this._point.downBounce(_grdSeg);
+        this._point.setPositionToGroundSegment(_grdSeg);
         this._point.linearVelocity.y = 0;
         this._lock  = true;
         this._jpt = 0;
@@ -146,6 +149,10 @@ class CrawlController extends Controller {
             this._jpt++;
         }
     }
+    
+    kill(){
+        this._point.kill();
+    }
 
     _calcEnableMove(h){
         let speed = this._point.linearVelocity;
@@ -180,12 +187,12 @@ class CrawlController extends Controller {
     }
 
     update(){
-        if(this._bindObj){
+        if(this._bindObj && this._point.living){
             let speed = this._point.linearVelocity;
             let _grdSeg = this._world.ground.getGroundUndered(this._point.position);
-            let theta = 0;
+            // let theta = 0;
             if(_grdSeg){
-                theta = Math.abs(_grdSeg.angle);
+                // theta = Math.abs(_grdSeg.angle);
             }else{
                 console.warn('找不到所在地面，忽视地面限制');
             }
@@ -209,17 +216,17 @@ class CrawlController extends Controller {
                     let h = _grdSeg.length * Math.sin(beta);
                     this._calcEnableMove(h);
                     if(this._enableRight && speed.x >= 0 || this._enableLeft && speed.x <= 0){
-                        speed.x = speed.x * Math.cos(theta);
+                        // speed.x = speed.x * Math.cos(theta);
                     }else{
                         speed.x = 0;
                     }
-                    this._point.setPositionToGround(this._world.ground);
+                    // this._point.force.y = this._gravityForce;
                 }
-                this._point.force.y = 0;
             }else{
                 // 跳跃
-                this._point.force.y = this._gravityForce;
+                // this._point.force.y = this._gravityForce;
             }
+            this._point.force.y = this._gravityForce;
             this._bindObj.position.x = this._offset.x + this._point.position.x;
             this._bindObj.position.y = this._offset.y + this._point.position.y;
         }else{

@@ -10,14 +10,18 @@ class Unit{
         
         // 自我描述属性
         this._living = true;
+        this._position = $option.position || this._renderObj.position;
+        if(this._point){
+            this._point.position = $option.position || this._renderObj.position;
+        }
+    }
+
+    get point(){
+        return this._point;
     }
 
     get living(){
         return this._living;
-    }
-
-    kill(){
-        this._living = false;
     }
 
     get controller(){
@@ -25,11 +29,11 @@ class Unit{
     }
 
     set position($p){
-        this._renderObj.position = $p;
+        this._renderObj.position = $p;  // []][
     }
 
     get position(){
-        return this._renderObj.position;
+        return this._renderObj.position;  // []][
     }
 
     get renderObject(){
@@ -39,6 +43,19 @@ class Unit{
     set renderObject($obj){
         $obj.position = this._renderObj.position;
         this._renderObj = $obj;
+    }
+
+    setOnKill($func){
+        this.onKill = $func;
+    }
+
+    onKill(){
+        
+    }
+
+    kill(){
+        this._living = false;
+        this.onKill();
     }
 
     setHurt($func){

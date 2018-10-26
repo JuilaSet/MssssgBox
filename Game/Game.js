@@ -9,6 +9,21 @@ class Game{
 
     // 开始游戏
     run(){
+        // AI 模块测试
+        let rulebai = new RuleBasedAiSystem();
+        let ISDIE = 0x1, CANBEKILLED=0x2, CONNBEKILLED=0x3, KILL=0x4, DIE=0x5, ALIVE=0x6;
+        rulebai.addRules([
+            new Rule({
+                result:DIE,
+                expression:[ISDIE, Fact.OR, CANBEKILLED]
+            }), new Rule({
+                result:ALIVE,
+                expression: [KILL, Fact.AND, CONNBEKILLED]
+            })
+        ]);
+        rulebai.mssageRules = [KILL, CONNBEKILLED];
+        console.log( rulebai.infer() );
+
         // dis 模块
         let dis = this.display;
         dis.setFullScreen(false);
@@ -50,9 +65,11 @@ class Game{
             }),
             ground: ground
         });
+        
         let fac = new ControlableUnitFactory({
             game: this,
-            iotrigger : iotrigger
+            iotrigger : iotrigger,
+            world: world
         });
 
         let fac2 = new AIUnitFactory({
@@ -61,24 +78,26 @@ class Game{
         });
 
         let unitm = new UnitManager();
-        let tu = fac.createCrawlUnit(new Tree({treeHeight:0}), new Vector2d(40, 100), world, {});
+
+        let tu = fac.createCrawlUnit(new Tree({treeHeight:0}), new Vector2d(40, 100));
         unitm.add(tu);
 
-        let tu2 = fac2.createCrawlAiUnit(new Cube(), new Vector2d(400, 100), {}, {
-            aimUnit: tu,
-            timer: timer
+        // animation 事件
+        animation.setMouseDown((e)=>{
+            unitm.add(
+                fac2.createCrawlAiUnit(new Cube(), new Vector2d(e.offset.x, e.offset.y), {}, {
+                    speed : 40,
+                    aimUnit: tu,
+                    timer: timer
+                })
+            );
         });
-        unitm.add(tu2);
-
-        iotrigger.setKeyPressEvent(()=>{
-
-        },32);
 
         animation.setAction(($ctx, $this)=>{
             animation.drawFrame();
             unitm.render($ctx, timer.tick);
-            // world.render($this);
-            ground.render($ctx);
+            world.render($this);
+            // ground.render($ctx);
         });
         dis.addAnimation(animation);
         

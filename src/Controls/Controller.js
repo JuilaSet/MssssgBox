@@ -15,6 +15,11 @@ class Controller{
         return this._bindObj;
     }
 
+    // @enableOverride 使其无效
+    kill(){
+
+    }
+
     render($context){
 
     }
