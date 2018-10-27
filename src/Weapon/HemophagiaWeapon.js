@@ -3,6 +3,8 @@ class HemophagiaWeapon extends Weapon{
         super($option);
         this._swap = true;
         this._maxLife = this._user.hitpoint + this.power / 2;
+        this._bullet;
+        this._hemo = $option.hemo || false; // 是否吸血
     }
 
     set user($user){
@@ -12,6 +14,12 @@ class HemophagiaWeapon extends Weapon{
         this._user = $user;
     }
 
+    kill(){
+        if(this._bullet){
+            this._bullet.kill();
+        }
+    }
+
     // @Override
     shoot(){
         // 全局只有一个子弹
@@ -19,21 +27,26 @@ class HemophagiaWeapon extends Weapon{
             let eee = true;
             let sf = this._shootPointFactory;
             this._bullet = sf.createBasicHurtPoint(
+                this.team,
                 this._user.position,     // 绑定位置
                 this.power,
                 this._user,
                 ($unit)=>{
                     if(eee){
-                        $unit.hurt(this.hurt);  // 调用撞到单位的方法
-                        if(this._maxLife > this._user.hitpoint){
-                            this._user.heal(this.hurt);
-                        }else{
-                            this._user.hurt(this.hurt);
+                        if($unit.team != this._bullet.team){
+                            $unit.hurt(this.hurt);  // 调用撞到单位的方法
+                            if(this._hemo){
+                                if(this._maxLife > this._user.hitpoint){
+                                    this._user.heal(this.hurt);
+                                }else{
+                                    this._user.hurt(this.hurt);
+                                }
+                            }
+                            eee = false;
+                            this._timer.callLater(()=>{
+                                eee = true;
+                            }, this.fireRate);
                         }
-                        eee = false;
-                        this._timer.callLater(()=>{
-                            eee = true;
-                        }, this.fireRate);
                     }
                 },
                 this.color

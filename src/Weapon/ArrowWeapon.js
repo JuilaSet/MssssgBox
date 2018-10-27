@@ -1,4 +1,4 @@
-class ArrawWeapon extends Weapon{
+class ArrowWeapon extends Weapon{
     constructor($option={}){
         super($option);
     }
@@ -14,17 +14,20 @@ class ArrawWeapon extends Weapon{
             let sbf = this._shootPointFactory;
             let eee = true;
             let sb = sbf.createArrowHurtPoint(
-                this._user.position.clone(), 
-                new Vector2d(this._user.controller.speed.x * 2, this._user.controller.speed.y * 2),
+                this.team,
+                this._user.position.clone(),
+                new Vector2d(this._user.controller.speed.x * 2, this._user.controller.speed.y * 0.2),
                 this.power,
                 this._user,
                 ($unit)=>{
                     if(eee){
-                        $unit.hurt(this.hurt);  // 调用撞到单位的方法
-                        eee = false;
-                        this._timer.callLater(()=>{
-                            eee = true;
-                        }, 20);
+                        if($unit.team != sb.team){
+                            $unit.hurt(this.hurt);  // 调用撞到单位的方法
+                            eee = false;
+                            this._timer.callLater(()=>{
+                                eee = true;
+                            }, 20);
+                        }
                     }
                 },
                 this.color

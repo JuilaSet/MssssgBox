@@ -1,5 +1,5 @@
 "strict mode";
-class Game{
+class AdventureGame{
     constructor($option={}){
         this.timer = new Timer();
         this.display = new Display($option.canvas, $option.container, this.timer);
@@ -9,6 +9,42 @@ class Game{
 
     // 开始游戏
     run(){
+        // 局部函数
+        function earthquake($animation){
+            $animation.position.y += 10;
+            timer.callLater(()=>{
+                $animation.position.y -= 10;
+                timer.callLater(()=>{
+                    $animation.position.y += 10;
+                    timer.callLater(()=>{
+                        $animation.position.y -= 10;
+                    }, 1);
+                }, 4);
+            }, 2);
+        }
+        
+        let num = 0, maxZqMun = 8;
+        function giveWeaponToZq(zq, world, game){
+            // 给予武器
+            let u = new HemophagiaWeapon({
+                game: game,
+                user : zq,
+                team : 0,
+                world: world,
+                timer: game.timer,
+                hurt : 10,
+                ammo : 90,
+                power : 60,
+                fireRate: 5,
+                color : "#F00"
+            });
+            zq.setOnKill(()=>{
+                num--;
+                u.kill();
+            });
+            u.shoot();
+        }
+
         // dis 模块
         let dis = this.display;
         dis.setFullScreen(false);
@@ -63,26 +99,40 @@ class Game{
         });
 
         let unitm = new UnitManager();
-
+        
+        // Player Unit
         let hero = fac.createTreeHeroUnit(new Vector2d(40, 100), {
             angle: Math.PI / 4,
         }, 60);
+        hero.setOnKill(()=>{
+            alert('你输了');
+            this.stop();
+        });
         hero.team = 1;
         unitm.add(hero);
 
-        let hero2 = fac.createTreeHeroUnit(new Vector2d(40, 100), {
-            angle: Math.PI / 4,
-        }, 60, 150, 150, [37, 39, 38]);
-        hero2.team = 1;
-        unitm.add(hero2);
+        // weapon
+        let weapen = new ArrowWeapon({
+            team : 1,
+            game: this,
+            user : hero,
+            world: world,
+            timer: timer,
+            power: 20,
+            hurt : 70,
+            fireRate: 5,
+            onDestory : ()=>{
+                earthquake(animation);
+            }
+        })
 
         // animation 事件
         animation.setAction(($ctx, $this)=>{
             animation.drawFrame();
             unitm.render($ctx, timer.tick);
             world.render($this);
-            // ground.render($ctx);
         });
+
         // 用户io事件
         animation.setMouseDown((e)=>{
             let p = new Point({
@@ -96,64 +146,27 @@ class Game{
         });
         dis.addAnimation(animation);
 
-        let weapen = new FireBallWeapon({
-            team : 1,
-            game: this,
-            user : hero,
-            world: world,
-            timer: timer,
-            hurt : 70,
-            onDestory : ()=>{
-                earthquake(animation);
-            }
-        })
-
-        let weapen2 = new HemophagiaWeapon({
-            game: this,
-            team : 1,
-            user : hero2,
-            world: world,
-            timer: timer,
-            hurt : 10,
-            ammo : 90,
-            power : 60,
-            fireRate: 5,
-            onDestory : ()=>{
-                // earthquake(animation);
-            }
-        });
-
+        // building
         let buildingFactory = new BuildingFactory({
             game: this,
             world: world
         });
         let building = buildingFactory.createBasicBuilding(
-            "0001000,"+
-            "0011100,"+
-            "0111110,"+
-            "1111111",
-            20, 20, new Vector2d(400, 200), 10
+            "00010000001000,"+
+            "00111000011100,"+
+            "01111100111110,"+
+            "11111111111111,"+
+            "11111111111111,"+
+            "11111111111111,"+
+            "11111111111111",
+            5,
+            20, 15, new Vector2d(400, 200), 40
         );
         building.team = 0;
         building.setOnKill(()=>{
             console.log('TAG', "kill");
         });
         unitm.add(building);
-
-
-
-        iotrigger.setKeyPressEvent((e)=>{
-            weapen = new ArrawWeapon({
-                game: this,
-                team : 1,
-                user : hero,
-                world: world,
-                timer: timer,
-                hurt : 10,
-                fireRate : 3,
-                ammo : 90
-            });
-        }, 32);
         
         iotrigger.setKeyDownEvent(()=>{
             weapen.shoot();
@@ -161,23 +174,6 @@ class Game{
 
         iotrigger.setKeyUpEvent(()=>{}, 83);
 
-        iotrigger.setKeyDownEvent((e)=>{
-            weapen2.shoot();
-        }, 40);
-        iotrigger.setKeyUpEvent((e)=>{}, 40);
-
-        function earthquake($animation){
-            $animation.position.y += 10;
-            timer.callLater(()=>{
-                $animation.position.y -= 10;
-                timer.callLater(()=>{
-                    $animation.position.y += 10;
-                    timer.callLater(()=>{
-                        $animation.position.y -= 10;
-                    }, 4);
-                }, 4);
-            }, 4);
-        }
 
         // game logic
         let genZone = new Zone({
@@ -186,37 +182,20 @@ class Game{
             height: 100
         });
         
-        let num = 0;
         ///
         dis.render(()=>{
             if(!this.pause){
                 stats.update();
                 timer.update();
                 timer.interval(()=>{
-                    if(num < 8){
+                    if(num < maxZqMun && building.living){
                         num++;
                         // 产生赵强
-                        let zq = aif.createHostileCrawlAIUnit(genZone.getRandomPosition(),
+                        let zq = aif.createHostileCrawlAIUnit(
+                            building.randomPosition(),
                             hero, 20, ()=>{}, "#F00");
                         zq.team = 0;
-                        // 给予武器
-                        let u = new HemophagiaWeapon({
-                            game: this,
-                            user : zq,
-                            team : 0,
-                            world: world,
-                            timer: timer,
-                            hurt : 10,
-                            ammo : 90,
-                            power : 60,
-                            fireRate: 5,
-                            color : "#F00"
-                        });
-                        zq.setOnKill(()=>{
-                            num--;
-                            u.kill();
-                        });
-                        u.shoot();
+                        giveWeaponToZq(zq, world, this);
                         unitm.add(zq);
                     }
                 }, 100)

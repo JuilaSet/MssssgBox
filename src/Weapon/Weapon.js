@@ -11,6 +11,7 @@ class Weapon{
         this.onDestory = $option.onDestory || (()=>{});// 子弹消失时回调
         this.ammo = $option.ammo || 10;   // 弹药量
         this.color = $option.color || "#FFF";
+        this.team = $option.team || 0; // 团队过滤器
         
         // private
         this._game = $option.game || console.error('没有指定游戏对象');

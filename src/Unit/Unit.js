@@ -4,6 +4,7 @@ class Unit{
         this._game = $option.game || console.error('未指定游戏对象');
         this._renderObj = $option.renderObject || new RenderObject();   // Unit位置与渲染的位置相同
         this._renderObj.position = $option.position || this._renderObj.position;
+        this.team = $option.team || 0;  // 队伍过滤
 
         this._point = $option.point;    // 物理对象
         this._static = $option.static;
@@ -38,6 +39,8 @@ class Unit{
 
     set position($p){
         this._renderObj.position = $p;  // []][
+        this._point.position = $p;
+        this._position = $p;
     }
 
     get position(){

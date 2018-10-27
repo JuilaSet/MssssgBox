@@ -9,23 +9,26 @@ class FireBallWeapon extends Weapon{
             let fbf = this._shootPointFactory;
             let eee = true;
             let fb = fbf.createFireBallPoint(
-                    ($unit)=>{
-                        if(eee){
+                this.team,
+                ($unit)=>{
+                    if(eee){
+                        if($unit.team != fb.team){
                             $unit.hurt(this.hurt);  // 调用撞到单位的方法
                             eee = false;
                             this._timer.callLater(()=>{
                                 eee = true;
                             }, 40);
                         }
-                    },
-                    this._user.position.clone(),
-                    new Vector2d(   this._user.controller.speed.x * 2, 
-                                    this._user.controller.speed.y * 2),
-                    this._user,
-                    this.power,
-                    {
-                        size : this.power * 3 / 2
                     }
+                },
+                this._user.position.clone(),
+                new Vector2d(   this._user.controller.speed.x * 2, 
+                                this._user.controller.speed.y * 2),
+                this._user,
+                this.power,
+                {
+                    size : this.power * 3 / 2
+                }
             )
             fb.setOnKilled(this.onDestory);
             this._world.addBody(fb);

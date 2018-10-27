@@ -6,7 +6,6 @@ class StaticSquareGroup{
 
         // 外边框区域
         this._outLineZone = new Zone();
-        this._maxCleanSize = $option.maxCleanSize || 50;
         if($option.sqrts){
             for(let s of $option.sqrts){ //chain @Array
                 this.addStaticSquare(s);
@@ -22,14 +21,6 @@ class StaticSquareGroup{
         });
         this.calcCenter();
         this.calcOutlineZone();
-    }
-
-    get position(){
-        return this._position;
-    }
-
-    set position($p){
-        this._position = $p;
     }
 
     get center(){
@@ -159,7 +150,7 @@ class StaticSquareGroup{
     }
 
     update(){
-        if(this._maxCleanSize > this._maxCleanSize)this.cleanSqures();
+        this.cleanSqures();
     }
 
     // 测试用
@@ -281,6 +272,43 @@ class StaticSquare{
         $context.save();
         $context.strokeStyle = '#FFF';
         $context.lineWidth = 1;
+        $context.strokeRect(z.position.x, 
+                            z.position.y,
+                            z.width, z.height);
+        $context.restore();
+    }
+}
+
+class Bricks extends StaticSquare{
+    constructor($option={}){
+        super($option);
+        this.hitpoint = $option.hitpoint || 3;
+        this.heal = $option.heal || (()=>{});
+        this.hurt = $option.hurt || (()=>{});
+    }
+    
+    setHeal($func){
+        this.heal = $func;
+    }
+
+    heal($healPoint){
+        
+    }
+
+    setHurt($func){
+        this.hurt = $func;
+    }
+
+    hurt($hurtPoint){
+
+    }
+
+    //@Override
+    render($context){
+        let z = this.zone;
+        $context.save();
+        $context.strokeStyle = '#FFF';
+        $context.lineWidth = this.hitpoint;
         $context.strokeRect(z.position.x, 
                             z.position.y,
                             z.width, z.height);

@@ -4,12 +4,13 @@ class ShootPointFactory{    // 会给point添加伤害属性
         this.timer = $option.timer || new Timer();
     }
 
-    createBasicHurtPoint($position, $size, $shooter, $hurtMethod, $color="#FFF"){
+    createBasicHurtPoint($team, $position, $size, $shooter, $hurtMethod, $color="#FFF"){
         let point = new HurtPoint({
+            team : $team,
             position : $position,
             border : $size,
             enableStrictBounce : false,
-            force :new Vector2d(0, 80),
+            force :new Vector2d(0, 0),
             livingZone : this._world.strict,
             user : $shooter || console.warn('没有指定射击者')
         });
@@ -40,8 +41,9 @@ class ShootPointFactory{    // 会给point添加伤害属性
         return point;
     }
 
-    createArrowHurtPoint($position, $dir, $size, $shooter, $hurtMethod, $color="#FFF"){
+    createArrowHurtPoint($team, $position, $dir, $size, $shooter, $hurtMethod, $color="#FFF"){
         let point = new HurtPoint({
+            team : $team,
             position : $position,
             linearVelocity : $dir,
             border : $size,
@@ -74,7 +76,7 @@ class ShootPointFactory{    // 会给point添加伤害属性
 
     createSpotPoints($position, $size=10, $colors = ["#EEC", "#CCC", "#E8C"]){
         let s = 500, grav = 600;
-        let p1 = new HurtPoint({
+        let p1 = new Point({
             position : $position,
             force : new Vector2d(0, grav),
             linearVelocity : new Vector2d(Math.random() * s - s/2, Math.random() * s - s/2),
@@ -106,11 +108,20 @@ class ShootPointFactory{    // 会给point添加伤害属性
     }
 
     // 返回hurtPoint对象
-    createFireBallPoint($hurtMethod, $position, $dir, $shooter, $spotNum=5, $renderOption={}, $colors = ["#EEC", "#CCC", "#E8C"]){
+    createFireBallPoint(
+        $team, 
+        $hurtMethod, 
+        $position, 
+        $dir, 
+        $shooter, 
+        $spotNum=5, 
+        $renderOption={}, 
+        $colors = ["#EEE", "#CCC", "#E8C"]){
         let hover = true;
         let s = 40, bsize = $renderOption.size || 10;
         // body
         let point = new HurtPoint({
+            team : $team,
             position : $position,
             linearVelocity : $dir,
             border : bsize,
@@ -122,6 +133,7 @@ class ShootPointFactory{    // 会给point添加伤害属性
         point.setHurtMethod($hurtMethod);
         function genP(){
             let p = new HurtPoint({
+                team : $team,
                 position : point.position.clone(),
                 linearVelocity : new Vector2d(Math.random() * s - s/2, Math.random() * s - s/2),
                 border : bsize,
@@ -162,6 +174,7 @@ class ShootPointFactory{    // 会给point添加伤害属性
         function genSpot($b){
             let s = 500, grav = 300;
             let p1 = new HurtPoint({
+                team : $team,
                 border: $b,
                 position : point.position.clone(),
                 force : new Vector2d(0, grav),
@@ -173,6 +186,7 @@ class ShootPointFactory{    // 会给point添加伤害属性
             p1.setHurtMethod($hurtMethod);
             // @override --[]][
             p1.render=($context)=>{
+                team : $team,
                 $context.beginPath();
                 if(p1.border < 3){
                     $context.fillStyle = $colors[2];
@@ -215,6 +229,11 @@ class ShootPointFactory{    // 会给point添加伤害属性
             if($static != $shooter.static){
                 point.staticBounce($which, $static);
                 point.setPointToStaticSquare($static);
+                for(var i = 0; i < $spotNum; i++){
+                    this._world.addBody(genSpot());
+                }
+                bsize -= 2;
+                point.kill();
             }
         });
         point.setOnGroundHover(()=>{
