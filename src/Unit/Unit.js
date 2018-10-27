@@ -9,6 +9,7 @@ class Unit{
         this._static = $option.static;
         
         // 自我描述属性
+        this.hitpoint = $option.hitpoint || 100; // 生命值
         this._living = true;
         this._position = $option.position || this._renderObj.position;
         if(this._point){
@@ -67,11 +68,19 @@ class Unit{
         this.onKill();
     }
 
+    setHeal($func){
+        this.heal = $func;
+    }
+
+    heal($healPoint){
+        
+    }
+
     setHurt($func){
         this.hurt = $func;
     }
 
-    hurt(){
+    hurt($hurtPoint){
 
     }
 

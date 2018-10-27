@@ -62,16 +62,17 @@ class Game{
             timer: timer
         });
 
-        let fac2 = new ShootPointFactory({
-            game: this,
-            world: world,
-            timer: timer
-        });
-
         let unitm = new UnitManager();
 
-        let hero = fac.createTreeHeroUnit(new Vector2d(40, 100), {angle: Math.PI / 4});
+        let hero = fac.createTreeHeroUnit(new Vector2d(40, 100), {
+            angle: Math.PI / 4,
+        }, 60);
         unitm.add(hero);
+
+        let hero2 = fac.createTreeHeroUnit(new Vector2d(40, 100), {
+            angle: Math.PI / 4,
+        }, 60, 150, 150, [37, 39, 38]);
+        unitm.add(hero2);
 
         // animation 事件
         animation.setAction(($ctx, $this)=>{
@@ -80,51 +81,72 @@ class Game{
             world.render($this);
             // ground.render($ctx);
         });
+        // 用户io事件
         animation.setMouseDown((e)=>{
-            world.addBody(
-                new Point({
-                    position: e.offset,
-                    force: new Vector2d(0, 100)
-                })
-            );
+            let p = new Point({
+                position: e.offset,
+                force: new Vector2d(0, 100)
+            })
+            timer.callLater(()=>{
+                p.kill();
+            }, 5);
+            world.addBody(p);
         });
         dis.addAnimation(animation);
-        
 
-        let enableShoot = true, shootSize = 8;
-        function shootSkill($hero){
-            if(enableShoot){
-                world.addBody(fac2.createFireBallPoint(
-                    $hero.position.clone(),
-                    new Vector2d($hero.controller.handler.linearVelocity.x * 2, 
-                                    $hero.controller.handler.linearVelocity.y * 2),
-                    $hero,
-                    {
-                        size : shootSize
-                    }
-                ));
-                enableShoot = false;
-                timer.callLater(()=>{
-                    enableShoot = true;
-                }, 10);
+        let weapen = new FireBallWeapon({
+            game: this,
+            user : hero,
+            world: world,
+            timer: timer,
+            hurt : 10,
+            onDestory : ()=>{
+                earthquake(animation);
             }
-        }
+        })
+
+        let weapen2 = new HemophagiaWeapon({
+            game: this,
+            user : hero2,
+            world: world,
+            timer: timer,
+            hurt : 10,
+            ammo : 90,
+            power : 60,
+            fireRate: 5,
+            onDestory : ()=>{
+                // earthquake(animation);
+            }
+        })
+
+
         iotrigger.setKeyPressEvent((e)=>{
-            // let segs = gen.generateSegs();
-            // gen.adjustSegsToValley(segs, 200);
-            // let ground = gen.generateMap(segs).ground;
-            // world.ground = ground;
+            weapen.power = 8;
         }, 32);
         
-        let shoottime = 50;
         iotrigger.setKeyDownEvent(()=>{
-            if(shoottime > 0){
-                shootSkill(hero);
-                shoottime--;
-            }
+            weapen.shoot();
         }, 83);
-
         iotrigger.setKeyUpEvent(()=>{}, 83);
+
+        iotrigger.setKeyDownEvent((e)=>{
+            weapen2.shoot();
+        }, 40);
+        iotrigger.setKeyUpEvent((e)=>{}, 40);
+
+        function earthquake($animation){
+            $animation.position.y += 10;
+            timer.callLater(()=>{
+                $animation.position.y -= 10;
+                timer.callLater(()=>{
+                    $animation.position.y += 10;
+                    timer.callLater(()=>{
+                        $animation.position.y -= 10;
+                    }, 4);
+                }, 4);
+            }, 4);
+        }
+
 
         // game logic
         let genZone = new Zone({
@@ -143,37 +165,37 @@ class Game{
                 timer.interval(()=>{
                     if(num < 3){
                         num++;
-                        let zq = aif.createHostileCrawlAIUnit(genZone.getRandomPosition(), {
-                            aimUnit : hero
-                        }, ()=>{
-                            if(eeee){
-                                hero.renderObject.size -= 5;
-                                if(hero.renderObject.size < 30){
-                                    hero.kill();
-                                    alert('you lose');
-                                }
-                                eeee = false;
-                                timer.callLater(()=>{
-                                    eeee = true;
-                                }, 100);
-                            }
-                        }, 50, 50);
+                        let zq = aif.createHostileCrawlAIUnit(genZone.getRandomPosition(),
+                            hero, 40, ()=>{}, "#F00");
                         zq.setOnKill(()=>{
                             num--;
                         });
+                        let u = new HemophagiaWeapon({
+                            game: this,
+                            user : zq,
+                            world: world,
+                            timer: timer,
+                            hurt : 10,
+                            ammo : 90,
+                            power : 60,
+                            fireRate: 5,
+                            color : "#F00",
+                            onDestory : ()=>{
+                                // earthquake(animation);
+                            }
+                        });
+                        u.shoot();
                         unitm.add(zq);
                     }
                 }, 100)
                 timer.interval(()=>{
                     let box = aif.createEdibleCrawlAIUnit(
-                        new Cube({
-                            color : '#0F0'
-                        }),
-                        genZone.getRandomPosition(), {
-                        aimUnit:hero
-                    }, ()=>{
-                        shoottime+=5;
-                    });
+                        new Cube(),
+                        genZone.getRandomPosition(),
+                        hero,
+                        ()=>{
+                            weapen.ammo+=5;
+                        });
                     unitm.add(box);
                 }, 500);
                 // timer.interval(()=>{

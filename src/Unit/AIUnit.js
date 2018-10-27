@@ -7,6 +7,11 @@ class AIUnit extends Unit{
     constructor($option){
         super($option);
         this._AI = $option.AI || new AI();
+        this._controller = this._AI.controller || new Controller();
+    }
+
+    get controller(){
+        return this._controller;
     }
 
     get ai(){
@@ -23,21 +28,10 @@ class AIUnit extends Unit{
         this._AI.controller.kill();
     }
 
-    // @Override
-    defaultOnUpdate(){
-
-    }
-
-    // @Override
-    onUpdate(){
-        
-    }
-
     update(){
         if(this._living){
             this.synStatic();
             this._AI.update();
-            this._AI.controller.update();
         }
     }
 }

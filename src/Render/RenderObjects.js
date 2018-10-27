@@ -147,7 +147,7 @@ class Tree extends RenderObject{
     }
 
     drawTree($tick){
-        var _this = this;
+        let _this = this;
         (function drawTree(px, py, ang, scale, len, times) {
             let _len = (times == 0)?_this._treeHeight:len;
 
@@ -177,8 +177,12 @@ class Tree extends RenderObject{
                     ) * (Math.PI / 180);
 
             //递归画出左右分枝
-            drawTree(px + x, py - y, ang - _this._arg + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//left
-            drawTree(px + x, py - y, ang + _this._arg + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//right
+            // let r = Math.random() * 10 > 5; 
+            // if(r){
+                drawTree(px + x, py - y, ang - _this._arg + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//left
+            // }else{
+                drawTree(px + x, py - y, ang + _this._arg + rn, scale, scale*len, 100 * (scale*len - _this._minLen) / (len - _this._minLen), ++times);	//right
+            // }
         })(this._disZone.width / 2, this._disZone.height / 2, this._rotation, this._scale, this._size, 0);
     }
     

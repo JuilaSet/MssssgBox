@@ -3,7 +3,15 @@
  **/
 class AI{
     constructor($option={}){
+        this._controller = $option.controller || new Controller();
+    }
 
+    set controller($c){
+        this._controller = $c;
+    }
+
+    get controller(){
+        return this._controller;
     }
 
     setAction($func){
@@ -17,5 +25,6 @@ class AI{
 
     update(){
         this.action();
+        this._controller.update();
     }
 }

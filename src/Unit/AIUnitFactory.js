@@ -88,23 +88,17 @@ class AIUnitFactory extends UnitFactory{
         return unit;
     }
 
-    createEdibleCrawlAIUnit($renderObj, $position, $aiOption={}, $eatFunc=()=>{}, $contrOption={}, 
-        $unitOption={},
-        $bodyOption={
-            border: 5,
-            position: new Vector2d(0, 0),
-            force : new Vector2d(0, 100)
-    }){
-        // ai
-        Object.assign($aiOption, {
-            escape: true
-        });
+    createEdibleCrawlAIUnit($renderObj, $position, $aimUnit, $eatFunc=()=>{}){
         // unit
         let unit = this.createCrawlAIUnitWithBody(
             $renderObj,
-            $position, $aiOption, $contrOption, 
-            $unitOption,
-            $bodyOption,
+            $position, {
+                aimUnit: $aimUnit,
+                escape: true
+            }, 
+            {}, 
+            {},
+            {},
             {
                 width : 25,
                 height: 25
@@ -123,30 +117,26 @@ class AIUnitFactory extends UnitFactory{
         return unit;
     }
     
-    createHostileCrawlAIUnit($position, $aiOption={}, $hurtFunc=()=>{}, 
-        $hurt = 10,
-        $size = 70,
-        $unitOption={},
-        $bodyOption){
+    createHostileCrawlAIUnit($position, $aimUnit, $size = 70, $hurtFunc=()=>{},
+                             $color='#F00'){
         // renderObj
         let tree = new Tree({
-            size: $size,
+            size: $size + 25,
             treeHeight:0, 
             minLength:7,
-            color: "#F00"
-        });
-       
-        // ai
-        Object.assign($aiOption, {
-            escape: false,
-            catchDistance: 100,
-            speed : 15
+            color: $color
         });
 
         // unit
-        let unit = this.createCrawlAIUnitWithBody(tree, $position, $aiOption, {}, 
-            $unitOption,
-            $bodyOption,
+        let unit = this.createCrawlAIUnitWithBody(tree, $position, {
+            escape: false,
+            catchDistance: 100,
+            speed : 15,
+            aimUnit: $aimUnit
+        },  {}, 
+            {},
+            {},
+            // 碰撞体积
             {
                 width : 25,
                 height: 25
@@ -155,35 +145,42 @@ class AIUnitFactory extends UnitFactory{
             unit.ai.defaultOnNear();
             $hurtFunc();
         });
-        
-        let fac2 = new ShootPointFactory({
-            game: this._game,
-            world: this._world,
-            timer: this._timer
+        unit.hitpoint = $size / 2;
+        // 设置自己被子弹撞击的事件
+        let sf = new ShootPointFactory({
+            world : this._world,
+            timer : this._timer
         });
-
-        let eee = true;
+        unit.setHeal(($heal)=>{
+            unit.hitpoint += $heal;
+            unit.renderObject.size = unit.hitpoint + 25;
+            unit.ai.speed += 5;
+        });
+        unit.setHurt(($hurt)=>{
+            unit.hitpoint -= $hurt;
+            unit.renderObject.size = unit.hitpoint + 25;
+            unit.ai.speed -= 5;
+            this._world.addBody(sf.createSpotPoints(unit.position.clone(), 3, [
+                $color, $color, $color
+            ]));
+            this._world.addBody(sf.createSpotPoints(unit.position.clone(), 4, [
+                $color, $color, $color
+            ]));
+            this._world.addBody(sf.createSpotPoints(unit.position.clone(), 5, [
+                $color, $color, $color
+            ]));
+        });
         unit.static.setOnHit(($point)=>{
             if($point != unit.point){
-                if(eee){
-                    unit.renderObject.size -= $hurt;
-                    unit.ai.speed -= 10;
-                    if(unit.renderObject.size < $size / 2){
-                        unit.kill();
+                if(!($point instanceof HurtPoint)){
+                    console.warn('point必须是hurtPoint对象');
+                }else{
+                    if($point.user != unit){
+                        $point.hurtMethod(unit);    // 调用子弹撞到自己的方法
+                        if(unit.hitpoint < 0){
+                            unit.kill();
+                        }
                     }
-                    this._world.addBody(fac2.createSpotPoints(unit.position.clone(), 4, [
-                        '#F00', '#F00', '#F00'
-                    ]));
-                    this._world.addBody(fac2.createSpotPoints(unit.position.clone(), 4, [
-                        '#F00', '#F00', '#F00'
-                    ]));
-                    this._world.addBody(fac2.createSpotPoints(unit.position.clone(), 4, [
-                        '#F00', '#F00', '#F00'
-                    ]));
-                    eee = false;
-                    this._timer.callLater(()=>{
-                        eee = true;
-                    }, 40)
                 }
             }
         });

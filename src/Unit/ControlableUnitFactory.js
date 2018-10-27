@@ -106,16 +106,11 @@ class ControlableUnitFactory extends UnitFactory{
         return unit;
     }
 
-    createTreeHeroUnit( $position, 
-                        $treeOption={}, 
-                        $contrOption={}, 
-                        $unitOption={}, 
-                        $bodyOption={}, 
-                        $staticOption={},
-                        $keys=[65,68,87]){
+    createTreeHeroUnit( $position, $treeOption, $size, $jumpHeight=150, $speed=120, $keys=[65,68,87]){
         // renderObj
         Object.assign($treeOption, {
-            treeHeight:0, minLength:7
+            treeHeight:0, minLength:7,
+            size : $size + 25
         });
         let tree = new Tree($treeOption);
 
@@ -124,17 +119,55 @@ class ControlableUnitFactory extends UnitFactory{
             tree, 
             $position,
             {
-                jumpHeight : 150,
-                speed:120
+                jumpHeight : $jumpHeight,
+                speed : $speed
             }, 
-            $unitOption, 
-            $bodyOption, 
+            {}, 
+            {}, 
             {
                 width : 25,
                 height: 25
             },
             $keys);
 
+        // 设置自己被子弹撞击的事件
+        let sf = new ShootPointFactory({
+            world : this._world,
+            timer : this._timer
+        });
+        let color = $treeOption.color || "#FFF";
+        unit.hitpoint = unit.renderObject.size / 2;
+        unit.setHeal(($heal)=>{
+            unit.hitpoint += $heal;
+            unit.renderObject.size = unit.hitpoint + 25;
+        });
+        unit.setHurt(($hurt)=>{
+            unit.hitpoint -= $hurt;
+            unit.renderObject.size = unit.hitpoint + 25;
+            this._world.addBody(sf.createSpotPoints(unit.position.clone(), 3, [
+                color, color, color
+            ]));
+            this._world.addBody(sf.createSpotPoints(unit.position.clone(), 4, [
+                color, color, color
+            ]));
+            this._world.addBody(sf.createSpotPoints(unit.position.clone(), 5, [
+                color, color, color
+            ]));
+        });
+        unit.static.setOnHit(($point)=>{
+            if($point != unit.point){
+                if(!($point instanceof HurtPoint)){
+                    console.warn('point必须是hurtPoint对象');
+                }else{
+                    if($point.user != unit){
+                        $point.hurtMethod(unit);
+                        if(unit.hitpoint < 0){
+                            unit.kill();
+                        }
+                    }
+                }
+            }
+        });
         // renderobj
         let contr = unit.controller;
         tree.addRenderFrame(($ctx, $tick)=>{

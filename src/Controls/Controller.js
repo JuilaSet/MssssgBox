@@ -3,6 +3,10 @@ class Controller{
         this._bindObj = $option.bindObj;
     }
 
+    get speed(){
+
+    }
+
     get position(){
 
     }

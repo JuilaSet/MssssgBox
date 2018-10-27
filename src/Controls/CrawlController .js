@@ -64,8 +64,14 @@ class CrawlController extends Controller {
         this._point.position = $position;
     }
 
+    // @Override
     get position(){
         return this._point.position;
+    }
+
+    // @Override
+    get speed(){
+        return new Vector2d(this._point.linearVelocity.x, this._point.linearVelocity.y);
     }
 
     get handler(){
@@ -88,11 +94,13 @@ class CrawlController extends Controller {
         return this._offset;
     }
 
+    // @Override
     set bindObj($obj){
         this._bindObj = $obj;
         this._point.position.set(this._bindObj.position.x, this._bindObj.position.y);
     }
 
+    // @Override
     get bindObj(){
         return this._bindObj;
     }
@@ -150,6 +158,7 @@ class CrawlController extends Controller {
         }
     }
     
+    // @Override
     kill(){
         this._point.kill();
     }
