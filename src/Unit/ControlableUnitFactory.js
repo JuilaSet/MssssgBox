@@ -45,7 +45,7 @@ class ControlableUnitFactory extends UnitFactory{
     createCrawlUnitWithBody($renderObj, $position, $contrOption={}, $unitOption={}, $bodyOption={
             border: 5,
             position: new Vector2d(0, 0),
-            force : new Vector2d(0, 100)
+            force : new Vector2d(0, 300)
         }, $staticOption={
             width : 100,
             height : 100
@@ -129,7 +129,7 @@ class ControlableUnitFactory extends UnitFactory{
                 height: 25
             },
             $keys);
-
+            
         // 设置自己被子弹撞击的事件
         let sf = new ShootPointFactory({
             world : this._world,

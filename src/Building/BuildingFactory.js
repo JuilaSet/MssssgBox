@@ -53,7 +53,6 @@ class BuildingFactory{
                     if(sqrt.hitpoint <= 0){
                         sqrt.kill();
                     }
-                    staticGrp.calcCenter();
                     staticGrp.calcOutlineZone();
                 }
             });

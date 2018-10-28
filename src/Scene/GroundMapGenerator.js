@@ -69,7 +69,7 @@ class GroundMapGenerator extends MapGenerator{
         return $segs;
     }
     
-    // 根据函数生成地图
+    // 剪切地图地图
     adjustSegsToCutRange($segs, $maxH=100, $maxD=100){
         let segnum = this._segnum;
         for(let x = 0; x <= segnum; x++){

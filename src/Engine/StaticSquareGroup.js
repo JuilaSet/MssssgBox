@@ -155,10 +155,10 @@ class StaticSquareGroup{
 
     // 测试用
     render($ctx){
-        if(this._center){
-            this.drawCenter($ctx);
-            this.drawOutLine($ctx);
-        }
+        // if(this._center){
+        //     this.drawCenter($ctx);
+        //     this.drawOutLine($ctx);
+        // }
         this._sqrts.forEach(sq => {
             if(sq.living){
                 sq.render($ctx);
@@ -308,7 +308,7 @@ class Bricks extends StaticSquare{
         let z = this.zone;
         $context.save();
         $context.strokeStyle = '#FFF';
-        $context.lineWidth = this.hitpoint;
+        $context.lineWidth = Math.ceil( this.hitpoint / 100 );
         $context.strokeRect(z.position.x, 
                             z.position.y,
                             z.width, z.height);

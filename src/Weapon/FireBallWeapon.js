@@ -1,6 +1,7 @@
 class FireBallWeapon extends Weapon{
     constructor($option={}){
         super($option);
+        this._colors = $option.colors || ["#EEE", "#CCC", "#E8C"];
     }
 
     // @Override
@@ -28,7 +29,8 @@ class FireBallWeapon extends Weapon{
                 this.power,
                 {
                     size : this.power * 3 / 2
-                }
+                },
+                this._colors
             )
             fb.setOnKilled(this.onDestory);
             this._world.addBody(fb);

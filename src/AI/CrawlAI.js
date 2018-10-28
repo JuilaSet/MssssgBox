@@ -1,5 +1,5 @@
 /* 
- *  在地面上爬行的AI
+ *  在地面上爬行的AI []][]
  **/
 class CrawlAI extends AI{
     constructor($option={}){
@@ -9,7 +9,7 @@ class CrawlAI extends AI{
         this._timer = $option.timer || console.error('未指定计时对象');
         this._speed = $option.speed || 90;
         this._jumpActionMinSpeed = $option.jumpActionMinSpeed || 120;
-        this._distance = $option.distance || 5;
+        this._distance = $option.distance || 15;
         this._catchDistance = $option.catchDistance || 50;
         this._jumpT = $option.jumpRate || 25;
         this._jumpHeight = $option.jumpHeight || 90;

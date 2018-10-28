@@ -16,7 +16,7 @@ class ArrowWeapon extends Weapon{
             let sb = sbf.createArrowHurtPoint(
                 this.team,
                 this._user.position.clone(),
-                new Vector2d(this._user.controller.speed.x * 2, this._user.controller.speed.y * 0.2),
+                new Vector2d((this._user.controller.speed.x>0?100:-100), 30),
                 this.power,
                 this._user,
                 ($unit)=>{

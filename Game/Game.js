@@ -9,7 +9,7 @@ class Game{
 
     // 开始游戏
     run(){
-        // dis 模块
+        // init
         let dis = this.display;
         dis.setFullScreen(false);
 
@@ -18,7 +18,25 @@ class Game{
         let stats = new Stats();
         dis.container.appendChild( stats.dom );
 
+        let game = this;
+
         let iotrigger = this.iotrigger;
+
+        // 局部函数
+        function earthquake($animation){
+            $animation.position.y += 10;
+            timer.callLater(()=>{
+                $animation.position.y -= 10;
+                timer.callLater(()=>{
+                    $animation.position.y += 10;
+                    timer.callLater(()=>{
+                        $animation.position.y -= 10;
+                    }, 1);
+                }, 4);
+            }, 2);
+        }
+
+        // 游戏显示框
         let animation = new Animation({
             layer:1,
             id:1,
@@ -37,19 +55,37 @@ class Game{
             segnum: segnum,
             beginHeight : 400
         });
-        let segs = gen.generateSegs();
-        gen.adjustSegsToValley(segs, 200);
-        let ground = gen.generateMap(segs).ground;
 
+        // 生成世界
+        let zqBuidingPosition = new Vector2d(0, 0);
+        function genWorld($stage=0){
+            let segs = gen.generateSegs();
+            gen.adjustSegsToValley(segs, 200);
+            // 找到最小的y
+            let py = segs[0].origionPosition.y, px = segs[0].origionPosition.x;
+            segs.forEach(e=>{
+                if(e.origionPosition.y < py ){
+                    py = e.origionPosition.y;
+                    px = e.origionPosition.x;
+                }
+            });
+            zqBuidingPosition.set(px, py);
+            gen.adjustSegsToSpine(segs, $stage, -100);
+            gen.adjustSegsToGivenFunc(segs, x=>Math.pow(x-100, 2) / (180 - $stage*10));
+            let ground = gen.generateMap(segs).ground;
+            world.ground = ground;
+        }
+        
         let world = new World({
             strict : new Zone({
                 position: new Vector2d(0, -1000),
                 width: animation.width,
                 height: 2000
-            }),
-            ground: ground
+            })
         });
-        
+        genWorld(0);
+
+        // 单位建造工厂
         let fac = new ControlableUnitFactory({
             game: this,
             iotrigger : iotrigger,
@@ -63,179 +99,86 @@ class Game{
         });
 
         let unitm = new UnitManager();
-
+        
+        // Player Unit
         let hero = fac.createTreeHeroUnit(new Vector2d(40, 100), {
             angle: Math.PI / 4,
         }, 60);
+        hero.setOnKill(()=>{
+            alert('红色获胜'); //[]][
+            this.stop();
+        });
         hero.team = 1;
         unitm.add(hero);
 
-        let hero2 = fac.createTreeHeroUnit(new Vector2d(40, 100), {
-            angle: Math.PI / 4,
-        }, 60, 150, 150, [37, 39, 38]);
-        hero2.team = 1;
+        // Player2 Unit
+        let hero2 = fac.createTreeHeroUnit(new Vector2d(800, 100),{
+            color: '#F00',
+            angle : Math.PI / 4
+        }, 60, 150, 120, [37, 39, 38]);
+        hero2.setOnKill(()=>{
+            alert('白色获胜'); //[]][
+        });
+        hero2.team = 0;
         unitm.add(hero2);
 
-        // animation 事件
-        animation.setAction(($ctx, $this)=>{
-            animation.drawFrame();
-            unitm.render($ctx, timer.tick);
-            world.render($this);
-            // ground.render($ctx);
-        });
-        // 用户io事件
-        animation.setMouseDown((e)=>{
-            let p = new Point({
-                position: e.offset,
-                force: new Vector2d(0, 100)
-            })
-            timer.callLater(()=>{
-                p.kill();
-            }, 5);
-            world.addBody(p);
-        });
-        dis.addAnimation(animation);
-
+        // weapon
         let weapen = new FireBallWeapon({
             team : 1,
             game: this,
             user : hero,
             world: world,
             timer: timer,
+            ammo : 25,
+            power: 5,
             hurt : 70,
+            fireRate: 8,
             onDestory : ()=>{
                 earthquake(animation);
             }
-        })
-
-        let weapen2 = new HemophagiaWeapon({
+        });
+        let weapen2 = new FireBallWeapon({
+            team : 0,
             game: this,
-            team : 1,
             user : hero2,
             world: world,
             timer: timer,
-            hurt : 10,
-            ammo : 90,
-            power : 60,
-            fireRate: 5,
+            ammo : 25,
+            power: 5,
+            hurt : 70,
+            fireRate: 8,
+            colors:["#F00", "#F00", "#E20"],
             onDestory : ()=>{
-                // earthquake(animation);
+                earthquake(animation);
             }
         });
 
-        let buildingFactory = new BuildingFactory({
-            game: this,
-            world: world
-        });
-        let building = buildingFactory.createBasicBuilding(
-            "0001000,"+
-            "0011100,"+
-            "0111110,"+
-            "1111111",
-            20, 20, new Vector2d(400, 200), 10
-        );
-        building.team = 0;
-        building.setOnKill(()=>{
-            console.log('TAG', "kill");
-        });
-        unitm.add(building);
-
-
-
-        iotrigger.setKeyPressEvent((e)=>{
-            weapen = new ArrawWeapon({
-                game: this,
-                team : 1,
-                user : hero,
-                world: world,
-                timer: timer,
-                hurt : 10,
-                fireRate : 3,
-                ammo : 90
-            });
-        }, 32);
+        // animation 事件
+        dis.addAnimation(animation);
         
+        animation.setAction(($ctx, $this)=>{
+            animation.drawFrame();
+            unitm.render($ctx, timer.tick);
+            world.render($this);
+        });
+
+        // 用户io事件
+
         iotrigger.setKeyDownEvent(()=>{
             weapen.shoot();
         }, 83);
-
         iotrigger.setKeyUpEvent(()=>{}, 83);
-
-        iotrigger.setKeyDownEvent((e)=>{
+        
+        iotrigger.setKeyDownEvent(()=>{
             weapen2.shoot();
         }, 40);
-        iotrigger.setKeyUpEvent((e)=>{}, 40);
-
-        function earthquake($animation){
-            $animation.position.y += 10;
-            timer.callLater(()=>{
-                $animation.position.y -= 10;
-                timer.callLater(()=>{
-                    $animation.position.y += 10;
-                    timer.callLater(()=>{
-                        $animation.position.y -= 10;
-                    }, 4);
-                }, 4);
-            }, 4);
-        }
-
-        // game logic
-        let genZone = new Zone({
-            position: new Vector2d(0, 0),
-            width: animation.width,
-            height: 100
-        });
+        iotrigger.setKeyUpEvent(()=>{}, 40);
         
-        let num = 0;
         ///
         dis.render(()=>{
             if(!this.pause){
                 stats.update();
                 timer.update();
-                timer.interval(()=>{
-                    if(num < 8){
-                        num++;
-                        // 产生赵强
-                        let zq = aif.createHostileCrawlAIUnit(genZone.getRandomPosition(),
-                            hero, 20, ()=>{}, "#F00");
-                        zq.team = 0;
-                        // 给予武器
-                        let u = new HemophagiaWeapon({
-                            game: this,
-                            user : zq,
-                            team : 0,
-                            world: world,
-                            timer: timer,
-                            hurt : 10,
-                            ammo : 90,
-                            power : 60,
-                            fireRate: 5,
-                            color : "#F00"
-                        });
-                        zq.setOnKill(()=>{
-                            num--;
-                            u.kill();
-                        });
-                        u.shoot();
-                        unitm.add(zq);
-                    }
-                }, 100)
-                timer.interval(()=>{
-                    let box = aif.createEdibleCrawlAIUnit(
-                        new Cube(),
-                        genZone.getRandomPosition(),
-                        hero,
-                        ()=>{
-                            weapen.ammo += 5;
-                        });
-                    unitm.add(box);
-                }, 500);
-                // timer.interval(()=>{
-                //     let segs = gen.generateSegs();
-                //     gen.adjustSegsToValley(segs, 200);
-                //     let ground = gen.generateMap(segs).ground;
-                //     world.ground = ground;
-                // }, 1000)
                 world.update();
                 unitm.update();
             }

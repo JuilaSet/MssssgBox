@@ -60,6 +60,8 @@ class Ring extends RenderObject{
     drawCircle(){
         this.context.beginPath();
         this.context.strokeStyle = this.color;
+        this.context.arc(this._p.x, this._p.y, this.r/4, 0, 2 * Math.PI, false);
+        this.context.arc(this._p.x, this._p.y, this.r/2, 0, 2 * Math.PI, false);
         this.context.arc(this._p.x, this._p.y, this.r, 0, 2 * Math.PI, false);
         this.context.stroke();
     }

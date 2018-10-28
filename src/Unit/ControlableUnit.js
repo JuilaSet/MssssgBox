@@ -13,6 +13,10 @@ class ControlableUnit extends Unit{
         return this._controller;
     }
 
+    get position(){
+        return this._controller.position;
+    }
+
     // @Override
     kill(){
         super.kill();

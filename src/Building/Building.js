@@ -62,6 +62,6 @@ class Building{
     }
 
     update(){
-        this._staticGroup.moveTo(this._position);
+        // this._staticGroup.moveTo(this._position);
     }
 }

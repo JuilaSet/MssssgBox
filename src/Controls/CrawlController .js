@@ -9,6 +9,10 @@ class CrawlController extends Controller {
         this._offset = $option.offset || new Vector2d(0, 0);    // 偏离值
         this._maxMoveHeight = $option.maxMoveHeight!=undefined?$option.maxMoveHeight:45;
 
+        // 自我描述属性 []][
+        this._jumpAcc = $option.jumpAcc || 150;
+        this._acc = $option.acc || 12;
+
         this._gravityForce = $option.gravityForce || 170;
 
         // private
@@ -32,6 +36,15 @@ class CrawlController extends Controller {
         this._absAcc2 = 0;
         this._lock = true;
         this._fX = 0;
+    }
+
+    // 自我描述属性
+    get acc(){
+        return this._acc;
+    }
+
+    get jumpHeight(){
+        return this._jumpAcc;
     }
 
     defaultOnStaticHit($which, $static){
@@ -139,20 +152,20 @@ class CrawlController extends Controller {
         return this._lock;
     }
 
-    accLeft($a=12){
-        this._absAcc1 = -$a;
+    accLeft($a){
+        this._absAcc1 = -($a || this._acc);
     }
 
-    accRight($a=12){
-        this._absAcc2 = $a;
+    accRight($a){
+        this._absAcc2 = ($a || this._acc);
     }
 
-    jump($upVec=300){
+    jump($upVec){
         if(this._lock){
             this._lock = false;
         }
         if(this._jpt < this.jumpTimes){
-            this._accy = -$upVec;
+            this._accy = -($upVec || this._jumpAcc);
             this._point.linearVelocity.y = -$upVec;
             this._jpt++;
         }

@@ -45,10 +45,10 @@ class ShootPointFactory{    // 会给point添加伤害属性
         let point = new HurtPoint({
             team : $team,
             position : $position,
-            linearVelocity : $dir,
+            linearVelocity : new Vector2d(0, 0),
             border : $size,
             enableStrictBounce : false,
-            force :new Vector2d(0, 80),
+            force : $dir,
             livingZone : this._world.strict,
             user : $shooter || console.warn('没有指定射击者')
         });

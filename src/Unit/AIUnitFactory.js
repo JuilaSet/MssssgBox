@@ -51,7 +51,8 @@ class AIUnitFactory extends UnitFactory{
 
         // contr
         Object.assign($contrOption, {
-            world: this._world
+            world: this._world,
+            maxSpeed : $aiOption.speed
         });
         let controllerx = new CrawlController($contrOption);
         
@@ -96,7 +97,9 @@ class AIUnitFactory extends UnitFactory{
                 aimUnit: $aimUnit,
                 escape: true
             }, 
-            {}, 
+            {
+                speed : 50
+            }, 
             {},
             {},
             {
@@ -131,7 +134,7 @@ class AIUnitFactory extends UnitFactory{
         let unit = this.createCrawlAIUnitWithBody(tree, $position, {
             escape: false,
             catchDistance: 100,
-            speed : 15,
+            speed : 50,
             aimUnit: $aimUnit
         },  {}, 
             {},
