@@ -24,13 +24,13 @@ class TestGame{
         // AI模块
         // GridAI 测试 {i, j}
         let grids = new GridNet({
-                position : new Vector2d(100, 100),
-                w : 30,
-                h : 30,
-                wn : 30,
-                hn : 15
-            });
-            
+            position : new Vector2d(100, 100),
+            w : 30,
+            h : 30,
+            wn : 30,
+            hn : 15
+        });
+
         let gridAi = new AStarAI({
             gridNet : grids,
             aimRas : {i: 0, j: 0},
@@ -50,6 +50,7 @@ class TestGame{
                 if(e.button == 0){
                         gridAi.setAim(ras.i, ras.j);
                         gridAi.search();
+                        console.log(gridAi.state);
                 }
             }
         });

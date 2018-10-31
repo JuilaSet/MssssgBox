@@ -14,6 +14,7 @@
         "util/Timer",
         "util/Vector2d",
         "util/Zone",
+        "util/Grid",
         "util/GridNet",
         "AI/StateSpace",
         "AI/TNode",

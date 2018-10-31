@@ -37,7 +37,11 @@
 		"properties": [
 			{
 				"name": "trace",
-				"disc": "存放计算后的路径，是Grid对象组成的数组，其键是Grid对象的rank"
+				"disc": "存放计算后的路径，越接近第一个越接近目标"
+			},
+			{
+				"name": "state",
+				"disc": "状态，找到目标为true，没有找到为false"
 			}
 		],
 		"<other>":[

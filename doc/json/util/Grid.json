@@ -1,0 +1,55 @@
+{
+	"title": "Grid",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"网格单元"
+			}
+		],
+		"methods": [
+			{
+				"name": "example-methods",
+				"disc": ["describe1",
+						"describe2"]
+			}
+		],
+		"properties": [
+			{
+				"name": "i",
+				"disc": "所在列数"
+			},
+			{
+				"name": "j",
+				"disc": "所在行数"
+			},
+			{
+				"name": "rank",
+				"disc": "从左至右，从上到下的序号"
+			},
+			{
+				"name": "zone",
+				"disc": "该处的区域对象"
+			}
+		],
+		"<other>":[
+			{
+				"name": "i",
+				"disc": "设置所在列数"
+			},
+			{
+				"name": "j",
+				"disc": "设置所在行数"
+			},
+			{
+				"name": "rank",
+				"disc": "设置从左至右，从上到下的序号"
+			},
+			{
+				"name": "zone",
+				"disc": "设置该处的区域对象"
+			}
+		]
+	}
+}

@@ -23,8 +23,7 @@ class AStarAI{
         }
 
         // private
-        this._stepGrids = {};   // 路径表 rank -> grid
-        this._resultGrids = {}; // 结果路径 rank -> grid
+        this.init();
         
         // 状态空间
         this._stateSpace = new StateSpace();
@@ -42,17 +41,22 @@ class AStarAI{
         return this._resultGrids;
     }
 
+    // 是否找到
+    get state(){
+        return this._state;
+    }
+
     // 初始化
     init(){
-        this._stepGrids = {};
-        this._resultGrids = {};
+        this._state = false;
+        this._stepGrids = {};   // 路径表 rank -> grid
+        this._resultGrids = []; // 结果路径数组,越接近第一个越接近目标
     }
 
     // 设置状态空间
     initStateSpace(){
         if(this._aim){
             this._net.clearAllGrid();
-    
             let stateSpace = this._stateSpace;
             stateSpace.setGenRule(($father)=>{
                 let nodes = [];
@@ -73,8 +77,13 @@ class AStarAI{
             });
     
             stateSpace.setJudge((node)=>{
-                let rankStr = `${node.grid.rank}`;
-                return (node.grid.i == this._aim.i && node.grid.j == this._aim.j) ? true : false; // 是否到终点
+                // 是否到终点
+                if(node.grid.i == this._aim.i && node.grid.j == this._aim.j){
+                    this._state = true;
+                    return true;
+                }else{
+                    return false; 
+                } 
             });
             
             stateSpace.setHeuristicFunc((node)=>{
@@ -101,7 +110,7 @@ class AStarAI{
                 let grid = gridnode.grid;
                 if( !(grid.i == this._aim.i && grid.j == this._aim.j) && 
                     !(grid.i == this._org.i && grid.j == this._org.j)){
-                    this._resultGrids[grid.rank] = grid;    // 添加至结果路径
+                    this._resultGrids.push(grid);    // 添加至结果路径,越接近第一个越接近目标
                 }
             }
             console.info("AStarAI", "TOTAL STEPS = ", stateSpace.step);
