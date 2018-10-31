@@ -38,7 +38,7 @@ class TestGame{
                 j: 10 
             });
         }
-        let gridAi = new GridSearchAi({
+        let gridAi = new AStarAi({
             gridNet : grids,
             orgRas : {i: 5, j: 0},
             blockRases : blocks

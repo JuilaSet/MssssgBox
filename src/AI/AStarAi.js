@@ -1,4 +1,4 @@
-class GridSearchAi{
+class AStarAi{
     constructor($option={}){
         this._net = $option.gridNet || console.error('未指定网格');
         let aimRas = $option.aimRas;  // 默认最右下方为目标
