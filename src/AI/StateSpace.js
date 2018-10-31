@@ -250,6 +250,7 @@ class StateSpace{
         return [];
     }
 
+    // []][
     generalGraphHeuristicSearch($gnode){
         this.init();
         if(!($gnode instanceof GNode))console.error('$node必须为GNode对象');
@@ -344,7 +345,7 @@ class StateSpace{
 
 // 树结点
 class TNode{
-    constructor($option){
+    constructor($option={}){
         this.state = $option.state;
         this.father = $option.father;
         this._depth = $option.depth;
@@ -374,7 +375,7 @@ class TNode{
 
 // 图结点
 class GNode{
-    constructor($option){
+    constructor($option={}){
         this.state = $option.state;
         this.father = $option.father;
         this.handleMsg = $option.handleMsg;

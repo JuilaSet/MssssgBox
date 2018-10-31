@@ -72,7 +72,7 @@ class ControlableUnitFactory extends UnitFactory{
 
         // static
         let staticsqrt = new StaticSquare($staticOption);
-        staticsqrt.render = ()=>{};
+        // staticsqrt.render = ()=>{};
         this._world.addBody(staticsqrt);
         // unit
         Object.assign($unitOption,{

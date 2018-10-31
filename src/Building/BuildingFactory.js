@@ -5,9 +5,9 @@ class BuildingFactory{
     }
 
     // 根据给定字符串创建一个普通的建筑
-    createBasicBuilding($model="111,111,111", 
-                        $hitpoint=2, $w=10, $h=20, $position, 
-                        $minStructPercent=0){ // 小于多少时会被删除 
+    createBasicBuilding( $model="111,111,111", 
+                         $hitpoint=2, $w=10, $h=20, $position, 
+                         $minStructPercent=0 ){ // 小于多少时会被删除 
         let model = $model.split(',');
         let sqrts = [];
         let size = 0;

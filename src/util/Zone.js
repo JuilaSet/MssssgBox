@@ -10,6 +10,17 @@ class Zone{
                              Math.random() * this.height + this.position.y );
     }
 
+    // +
+    render($ctx){
+        this.drawFilledRect($ctx);
+    }
+
+    // +
+    drawFilledRect($ctx, $color){
+        $ctx.fillStyle = $color || '#CCC';
+        $ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+
     check($position){
         let p = this.position;
         if(isNaN(this.width + p.x) || isNaN(this.height + p.y)){

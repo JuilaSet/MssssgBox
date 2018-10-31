@@ -1,0 +1,91 @@
+{
+	"title": "example-name",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"管理网格信息"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option={})",
+				"disc": "$option : 选项"
+			},
+			{
+				"name": "drawGridNet($ctx, $color)",
+				"disc": ["绘制网格",
+						"$ctx: 画笔",
+						"$color: 绘制颜色"]
+			},
+			{
+				"name": "check($gridori, $j)",
+				"disc": ["检查点是否在网格中",
+						"$gridori: grid对象或者列数",
+						"$j: 行数"]
+			},
+			{
+				"name": "getRasterize($p)",
+				"disc": ["根据位置获取所在的行列，返回{i, j}对象",
+						"$p: 坐标位置，vector2d对象"]
+			},
+			{
+				"name": "getRasterizeAround($i, $j)",
+				"disc": ["根据行列位置获取周围的行列位置,返回{i,j}对象数组",
+						"$i: 列数",
+						"$j: 行数"]
+			},
+			{
+				"name": "getGrid($i, $j)",
+				"disc": ["根据行列获取grid对象",
+						"$i: 列数",
+						"$j: 行数"]
+			}
+		],
+		"properties": [
+			{
+				"name": "hn",
+				"disc": "行数"
+			},
+			{
+				"name": "wn",
+				"disc": "列数"
+			},
+			{
+				"name": "h",
+				"disc": "列间距"
+			},
+			{
+				"name": "w",
+				"disc": "行间距"
+			},
+			{
+				"name": "position",
+				"disc": "网格位置"
+			}
+		],
+		"<other>":[
+			{
+				"name": "hn",
+				"disc": "设置行数"
+			},
+			{
+				"name": "wn",
+				"disc": "设置列数"
+			},
+			{
+				"name": "h",
+				"disc": "设置列间距"
+			},
+			{
+				"name": "w",
+				"disc": "设置行间距"
+			},
+			{
+				"name": "position",
+				"disc": "设置网格位置"
+			}
+		]
+	}
+}

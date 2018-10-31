@@ -12,7 +12,7 @@ class AdventureGame{
         // init
         let dis = this.display;
         dis.setFullScreen(false);
-
+        
         let timer = this.timer;
 
         let stats = new Stats();
@@ -113,11 +113,11 @@ class AdventureGame{
 
         // weapon
         let weapen = new FireBallWeapon({
-            team : 1,
             game: this,
             user : hero,
             world: world,
             timer: timer,
+            team : 1,
             ammo : 25,
             power: 5,
             hurt : 70,
@@ -129,7 +129,7 @@ class AdventureGame{
 
         // animation 事件
         animation.setAction(($ctx, $this)=>{
-            animation.drawFrame();
+            // animation.drawFrame();
             unitm.render($ctx, timer.tick);
             world.render($this);
         });
@@ -151,6 +151,12 @@ class AdventureGame{
             weapen.shoot();
         }, 83);
         iotrigger.setKeyUpEvent(()=>{}, 83);
+
+        iotrigger.setKeyDownEvent(()=>{
+            this.switch();
+        }, 32);
+        iotrigger.setKeyUpEvent(()=>{
+        }, 32);
 
         // game logic
         let genZone = new Zone({
@@ -312,6 +318,7 @@ class AdventureGame{
             zqBuiding();
             stage++;
         }
+
         hero.controller.handler.setOnStrictHit(($strict, $which)=>{
             if($which == Zone.LEFT){
                 hero.controller.handler.strictBounce($strict, $which);
@@ -328,7 +335,7 @@ class AdventureGame{
                 timer.update();
                 timer.interval(()=>{
                     createZq();
-                }, 100)
+                }, 100);
                 timer.interval(()=>{
                     createAmmo();
                 }, 500);

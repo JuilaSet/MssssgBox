@@ -9,6 +9,21 @@ class Game{
 
     // 开始游戏
     run(){
+        // AI 模块测试
+        let rulebai = new RuleBasedAiSystem();
+        let ISDIE = 0x1, CANBEKILLED=0x2, CONNBEKILLED=0x3, KILL=0x4, DIE=0x5, ALIVE=0x6;
+        rulebai.addRules([
+            new Rule({
+                result:DIE,
+                expression:[ISDIE, Fact.OR, CANBEKILLED]
+            }), new Rule({
+                result:ALIVE,
+                expression: [KILL, Fact.AND, CONNBEKILLED]
+            })
+        ]);
+        rulebai.mssageRules = [KILL, CONNBEKILLED, ISDIE];
+        console.log("TAG", rulebai.infer() );
+
         // init
         let dis = this.display;
         dis.setFullScreen(false);
@@ -18,7 +33,7 @@ class Game{
         let stats = new Stats();
         dis.container.appendChild( stats.dom );
 
-        let game = this;
+        // let game = this;
 
         let iotrigger = this.iotrigger;
 
@@ -123,7 +138,7 @@ class Game{
         unitm.add(hero2);
 
         // weapon
-        let weapen = new FireBallWeapon({
+        let weapen = new ArrowWeapon({
             team : 1,
             game: this,
             user : hero,
@@ -163,7 +178,6 @@ class Game{
         });
 
         // 用户io事件
-
         iotrigger.setKeyDownEvent(()=>{
             weapen.shoot();
         }, 83);
