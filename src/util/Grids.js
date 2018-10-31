@@ -34,13 +34,13 @@ class GridNet{
         if(arguments.length == 1){
             let i = $grid.i;
             let j = $grid.j;
-            if (i >= 0 && i < _this._wn && j >= 0 && j < _this._hn) {
+            if (i >= 0 && i < this._wn && j >= 0 && j < this._hn) {
                 return true;
             } else {
                 return false;
             }
         }else{
-            if ($gridori >= 0 && $gridori < _this._wn && $j >= 0 && $j < _this._hn) {
+            if ($gridori >= 0 && $gridori < this._wn && $j >= 0 && $j < this._hn) {
                 return true;
             } else {
                 return false;

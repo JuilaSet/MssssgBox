@@ -1,4 +1,4 @@
-class AStarAi{
+class AStarAI{
     constructor($option={}){
         this._net = $option.gridNet || console.error('未指定网格');
         let aimRas = $option.aimRas;  // 默认最右下方为目标
@@ -11,14 +11,16 @@ class AStarAi{
         if(orgRas){
             this._org = this._net.getGrid(orgRas.i, orgRas.j);
         }else{
-            console.error("GridSearchAi", "没有定义起点");
+            console.error("AStarAI", "没有定义起点");
         }
 
         this._blockGrids = {};  // 阻碍物表 rank -> grid
-        $option.blockRases.forEach(ras => {
-            let grid = this._net.getGrid(ras.i, ras.j);
-            this._blockGrids[grid.rank] = grid;
-        });
+        if($option.blockRases){
+            $option.blockRases.forEach(ras => {
+                let grid = this._net.getGrid(ras.i, ras.j);
+                this._blockGrids[grid.rank] = grid;
+            });
+        }
 
         // private
         this._stepGrids = {};   // 路径表 rank -> grid
@@ -26,7 +28,6 @@ class AStarAi{
         
         // 状态空间
         this._stateSpace = new StateSpace();
-        // this.initStateSpace();
     }
 
     // grid到grid的距离
@@ -72,6 +73,7 @@ class AStarAi{
             });
     
             stateSpace.setJudge((node)=>{
+                let rankStr = `${node.grid.rank}`;
                 return (node.grid.i == this._aim.i && node.grid.j == this._aim.j) ? true : false; // 是否到终点
             });
             
@@ -80,12 +82,12 @@ class AStarAi{
             });
         }else{
             if(!this._aim){
-                console.error("GridSearchAi", "没有定义目标");
+                console.error("AStarAI", "没有定义目标");
             }
         }
     }
 
-    search(){
+    search(){ 
         if(this._aim){
             this.init();
             let stateSpace = this._stateSpace;
@@ -93,6 +95,7 @@ class AStarAi{
                 grid : this._org,
                 distance : this._distance(this._org, this._aim)
             });
+            this._stepGrids[this._org.rank] = this._org;
             let res = stateSpace.globalOptimizationSearch(first);
             for(let gridnode of res){
                 let grid = gridnode.grid;
@@ -101,37 +104,41 @@ class AStarAi{
                     this._resultGrids[grid.rank] = grid;    // 添加至结果路径
                 }
             }
-            console.info("GridSearchAi", "TOTAL STEPS = ", stateSpace.step);
+            console.info("AStarAI", "TOTAL STEPS = ", stateSpace.step);
+            return this._resultGrids;
         }else{
             if(!this._aim){
-                console.error("GridSearchAi", "没有定义目标");
+                console.error("AStarAI", "没有定义目标");
             }
         }
     }
 
-    addStep($grid){
-        this._stepGrids[$grid.rank] = $grid;
-    }
-
-    addBlock($grid){
-        this._blockGrids[$grid.rank] = $grid;
+    addBlock($gridori, $j){
+        if(arguments.length == 1){
+            this._blockGrids[$grid.rank] = $gridori;
+        }else{
+            let grid = this._net.getGrid($gridori, $j);
+            this._blockGrids[grid.rank] = grid;
+        }
     }
 
     setAim($i, $j){
-        this._aim = this._net.getGrid($i, $j);
+        if(this._net.check($i, $j)){
+            this._aim = this._net.getGrid($i, $j);
+        }else{
+            console.error("AStarAI", "目标位置不存在");
+        }
     }
 
     // 渲染相关
     render($ctx){
-        this.drawBlocks($ctx, "#555");
-        
-
         this.drawSteps($ctx, "#F00");
-        this.drawResult($ctx, "#050");
+        this.drawResult($ctx, "#453");
 
         this.drawOrg($ctx, "#00F");
         this.drawAim($ctx, "#EF0");
 
+        this.drawBlocks($ctx, "#EEE");
         this._net.drawGridNet($ctx);
     }
     

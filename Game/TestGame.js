@@ -30,32 +30,34 @@ class TestGame{
                 wn : 30,
                 hn : 15
             });
-
-        let blocks = [];
-        for(let x = 0; x < 10; x++){
-            blocks.push({
-                i: 10 + x,
-                j: 10 
-            });
-        }
-        let gridAi = new AStarAi({
+            
+        let gridAi = new AStarAI({
             gridNet : grids,
-            orgRas : {i: 5, j: 0},
-            blockRases : blocks
+            aimRas : {i: 0, j: 0},
+            orgRas : {i: 5, j: 0}
         });
+        gridAi.initStateSpace();
 
         animation.setAction(($ctx)=>{
             animation.drawFrame();
             gridAi.render($ctx);
         });
 
-        animation.setMouseDown((e)=>{
-            // 添加路径
+        animation.setDblClick((e)=>{
             let ras = grids.getRasterize(e.offset);
+            // 添加路径
             if(ras){
-                gridAi.setAim(ras.i, ras.j);
-                gridAi.initStateSpace();
-                gridAi.search();
+                if(e.button == 0){
+                        gridAi.setAim(ras.i, ras.j);
+                        gridAi.search();
+                }
+            }
+        });
+        animation.setMouseStretch((e)=>{
+            let ras = grids.getRasterize(e.offset);
+            // 添加路径
+            if(ras){
+                gridAi.addBlock(ras.i, ras.j);
             }
         });
         dis.addAnimation(animation);

@@ -1,0 +1,62 @@
+{
+	"title": "AStarAI",
+	"type": "class",
+	"members":{
+		"description":[
+			{
+				"name":"职责",
+				"disc":"在网格中绕过障碍并搜索路径"
+			}
+		],
+		"methods": [
+			{
+				"name": "constructor($option)",
+				"disc": "$option:选项"
+			},
+			{
+				"name": "initStateSpace()",
+				"disc": "初始化状态空间，在调用search前必须被调用，在没有目标时会报错。"
+			},
+			{
+				"name": "search()",
+				"disc": "进行起点到目标的路径搜索，返回路径，是Grid对象组成的数组，其键是Grid对象的rank"
+			},
+			{
+				"name": "addBlock($gridori, $j)",
+				"disc": ["添加障碍物",
+                        "$gridori: grid对象或者列数",
+                        "$j: 行数"]
+			},
+			{
+				"name": "setAim($i, $j)",
+				"disc": ["设置目标",
+                        "$i: 所在列",
+                        "$j: 所在行"]
+			}
+		],
+		"properties": [
+			{
+				"name": "trace",
+				"disc": "存放计算后的路径，是Grid对象组成的数组，其键是Grid对象的rank"
+			}
+		],
+		"<other>":[
+            {
+				"name": "gridNet",
+				"disc": "设置GridNet网格对象"
+			},
+			{
+				"name": "aimRas",
+				"disc": "目标行列位置，以{i, j}的形式设置"
+			},
+			{
+				"name": "orgRas",
+				"disc": "起点行列位置，以{i, j}的形式设置"
+			},
+			{
+				"name": "blockRases",
+				"disc": "障碍物，默认没有"
+			}
+		]
+	}
+}

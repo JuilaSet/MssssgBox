@@ -18,6 +18,7 @@
         "AI/StateSpace",
         "AI/TNode",
         "AI/GNode",
+        "AI/AStarAI",
         "Unit/Unit",
         "Unit/UnitManager",
         "Comps/Component",
