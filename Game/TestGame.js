@@ -61,6 +61,7 @@ class TestGame{
                 gridAi.addBlock(ras.i, ras.j);
             }
         });
+        
         dis.addAnimation(animation);
 
 

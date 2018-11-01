@@ -2,10 +2,37 @@ window.onload = function(){
 	
 	///
 
-	// var canvas = document.getElementsByTagName("canvas")[0];
+	// let canvas = document.getElementsByTagName("canvas")[0];
 	// canvas.width = document.documentElement.clientWidth;
 	// canvas.height = document.documentElement.clientHeight;
 	// let game = new Game();
 	let game = new TestGame();
 	game.run();
+
+	// create the network
+	let myPerceptron = new Perceptron(2, [3], 1);
+
+	// train the network - learning
+	let learningRate = .3;
+	for (let i = 0; i < 40000; i++)
+	{
+		myPerceptron.activate([100, 100, 100]);
+		myPerceptron.propagate(learningRate, [1]);
+		
+		myPerceptron.activate([100, 100, 0]);
+		myPerceptron.propagate(learningRate, [0]);
+
+		myPerceptron.activate([100, 0, 0]);
+		myPerceptron.propagate(learningRate, [1]);
+
+		myPerceptron.activate([0, 0, 15]);
+		myPerceptron.propagate(learningRate, [0]);
+	}
+
+	// test the network
+	let x1 = 100, x2 = 0, x3 = 0;
+	for(x3 = 0; x3 < 100; x3++)
+		console.log(`[${x1},${x2},${x3}]=>`, myPerceptron.activate([x1,x2,x3]));
+
+	console.log("END");
 }
