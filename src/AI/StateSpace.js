@@ -111,7 +111,7 @@ class StateSpace{
                 if(exts instanceof Array && exts.length != 0){
                     for(let i = 0; i < exts.length; i++){
                         exts[i].father = node.index;
-                        exts[i].depth = node.depth + 1;
+                        exts[i].depth = node.depth + 1;     // ***
                         this.open.push(exts[i]);
                     }
                 }
@@ -120,27 +120,27 @@ class StateSpace{
         return result;
     }
 
-    // 计算结点的价值
-    F($node, $graphic){
-        return this.G($node, $graphic) + this.H($node, $graphic);
-    }
-
     setHeuristicFunc($h){
         this.H = $h;
     }
 
-    setHowFarFromOriginFunc($g){
+    setDepthFunc($g){
         this.G = $g;
     }
     
     // g，从起点到结点node的实际代价
-    G($node, $graphic){
-        return $node.g;
+    G($father, $current){
+        if($father){
+            return $father.g + 1;
+        }else{
+            // 是第一个结点
+            return 0;
+        }
     }
 
     // h，启发函数，从结点node到目标结点的估计代价
-    H($node, $graphic){
-        return $node.h;
+    H($current){
+        return $current.h;
     }
      
     // 局部择优搜索
@@ -183,7 +183,7 @@ class StateSpace{
                     exts[i].father = node.index;
                     exts[i].depth = node.depth + 1;
                 }
-                // 对exts列表进行排序
+                // 对exts列表进行排序，按照启发函数值进行排序，从小到大排序
                 exts.sort((n1 ,n2)=>{
                     return (n2.h - n1.h);
                 });
@@ -199,17 +199,17 @@ class StateSpace{
     }
 
     // 全局择优搜索
-    globalOptimizationSearch($tnode){
+    globalOptimizationSearch($first){
         this.init();
-        if(!($tnode instanceof TNode))console.error('$node必须为TNode对象');
+        if(!($first instanceof TNode))console.error('$node必须为TNode对象');
 
         let result = [];
         this.step = 0;
         let n = 0;
-        // 取出距离目标代价最小的
-        $tnode.h = this.H($tnode);
-        this.open.push($tnode);
+        $first.h = this.H($first);
+        this.open.push($first);
         while(this.open.length != 0){
+            // 回现以及保护措施
             this.callBack(this.step++);
             if(this.step % 1000 == 0){
                 if(!confirm("次数过多是否继续？")){
@@ -217,6 +217,7 @@ class StateSpace{
                 };
             }
 
+            // 取出距离目标代价最小的
             let node = this.open.shift();
             node.index = n++;
             this.closed.push(node);
@@ -239,7 +240,7 @@ class StateSpace{
                     exts[i].depth = node.depth + 1;
                     this.open.push(exts[i]);
                 }
-                // 对open列表进行排序
+                // 对open列表进行排序，按照启发函数值进行排序，从小到大排序
                 this.open.sort((n1 ,n2)=>{
                     return (n1.h - n2.h);
                 });
@@ -250,103 +251,118 @@ class StateSpace{
         return [];
     }
 
-    // []][
-    generalGraphHeuristicSearch($gnode){
+    // 从open列表中找寻相同的结点，并返回open列表中相同的结点，如果没有返回false
+    setFindOpenNodeAs($func){
+        this.findOpenNodeAs = $func;
+    }
+
+    findOpenNodeAs($open, $node){
+        return;
+    }
+
+    // 从closed列表中找寻相同的结点，并返回closed列表中相同的结点，如果没有返回false
+    setFindClosedNodeAs($func){
+        this.findClosedNodeAs = $func;
+    }
+
+    findClosedNodeAs($closed, $node){
+        return;
+    }
+
+    // a*算法
+    bestFirstSearch($first){
         this.init();
-        if(!($gnode instanceof GNode))console.error('$node必须为GNode对象');
+        if(!($first instanceof TNode))console.error('$node必须为TNode对象');
 
-        let result = [], graphic = [];
-        this.step = 0
-        let n = 0;
-        graphic.push($gnode);
-        this.open.push($gnode);
+        let result = [];    // 结果路径
+        this.step = 0;
+        let n = 0;          // 下标
+        $first.f = this.G() + this.H($first);
+        this.open.push($first); // 将第一个结点加入open列表
         while(this.open.length != 0){
+            // 回现以及保护措施
             this.callBack(this.step++);
-
-            // 从open中取出f最小的结点，放入closed中
-            let node = this.open.shift();
-            node.index = n++;
-            this.closed[node.index] = node;
-
-            // 判断是否是目标结点
-            if(this.judge(node)){
-                // 找到目标，放入结果集合
-                result.push(node);
-                do{
-                    node = this.closed[node.father];
-                    result.push(node);
-                }while(node.index != 0);
-                return {
-                    trace :result, 
-                    graphic: graphic
+            if(this.step % 1000 == 0){
+                if(!confirm("次数过多是否继续？")){
+                    return result;
                 };
             }
 
+            // 取出距离目标代价最小的
+            let current = this.open.shift();
+            current.index = n++;
+            this.closed.push(current);
+
+            // 是目标？
+            if(this.judge(current)){
+                result.push(current);
+                do{
+                    current = this.closed[current.father];
+                    result.push(current);
+                }while(current.father);    // 直到返回指针为空
+                return result;
+            }
+            
             // 拓展结点
-            let exts = this.generate(node);
+            let exts = this.generate(current);
             if(exts instanceof Array && exts.length != 0){
+                // 遍历每一个新生成的结点
                 for(let i = 0; i < exts.length; i++){
-                    if(!exts[i] instanceof GNode)console.error('$node必须为GNode对象');
-
-                    // 填入grphic
-                    node.addout(exts[i]);
-                    exts[i].addin(node);
-                    graphic.push(exts[i]);
-
-                    // 计算f
-                    let f = this.F(exts[i], graphic);
-                    let father = node.index;
-
-                    // 判断open和close表中是否已经有这个点
-                    let noexist = false;
-                    let x = this.open.indexOf(exts[i]);
-                    if(x >= 0){
-                        // 比较g，设置g值较小的node的返回指针
-                        if(this.open[x].g > ext[i].g){
-                            this.open[x].f = exts[i].f;
-                            this.open[x].father = exts[i].father;
-                        }
-                    }else{
-                        noexist = true;
+                    // 计算它的f
+                    exts[i].g = this.G(current, exts[i]);
+                    exts[i].h = this.H(exts[i]);
+                    exts[i].f = exts[i].g + exts[i].h;
+                    // 是否在open表和closed表中
+                    let nOpen = this.findOpenNodeAs(this.open, exts[i]);
+                    let nClose = this.findClosedNodeAs(this.closed, exts[i]);
+                    if(!nOpen && !nClose){
+                        exts[i].father = current.index;
+                        exts[i].depth = current.depth + 1;
                     }
-                    if(this.closed[exts[i].index]){
-                        // 比较g，设置g值较小的node的返回指针
-                        if(this.closed[exts[i].index].g > exts[i].g){
-                            this.closed[exts[i].index].f = exts[i].f;
-                            this.closed[exts[i].index].father = exts[i].father;
-                            // 修改通向该节点的后裔节点的g
-                            for(let n = exts[i].father; n.index != 0; n = n.father){
-                                n.g = this.G(n);
+                    else{
+                        if(nOpen){
+                            if(nOpen.f > exts[i].f){
+                                // 更新列表中结点的值
+                                nOpen.g = exts[i].g;
+                                nOpen.h = exts[i].h;
+                                nOpen.f = exts[i].f;
+                                nOpen.father = current.index;
+                                nOpen.depth = current.depth + 1;
+                            }
+                        }else{
+                            if(nClose.f > exts[i].f){
+                                // 更新列表中结点的值
+                                nClose.g = exts[i].g;
+                                nClose.h = exts[i].h;
+                                nClose.f = exts[i].f;
+                                nClose.father = current.index;
+                                nClose.depth = current.depth + 1;
+                                // re-open
+                                this.open.push(nClose);
                             }
                         }
-                    }else if(noexist){
-                        exts[i].f = f;
-                        exts[i].father = father;
+                    }
+                    if(!nOpen){
                         this.open.push(exts[i]);
                     }
                 }
+                // 对open列表进行排序，按照f值进行排序，从小到大排序
+                this.open.sort((n1 ,n2)=>{
+                    return (n1.f - n2.f);
+                });
             }else{
-                // 没有后继
                 continue;
             }
-            
-            // 对open的数据按f从小到大排序
-            this.open.sort((n1, n2)=>{
-                return (n1.f - n2.f);
-            });
         }
-
-        return {
-            graphic: graphic,
-            trace : result
-        };
+        return [];
     }
+
 }
 
 // 树结点
 class TNode{
     constructor($option={}){
-        this.state = $option.state;
+        this.state = $option.state; // 用于判断结点是否在逻辑上相同
         this.father = $option.father;
         this._depth = $option.depth;
 

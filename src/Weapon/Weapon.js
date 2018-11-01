@@ -17,6 +17,7 @@ class Weapon{
         this._game = $option.game || console.error('没有指定游戏对象');
         this._timer = $option.timer || console.error('需要指定时间对象');
         this._world = $option.world || console.error('无法在空虚中创建武器');
+        
         this._shootPointFactory = new ShootPointFactory({
             world : this._world,
             timer : this._timer

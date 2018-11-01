@@ -34,7 +34,7 @@ class TestGame{
         let gridAi = new AStarAI({
             gridNet : grids,
             aimRas : {i: 0, j: 0},
-            orgRas : {i: 5, j: 0}
+            orgRas : {i: 10, j: 7}
         });
         gridAi.initStateSpace();
 

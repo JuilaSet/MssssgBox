@@ -70,14 +70,35 @@
 						"$tnode: 第一个结点, TNode对象"]
 			},
 			{
+				"name": "bestFirstSearch($tnode)",
+				"disc": ["进行加权状态图搜索",
+						"需要先使用这样方法设置相应逻辑：setDepthFunc setHeuristicFunc setFindOpenNodeAs setFindClosedNodeAs",
+						"成功，返回结果路径组成的数组",
+						"失败，返回空数组", 
+						"$tnode: 第一个结点, TNode对象"]
+			},
+			{
 				"name": "setHowFarFromOriginFunc($g)",
-				"disc": ["$g($gnode, $graphic):设置距离出发点的代价函数，传入图结点对象，返回到起点的实际代价值。",
-						"$graphic:当前生成的搜索图，用于计算到起点的路径"]
+				"disc": ["$g($father, $current):设置距离出发点的代价函数，传入图结点对象，返回到起点的实际代价值。",
+						"$father:父节点",
+						"$current:当前结点"]
 			},
 			{
 				"name": "setHeuristicFunc($h)",
-				"disc": ["$h($gnode, $graphic):设置启发函数，传入图结点对象，返回到目标的估计代价值。",
-						"$graphic:当前生成的搜索图，用于计算到起点的路径"]
+				"disc": ["$h($current):设置启发函数，传入图结点对象，返回到目标的估计代价值。",
+						"$current:当前结点"]
+			},
+			{
+				"name": "setFindOpenNodeAs($findOpenNodeAs)",
+				"disc": ["设置findOpenNodeAs($open, $node):从open列表中找寻相同的结点，并返回open列表中相同的结点，如果没有建议返回false",
+						"$open:open列表，是一个数组",
+						"$node:新生成结点，根据这个结点去open列表中查找是否存在"]
+			},
+			{
+				"name": "setFindClosedNodeAs($设置findClosedNodeAs)",
+				"disc": ["设置findClosedNodeAs($closed, $node):从closed列表中找寻相同的结点，并返回closed列表中相同的结点，如果没有建议返回false",
+						"$closed:closed列表，是一个数组",
+						"$node:新生成结点，根据这个结点去closed列表中查找是否存在"]
 			},
 			{
 				"name": "init()",

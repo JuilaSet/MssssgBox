@@ -1,8 +1,8 @@
 class AStarAI{
     constructor($option={}){
         this._net = $option.gridNet || console.error('未指定网格');
-        let aimRas = $option.aimRas;  // 默认最右下方为目标
-        let orgRas = $option.orgRas;  // 默认最左上方为目标
+        let aimRas = $option.aimRas;  // 目标{i, j}
+        let orgRas = $option.orgRas;  // 起点{i, j}
         
         if(aimRas){
             this._aim = this._net.getGrid(aimRas.i, aimRas.j);
@@ -54,7 +54,7 @@ class AStarAI{
     }
 
     // 设置状态空间
-    initStateSpace(){
+    initStateSpace(){   // []][
         if(this._aim){
             this._net.clearAllGrid();
             let stateSpace = this._stateSpace;
@@ -85,10 +85,36 @@ class AStarAI{
                     return false; 
                 } 
             });
-            
-            stateSpace.setHeuristicFunc((node)=>{
-                return node.distance;
+
+            stateSpace.setFindOpenNodeAs(($open, $node)=>{
+                for(let i in $open){
+                    if($open[i].grid.rank == $node.grid.rank)
+                    return $open[i];
+                }
+                return false;
             });
+
+            stateSpace.setFindClosedNodeAs(($closed, $node)=>{
+                for(let i in $closed){
+                    if($closed[i].grid.rank == $node.grid.rank)
+                    return $closed[i];
+                }
+                return false;
+            });
+
+            stateSpace.setDepthFunc(($father, $node)=>{
+                if($father){
+                    return $father.g + this._distance($node.grid, $father.grid);
+                }else{
+                    // 是第一个结点
+                    return 0;
+                }
+            });
+            
+            stateSpace.setHeuristicFunc(($node)=>{
+                return this._distance($node.grid, this._aim);
+            });
+
         }else{
             if(!this._aim){
                 console.error("AStarAI", "没有定义目标");
@@ -105,7 +131,8 @@ class AStarAI{
                 distance : this._distance(this._org, this._aim)
             });
             this._stepGrids[this._org.rank] = this._org;
-            let res = stateSpace.globalOptimizationSearch(first);
+            // let res = stateSpace.globalOptimizationSearch(first);   // []][
+            let res = stateSpace.bestFirstSearch(first);   // []][
             for(let gridnode of res){
                 let grid = gridnode.grid;
                 if( !(grid.i == this._aim.i && grid.j == this._aim.j) && 
@@ -139,13 +166,17 @@ class AStarAI{
         }
     }
 
-    // 渲染相关
-    render($ctx){
-        this.drawSteps($ctx, "#F00");
-        this.drawResult($ctx, "#453");
+    //          //
+    // 渲染相关  //
+    //          //
 
-        this.drawOrg($ctx, "#00F");
-        this.drawAim($ctx, "#EF0");
+    // @enableOverride
+    render($ctx){
+        this.drawSteps($ctx, "#555");
+        this.drawResult($ctx, "#55F");
+
+        this.drawOrg($ctx, "#00C");
+        this.drawAim($ctx, "#8C0");
 
         this.drawBlocks($ctx, "#EEE");
         this._net.drawGridNet($ctx);
