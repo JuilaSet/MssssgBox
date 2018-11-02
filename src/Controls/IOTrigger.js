@@ -189,3 +189,10 @@ class IOTrigger extends Trigger {
         return new Vector2d(eobjX, eobjY);
     }
 }
+IOTrigger.UP_ARROW = 38;
+IOTrigger.DOWN_ARROW = 40;
+IOTrigger.LEFT_ARROW = 37;
+IOTrigger.RIGHT_ARROW = 39;
+IOTrigger.SHIFT = 16;
+IOTrigger.SPACE = 32;
+IOTrigger.ENTER = 13;
