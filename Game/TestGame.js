@@ -53,7 +53,7 @@ class TestGame{
             // answer
             animation.context.fillStyle = "#FFF";
             animation.context.font = 'bold 65px Arial';
-            animation.context.fillText(answer, 450, 190);
+            animation.context.fillText(answer, 350, 190);
 
             gridNet.render($ctx);
             grids.forEach(g => {
@@ -73,7 +73,7 @@ class TestGame{
         dis.addAnimation(animation);
             
         // create the network
-        let myPerceptron = new Perceptron(hn * wn, [hn], 10);
+        let myPerceptron = new Perceptron(hn * wn, [2, 2], 10);
 
         $("#clear").click(()=>{
             for(let x=0; x < gridArrays.length; x++){
@@ -104,8 +104,7 @@ class TestGame{
                     r = i;
                 }
             }
-            answer = r;
-            $("#expectation").val(r);
+            answer = "识别结果" + r;
             console.log("result=>", arrs);
         });
 

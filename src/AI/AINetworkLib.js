@@ -7,17 +7,17 @@ class Perceptron extends Network{
         var inputLayer = new Layer(input);
         var hiddenLayers = [];
         for(var i in hiddens){
-            hiddenLayers.push(new Layer(hiddens[i]));
+            hiddenLayers[i] = new Layer(hiddens[i]);
         }
         var outputLayer = new Layer(output);
 
         // 连接感知层
         inputLayer.project(hiddenLayers[0]);
-        for(var i in hiddens){
+        for(var i = 0; i < hiddenLayers.length; i++){
             if(i == hiddenLayers.length - 1){
                 hiddenLayers[i].project(outputLayer);
             }else{
-                hiddenLayers.push(new Layer(hiddens[i + 1]));
+                hiddenLayers[i].project(hiddenLayers[i + 1]);
             }
         }
 
