@@ -73,7 +73,7 @@ class TestGame{
         dis.addAnimation(animation);
             
         // create the network
-        let myPerceptron = new Perceptron(hn * wn, [2, 2], 10);
+        let myPerceptron = new Perceptron(hn * wn, [hn], 10);
 
         $("#clear").click(()=>{
             for(let x=0; x < gridArrays.length; x++){
