@@ -5,8 +5,8 @@ window.onload = function(){
 	// let canvas = document.getElementsByTagName("canvas")[0];
 	// canvas.width = document.documentElement.clientWidth;
 	// canvas.height = document.documentElement.clientHeight;
-	let game = new AStarTestGame();
-	// let game = new TestGame();
+	// let game = new AStarTestGame();
+	let game = new AdventureGame();
 	game.run();
 
 	// // // create the network
