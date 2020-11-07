@@ -27,7 +27,6 @@ class SurviveGame{
         // dis 模块
         let dis = this.display;
         dis.setFullScreen(false);
-        let c = 10101;
 
         let timer = this.timer;
 
@@ -164,7 +163,7 @@ class SurviveGame{
 
     // 暂停切换
     switch(){
-        this.pause =! this.pause;
+        this.pause = !this.pause;
     }
 
     // 暂停

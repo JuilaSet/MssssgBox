@@ -7,6 +7,7 @@ window.onload = function(){
 	// canvas.height = document.documentElement.clientHeight;
 	// let game = new AStarTestGame();
 	let game = new AdventureGame();
+	// let game = new SurviveGame();
 	game.run();
 
 	// // // create the network

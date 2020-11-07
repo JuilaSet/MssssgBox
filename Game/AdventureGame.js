@@ -155,8 +155,7 @@ class AdventureGame{
         iotrigger.setKeyDownEvent(()=>{
             this.switch();
         }, 32);
-        iotrigger.setKeyUpEvent(()=>{
-        }, 32);
+        iotrigger.setKeyUpEvent(()=>{}, 32);
 
         // game logic
         let genZone = new Zone({
@@ -176,6 +175,8 @@ class AdventureGame{
             genZqbuilding = buildingFactory.createBasicBuilding(
                 "000010000,"+
                 "001101100,"+
+                "011000110,"+
+                "011000110,"+
                 "011000110,"+
                 "011000110,"+
                 "110000011",
@@ -349,7 +350,7 @@ class AdventureGame{
 
     // 暂停切换
     switch(){
-        this.pause =! this.pause;
+        this.pause = !this.pause;
     }
 
     // 暂停
